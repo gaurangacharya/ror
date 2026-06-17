@@ -6,8 +6,8 @@ if ! command -v dokku >/dev/null 2>&1; then
   exit 1
 fi
 
-APP_NAME="${APP_NAME:-ownoutdoors}"
-DOMAIN="${DOMAIN:-dev.ownoutdoors.com}"
+APP_NAME="${APP_NAME:-staging-ownoutdoorsc}"
+DOMAIN="${DOMAIN:-jitsi.agiletechnologies.in}"
 SPHINX_HOST="${SPHINX_HOST:-${APP_NAME}.search.1}"
 
 if ! dokku apps:exists "$APP_NAME" 2>/dev/null; then
