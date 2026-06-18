@@ -133,9 +133,6 @@ RUN npm ci && cd client && npm ci
 
 COPY . /opt/app
 
-# database.yml is dockerignored; use Dokku DATABASE_URL template
-RUN cp config/database.dokku.yml config/database.yml
-
 EXPOSE 3000
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
@@ -157,6 +154,9 @@ RUN mkdir -p \
        config \
        log
 USER app
+
+# database.yml is dockerignored; use Dokku DATABASE_URL template
+RUN cp config/database.dokku.yml config/database.yml
 
 # If assets.tar.gz file exists in project root
 # assets will be extracted from there.
