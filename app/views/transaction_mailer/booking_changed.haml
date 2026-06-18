@@ -1,0 +1,66 @@
+%tr
+  %td.content-title{:align => "left"}
+    = t("emails.booking_changed.title", :listing_title => listing_title, :other_party_name => other_party_name).html_safe
+
+    - if @person_white_label&.ladera_enabled?
+      %br
+      %br
+      = t("emails.receipt_to_payer.look_forward")
+
+%tr
+  %td.content-main-cell{:align => "left"}
+    %table.content-main-table-buyer
+      %tbody
+        %tr
+          %td.body-font{:width => "200"}
+            %strong= t("emails.booking_changed.product")
+          %td.body-font
+            %strong= listing_title
+        - if booking.present?
+          - if !booking.per_hour?
+            %tr
+              %td.body-font{colspan: 2}
+                %b
+                  - if listing.booking_per_day?
+                    = use_new_translation("transactions.initiate.booked_days_label", count: duration).or_fallback_to("transactions.initiate.booked_days")
+                  - else
+                    = use_new_translation("transactions.initiate.booked_nights_label", count: duration).or_fallback_to("transactions.initiate.booked_nights")
+                %br
+                = l booking.start_on, format: :long_with_abbr_day_name
+                = "-"
+                - if listing.booking_per_day?
+                  = l (booking.end_on - 1.day), format: :long_with_abbr_day_name
+                  = "(#{pluralize(duration, t("listing_conversations.preauthorize.day"), t("listing_conversations.preauthorize.days"))})"
+                - else
+                  = l booking.end_on, format: :long_with_abbr_day_name
+                  = "(#{pluralize(duration, t("listing_conversations.preauthorize.night"), t("listing_conversations.preauthorize.nights"))})"
+          - else
+            %tr
+              %td{colspan: 2}
+                = t('transactions.initiate.booked_hours_label', count: duration)
+            %tr
+              %td.body-font{colspan: 2}
+                = l booking.start_time.to_date, format: :long_with_abbr_day_name
+                = '-'
+                - if !listing.fixed_units.present?
+                  = t("transactions.initiate.start_end_time",
+                    start_time: l(booking.start_time, format: :hours_only),
+                    end_time: l(booking.end_time, format: :hours_only))
+                - else
+                  = t("transactions.initiate.start_time",
+                    start_time: l(booking.start_time, format: :hours_only))
+            - if duration.present? && listing.availability != 'none' && !listing.fixed_units.present?
+              %tr
+                %td.body-font{:width => "250"}
+                  = t("emails.booking_changed.duration")
+                %td.body-font
+                  = duration
+
+            - elsif listing_quantity > 1
+              %tr
+                %td.body-font{:width => "250"}
+                  = quantity_selector_label || t("emails.booking_changed.quantity")
+                %td.body-font
+                  = listing_quantity
+
+= render :partial => "person_mailer/action_button_v2", :locals => { :text => t("emails.conversation_status_changed.view_thread"), :url => transaction_url}

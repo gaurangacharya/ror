@@ -1,0 +1,16 @@
+- if transaction_model.deposit_status == 'preauthorized'
+  .conversation-status
+    .inbox-horizontally-aligned-status
+      - if transaction_model.can_refund?
+        = form_tag refund_person_transaction_path(person_id: @current_user.id, id: transaction_model.id), method: :post do
+          .row
+            .col-6
+              %label= t(".perform_refund")
+            .col-3
+              = text_field_tag 'amount', transaction_model.deposit
+          .row
+            = submit_tag t(".refund_button"), class: 'button'
+      - elsif transaction_model.was_paid?
+        %p
+          = t(".performed_refund")
+          = humanized_money_with_symbol transaction_model.refunded_amount

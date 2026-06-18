@@ -1,0 +1,536 @@
+@import "./fonts";
+@import "./variables";
+
+html > body.ladera {
+  background: $background-color;
+  font-family: 'LibreBaskervilleRegular';
+  color: $primary-dark-color;
+
+  & #google_translate_element {
+    & .goog-te-gadget-simple {
+      background: $background-color;
+    }
+  }
+
+  & h1, h2, h3, h4, h5, h6 {
+    font-family: 'LibreBaskervilleRegular', helvetica, sans-serif;
+    color: $primary-dark-color;
+  }
+
+  & input[type=checkbox] {
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    -o-appearance:none;
+    outline: none;
+    content: none;
+  }
+
+  & input[type=checkbox]:before {
+    font-family: "FontAwesome";
+    content: "\f00c";
+    font-size: 13px;
+    color: transparent !important;
+    background: $background-color;
+    display: block;
+    width: 15px;
+    height: 15px;
+    border: 2px solid $primary-dark-color;
+    border-radius: 4px;
+    margin-right: 7px;
+  }
+
+  & input[type=checkbox]:checked:before {
+    color: $primary-dark-color !important;
+  }
+
+  & #sidewinder-wrapper {
+    .Topbar {
+      color: $primary-dark-color;
+      background: $background-color;
+    }
+
+    & .marketplace-lander {
+      & .marketplace-title-header {
+        & h1 {
+          color: $primary-dark-color;
+        }
+      }
+    }
+
+    & .page-content {
+      & .wrapper {
+        background: $background-color;
+
+        & .listing-details-container {
+          color: $primary-dark-color;
+        }
+
+        & .aside-listing-actions {
+          color: $primary-dark-color;
+
+          & .listing-price-amount,
+           .listing-price-quantity {
+            color: $primary-dark-color;
+          }
+
+          & .datepicker-per-hour .field label {
+            line-height: 43px;
+          }
+          & input.form-control,
+            .quantity-input > input,
+            select {
+            color: $primary-dark-color;
+            border: 2px solid $primary-dark-color;
+            background: $background-color;
+          }
+          & input.form-control::placeholder {
+            color: $secondary-warm-color;
+          }
+          & .listing_add_ons {
+            margin-bottom: 26px;
+          }
+
+          & .delivery-title,
+            .shipping-options-label,
+            .submit-payment-form-link,
+            #calendar-container,
+            .legend-center {
+            display: none;
+          }
+
+          & .row-with-divider {
+            border: none;
+          }
+
+          & .row-with-divider.row-listing-author,
+            .row-with-divider.listing-author-activity {
+            display: none;
+          }
+        }
+
+        & #googlemap {
+          display: none;
+        }
+
+        .listing-details-container {
+          & .listing-min-quantity,
+          .listing-max-quantity,
+          .listing-document,
+          .listing-capacity,
+          .listing-publishing-date,
+          .listing-social,
+          #comments {
+            display: none;
+          }
+        }
+
+        #booking-dates {
+          .bookind-date-timezone {
+            display: none;
+          }
+        }
+
+        #transaction-form {
+          .discount_code {
+            color: $primary-dark-color;
+          }
+        }
+
+        & .preauthorize-section {
+          & textarea,
+            input:not([type='checkbox']) {
+            color: $primary-dark-color;
+            border: 2px solid $primary-dark-color;
+            background: $background-color;
+          }
+        }
+
+        .initiate-transaction-totals,
+        .shipping-address-container,
+        .tx-fields {
+          background: $background-color;
+          border: 2px solid $primary-dark-color;
+          border-radius: 0.3125em;
+        }
+
+        .conversation-status {
+          .accept {
+            color: #ffffff;
+            background: $primary-dark-color;
+          }
+
+          .cancel {
+            color: $primary-dark-color;
+            background: $primary-light-color;
+            border: 2px solid $primary-dark-color;
+          }
+        }
+
+        #new_message {
+          textarea {
+            color: $primary-dark-color;
+            border: 2px solid $primary-dark-color;
+            background: $background-color;
+          }
+        }
+
+        .message-bubble-arrow-to-left {
+          &.message-mood-positive {
+            color: #ffffff;
+            background: $primary-dark-color;
+
+            &:after {
+              border-right-color: $primary-dark-color;
+            }
+          }
+        }
+
+        .message-bubble-arrow-to-right {
+          &.message-mood-positive {
+            color: #ffffff;
+            background: $primary-dark-color;
+
+            &:after {
+              border-left-color: $primary-dark-color;
+            }
+          }
+        }
+
+        // Guest type pricing indicators
+        .complimentary-price {
+          color: $primary-dark-color;
+          font-weight: bold;
+          font-style: italic;
+        }
+
+        .visitor-rate-label {
+          font-size: 12px;
+          color: #999;
+          font-style: italic;
+          margin-top: 3px;
+          margin-bottom: 0;
+          line-height: 1.1;
+          opacity: 0.7;
+          font-weight: normal;
+          text-transform: lowercase;
+          letter-spacing: 0.3px;
+        }
+        
+        // Ladera price display improvements
+        .ladera-pricing {
+          .listing-price-amount {
+            display: block;
+            margin-bottom: 4px;
+          }
+          
+          .listing-price-quantity {
+            font-size: 14px;
+            opacity: 0.8;
+          }
+        }
+
+        // Lightbox overlay styling for guest type modal
+        .lb_overlay {
+          background: rgba(0, 0, 0, 0.6) !important;
+          backdrop-filter: blur(2px);
+        }
+
+        // Guest type modal styling
+        #ladera-guest-type-modal {
+          max-width: 500px;
+          width: 95%;
+          position: relative;
+          
+          @media (max-width: 767px) {
+            max-width: 350px !important;
+            width: 95%;
+            margin: 20px auto;
+          }
+          
+          @media (max-width: 480px) {
+            max-width: 320px !important;
+          }
+          
+          .lightbox-x {
+            position: absolute !important;
+            top: -15px !important;
+            right: -15px !important;
+            width: 30px !important;
+            height: 30px !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            border: none !important;
+            border-radius: 50% !important;
+            color: white !important;
+            font-size: 20px !important;
+            font-weight: bold !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            z-index: 1000001 !important;
+            transition: all 0.2s ease !important;
+            text-decoration: none !important;
+            line-height: 1 !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+            opacity: 0.9 !important;
+            
+            &:hover {
+              background: rgba(0, 0, 0, 1) !important;
+              color: white !important;
+              transform: scale(1.1) !important;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+              opacity: 1 !important;
+            }
+            
+            &:focus {
+              outline: none !important;
+              box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3) !important;
+            }
+            
+            // Ensure the × symbol is properly styled
+            font-family: Arial, sans-serif !important;
+            font-size: 18px !important;
+            line-height: 1 !important;
+          }
+          
+          .lightbox-content {
+            position: relative;
+            background: $background-color;
+            border: 2px solid $primary-dark-color;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            overflow: visible; // Allow close button to extend outside
+            transform: scale(1);
+            transition: transform 0.3s ease;
+          }
+
+          .modal-header {
+            background: $background-color;
+            border-bottom: 1px solid rgba($primary-dark-color, 0.2);
+            padding: 20px 20px 15px;
+            
+            @media (max-width: 767px) {
+              padding: 15px 15px 10px;
+            }
+            
+            .modal-title {
+              color: $primary-dark-color;
+              font-family: 'LibreBaskervilleRegular', helvetica, sans-serif;
+              font-size: 24px;
+              font-weight: bold;
+              margin: 0;
+              text-align: center;
+              
+              @media (max-width: 767px) {
+                font-size: 20px;
+              }
+            }
+          }
+
+          .modal-body {
+            background: $background-color;
+            color: $primary-dark-color;
+            padding: 20px;
+            
+            @media (max-width: 767px) {
+              padding: 15px;
+            }
+
+            p {
+              color: $primary-dark-color;
+              margin-bottom: 25px;
+              font-size: 16px;
+              line-height: 1.5;
+              
+              @media (max-width: 767px) {
+                font-size: 14px;
+                margin-bottom: 20px;
+              }
+            }
+
+            .guest-type-options {
+              .row {
+                margin: 0 -10px;
+                
+                @media (max-width: 767px) {
+                  margin: 0 -5px;
+                }
+              }
+              
+              .col-6 {
+                padding: 0 10px;
+                
+                @media (max-width: 767px) {
+                  padding: 0 5px;
+                  margin-bottom: 10px;
+                }
+              }
+              
+              .guest-type-btn {
+                background: $background-color;
+                color: $primary-dark-color;
+                border: 2px solid $primary-dark-color;
+                border-radius: 8px;
+                padding: 20px 15px;
+                margin-bottom: 15px;
+                width: 100%;
+                text-align: center;
+                transition: all 0.3s ease;
+                min-height: 100px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                
+                @media (max-width: 767px) {
+                  padding: 15px 10px;
+                  min-height: 80px;
+                  margin-bottom: 0;
+                }
+
+                &:hover {
+                  background: rgba($primary-dark-color, 0.1);
+                  transform: translateY(-2px);
+                  box-shadow: 0 6px 20px rgba($primary-dark-color, 0.25);
+                  border-color: $primary-dark-color;
+                }
+
+                &:focus {
+                  outline: none;
+                  box-shadow: 0 0 0 3px rgba($primary-dark-color, 0.3);
+                }
+
+                &.btn-primary {
+                  background: $primary-dark-color;
+                  color: $background-color;
+                  box-shadow: 0 6px 20px rgba($primary-dark-color, 0.4);
+                  
+                  &:hover {
+                    background: darken($primary-dark-color, 10%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba($primary-dark-color, 0.5);
+                  }
+                }
+
+                h6 {
+                  margin-bottom: 8px;
+                  font-weight: bold;
+                  font-family: 'LibreBaskervilleRegular', helvetica, sans-serif;
+                  font-size: 18px;
+                  line-height: 1.2;
+                  
+                  @media (max-width: 767px) {
+                    font-size: 16px;
+                    margin-bottom: 5px;
+                  }
+                }
+
+                small {
+                  font-size: 13px;
+                  opacity: 0.9;
+                  line-height: 1.3;
+                  
+                  @media (max-width: 767px) {
+                    font-size: 12px;
+                  }
+                }
+              }
+            }
+
+            .guest-type-confirmation {
+              padding: 30px 0;
+              
+              @media (max-width: 767px) {
+                padding: 20px 0;
+              }
+              
+              p {
+                margin-bottom: 15px;
+                font-size: 18px;
+                
+                @media (max-width: 767px) {
+                  font-size: 16px;
+                  margin-bottom: 10px;
+                }
+                
+                &:last-child {
+                  margin-bottom: 0;
+                  font-size: 16px;
+                  opacity: 0.8;
+                  
+                  @media (max-width: 767px) {
+                    font-size: 14px;
+                  }
+                }
+              }
+            }
+            
+            .modal-footer {
+              border-top: 1px solid rgba($primary-dark-color, 0.2);
+              padding: 20px;
+              margin-top: 20px;
+              
+              @media (max-width: 767px) {
+                padding: 15px;
+                margin-top: 15px;
+              }
+              
+              .selection-help {
+                display: block;
+                margin-bottom: 15px;
+                
+                @media (max-width: 767px) {
+                  margin-bottom: 10px;
+                }
+              }
+              
+              .modal-buttons {
+                .cancel-btn {
+                  background: transparent;
+                  color: $primary-dark-color;
+                  border: 2px solid rgba($primary-dark-color, 0.3);
+                  border-radius: 6px;
+                  padding: 8px 20px;
+                  font-size: 14px;
+                  transition: all 0.2s ease;
+                  
+                  &:hover {
+                    background: rgba($primary-dark-color, 0.1);
+                    border-color: $primary-dark-color;
+                    color: $primary-dark-color;
+                  }
+                  
+                  &:focus {
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba($primary-dark-color, 0.3);
+                    border-color: $primary-dark-color;
+                  }
+                  
+                  @media (max-width: 767px) {
+                    padding: 6px 16px;
+                    font-size: 13px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  & .marketplace-lander {
+    & .coverimage-fade {
+      background: $background-color;
+    }
+  }
+
+  & .ladera-guest-type-modal-title {
+    font-family: 'LibreBaskervilleRegular', helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: $primary-light-color;
+  }
+}
+

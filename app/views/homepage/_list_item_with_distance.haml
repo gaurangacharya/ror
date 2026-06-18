@@ -1,0 +1,91 @@
+- frontpage_fragment_cache("list_item_with_distance", listing) do
+  - path_to_listing = ext_path_to_listing(listing: listing)
+
+  .browsing-list-item{id: "listing_list_#{listing.id}"}
+    .browsing-list-item-image-container
+      - if listing.listing_images.size > 0
+        = link_to path_to_listing, class: "browsing-list-item-image-desktop" do
+          = image_tag listing.listing_images.first[:small_3x2], { alt: listed_listing_title(listing), class: "home-list-image"}
+      - if listing.listing_images.size > 0
+        = link_to path_to_listing, class: "browsing-list-item-image-mobile" do
+          = image_tag listing.listing_images.first[:thumb], { alt: listed_listing_title(listing), class: "home-list-image"}
+    - is_hotel = @current_user&.is_hotel?
+    .browsing-list-item-details
+      - if is_hotel
+        .browsing-list-qr-code-right
+          - referral_id = "R-" + @current_user.username
+          - url = ext_path_to_listing(listing: listing, make_url: true, referral_id: referral_id)
+          = link_qr_code(url, viewbox: true).html_safe
+      .browsing-list-item-details-right
+        .browsing-list-item-price
+          - if listing.hide_price
+            &nbsp;
+          - elsif listing.call_for_price || listing.price.nil?
+            .browsing-list-item-price-quantity
+              = t("listings.call_for_price.title")
+          - elsif Listing.semi_premium_pricing?(listing)
+            .browsing-list-item-price-value.crossed.inline-crossed
+              = MoneyViewUtils.to_humanized(listing.price)
+            .browsing-list-item-price-value
+              = MoneyViewUtils.to_humanized(listing.price/2)
+            - price_unit = price_quantity_slash_unit(listing)
+            - if !price_unit.blank?
+              - price_text = " " + price_unit
+              .browsing-list-item-price-quantity
+                = price_text
+            - if !@current_user&.premium_pricing?(listing)
+              %div.member-price-notice
+                = t("listings.member_price")
+
+          - elsif listing.price
+            .browsing-list-item-price-value
+              = MoneyViewUtils.to_humanized(listing.price)
+            - price_unit = price_quantity_slash_unit(listing)
+            - if !price_unit.blank?
+              - price_text = " " + price_unit
+              .browsing-list-item-price-quantity
+                = price_text
+            - if @current_user&.hotel_pricing?(listing)
+              = t("listings.hotel_commission", number: @current_community.hotel_percent_user.to_i)
+
+          - else
+            .browsing-list-item-listing-shape-value
+              = shape_name(listing)
+
+      .browse-list-item-details-container
+        %h2.browsing-list-item-title
+          = link_to path_to_listing do
+            = listing.title
+        - distance = Maybe(listing.distance).or_else(nil)
+        - if(show_distance && distance.present?)
+          .browsing-list-item-distance
+            - dist = format_distance(distance)
+            = t("homepage.list_item.distance_away", distance: dist, distance_unit: listing.distance_unit)
+
+        .browsing-list-item-author{ class: (listing.listing_images.size > 0 ? "browsing-list-item-author-with-listing-image" : "browsing-list-item-author-without-listing-image")}
+          .browsing-list-item-avatar
+            = link_to(person_path(username: listing.author.username), class: "home-fluid-thumbnail-grid-author-avatar-image") do
+              = image_tag(listing.author.avatar.thumb || missing_avatar(:thumb, listing.author.is_vendor))
+          .browsing-list-item-author-details
+            = link_to(person_path(username: listing.author.username), class: "browsing-list-item-author-name") do
+              = PersonViewUtils::person_entity_display_name(listing.author, @current_community.name_display_type)
+            .browsing-list-item-author-reviews
+              = stars_rating_tag listing.author.rating_average, disable_after_rate: true, readonly: true
+              - if listing.author.num_of_reviews > 0
+                = pluralize(listing.author.num_of_reviews, t("homepage.list_item.review"), t("homepage.list_item.reviews"))
+
+        .browsing-list-item-price-mobile{ class: (listing.listing_images.size > 0 ? "browsing-list-item-price-mobile-with-listing-image" : "browsing-list-item-price-mobile-without-listing-image")}
+          - if listing.call_for_price || listing.price.nil?
+            .browsing-list-item-price-value-mobile
+              = t("listings.call_for_price.title")
+          - elsif listing.price
+            .browsing-list-item-price-value-mobile
+              = MoneyViewUtils.to_humanized(listing.price)
+            - price_unit = price_quantity_slash_unit(listing)
+            - if !price_unit.blank?
+              - price_text = " " + price_unit
+              .browsing-list-item-price-quantity
+                = price_text
+          - else
+            .browsing-list-item-shape-value-mobile
+              = shape_name(listing)

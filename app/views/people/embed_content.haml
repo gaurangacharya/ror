@@ -1,0 +1,6 @@
+.mfp-close
+- if @person.embed_document.present?
+  = @person.embed_document.html_safe
+- elsif @person.pdf.file?
+  %img{src: @person.pdf.url, alt: 'special deal, coupon popup window'}
+

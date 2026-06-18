@@ -1,0 +1,73 @@
+- filters.each do |field|
+
+  - next if field.id == 13442
+  - field.with_type do |type|
+    - if [:dropdown, :checkbox].include?(type)
+      - count_selected = 0
+      - field.options.sort.each do |option|
+        - param_name = type == :dropdown ? CustomFieldSearchParams.dropdown_param_name(option.id) : CustomFieldSearchParams.checkbox_param_name(option.id)
+        - if params[param_name]
+          - count_selected += 1
+
+      .auto-col.toggle-container.home-toolbar-toggle-container
+        .toggle.with-borders{data: {toggle: "#home-toolbar-filter-menu-#{field.id}"}, class: count_selected > 0 ? 'inverted' : ''}
+          .toggle-header-container
+            .toggle-header
+              = field.name(I18n.locale)
+              - if count_selected > 0
+                %strong
+                  &middot;
+                  = count_selected
+
+            = icon_tag("dropdown", ["icon-dropdown"])
+
+          .toggle-menu.hidden{id: "home-toolbar-filter-menu-#{field.id}"}
+            .filter-width
+              - field.options.sort.each do |option|
+                .custom-filter-checkbox-container
+                  %label.custom-filter-checkbox-label
+                    - param_name = type == :dropdown ? CustomFieldSearchParams.dropdown_param_name(option.id) : CustomFieldSearchParams.checkbox_param_name(option.id)
+                    = check_box_tag param_name, "#{option.id}", params[param_name]
+                    %span.custom-filter-checkbox-label-text
+                      = option.title(I18n.locale)
+                  - if params[param_name].present?
+                    - content_for :selected_filters do
+                      %span.filter-value
+                        = option.title(I18n.locale)
+                        %span.removable{data: {input: param_name}}
+
+
+  - field.with(:numeric) do
+    - min_param = CustomFieldSearchParams.numeric_min_param_name(field.id)
+    - max_param = CustomFieldSearchParams.numeric_max_param_name(field.id)
+    - min_value = params[min_param]
+    - max_value = params[max_param]
+
+    .row
+      .col-12
+        .custom-filter-title
+          = field.name(I18n.locale)
+    .row
+      .col-12
+        .custom-filter-options
+          - id = ["range-slider", field.id].join("-")
+          .range-slider{id: id}
+            - range = [field.min, field.max]
+            - start = [min_value || field.min, max_value || field.max]
+            - labels = ["#custom-filter-min-value-#{id}", "#custom-filter-max-value-#{id}"]
+            - fields = ["#nf_min_#{id}", "#nf_max_#{id}"]
+
+            - content_for :extra_javascript do
+              :javascript
+                window.ST.rangeFilter("##{id}", #{range.to_json.html_safe}, #{start.to_json.html_safe}, #{labels.to_json.html_safe}, #{fields.to_json.html_safe}, #{field.allow_decimals}, refreshSearchResults)
+
+    .row
+      .col-12
+        .left
+          %span.custom-filter-min-max-title= t(".min")
+          %span{id: "custom-filter-min-value-#{id}"}
+          %input{type: "hidden", id: "nf_min_#{id}", name: min_param, value: min_value}
+        .right
+          %span.custom-filter-min-max-title= t(".max")
+          %span{id: "custom-filter-max-value-#{id}"}
+          %input{type: "hidden", id: "nf_max_#{id}", name: max_param, value: max_value}

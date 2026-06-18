@@ -1,0 +1,33 @@
+%div{style: 'max-width: 600px; border: 2px solid #808080; border-radius: 5px; margin: 0px auto; padding: 20px'}
+  .row{style: 'text-align: center'}
+    - if @current_community.wide_logo.present?
+      = link_to landing_page_path do
+        = image_tag @current_community.wide_logo.url(:header_highres), style: 'max-width: 100%; height: auto'
+
+  .row{style: 'text-align: center'}
+    = huge_avatar_thumb(@person)
+
+  .row
+    .col-6
+      %strong
+        = t("people.show.name")
+    .col-6
+      %h2= @person.full_name
+
+  .row
+    .col-6
+      %strong
+        = t("people.show.premium_membership")
+    .col-6
+      %h2= t("people.show.active_until", date: @person.membership_expires_at.strftime("%m/%d/%Y"))
+
+  .row
+    .col-6
+      %strong
+        = t("people.show.member_id")
+    .col-6
+      %h2= @person.referral_id
+
+  .row{style: 'text-align: center'}
+    = info_qr_code(@person).html_safe
+

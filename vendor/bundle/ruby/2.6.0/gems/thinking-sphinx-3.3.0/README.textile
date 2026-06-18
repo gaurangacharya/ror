@@ -1,0 +1,87 @@
+h1. Thinking Sphinx
+
+Thinking Sphinx is a library for connecting ActiveRecord to the Sphinx full-text search tool, and integrates closely with Rails (but also works with other Ruby web frameworks). The current release is v3.3.0.
+
+h2. Upgrading
+
+Please refer to the release notes for any changes you need to make when upgrading:
+
+* "v3.3.0":https://github.com/pat/thinking-sphinx/releases/tag/v3.3.0
+* "v3.2.0":https://github.com/pat/thinking-sphinx/releases/tag/v3.2.0
+* "v3.1.4":https://github.com/pat/thinking-sphinx/releases/tag/v3.1.4
+* "v3.1.3":https://github.com/pat/thinking-sphinx/releases/tag/v3.1.3
+* "v3.1.2":https://github.com/pat/thinking-sphinx/releases/tag/v3.1.2
+* "v3.1.1":https://github.com/pat/thinking-sphinx/releases/tag/v3.1.1
+* "v3.1.0":https://github.com/pat/thinking-sphinx/releases/tag/v3.1.0
+* "v3.0.6":https://github.com/pat/thinking-sphinx/releases/tag/v3.0.6
+
+If you're upgrading from pre-v3, then the documentation has "pretty extensive notes":http://pat.github.io/thinking-sphinx/upgrading.html on what's changed.
+
+h2. Installation
+
+It's a gem, so install it like you would any other gem. You will also need to specify the mysql2 gem if you're using MRI, or jdbc-mysql if you're using JRuby:
+
+<pre><code>gem 'mysql2',          '~> 0.3.18', :platform => :ruby
+gem 'jdbc-mysql',      '= 5.1.35', :platform => :jruby
+gem 'thinking-sphinx', '~> 3.3.0'</code></pre>
+
+The MySQL gems mentioned are required for connecting to Sphinx, so please include it even when you're using PostgreSQL for your database. If you're using JRuby, there is "currently an issue with Sphinx and jdbc-mysql 5.1.36 or newer":http://sphinxsearch.com/forum/view.html?id=13939, so you'll need to stick to nothing more recent than 5.1.35.
+
+You'll also need to install Sphinx - this is covered in "the extended documentation":http://pat.github.io/thinking-sphinx/installing_sphinx.html.
+
+h2. Usage
+
+Begin by reading the "quick-start guide":http://pat.github.io/thinking-sphinx/quickstart.html, and beyond that, "the documentation":http://pat.github.io/thinking-sphinx/ should serve you pretty well.
+
+h3. Extending with Middleware, Glazes and Panes
+
+These are covered in "a blog post":http://freelancing-gods.com/posts/rewriting_thinking_sphinx_middleware_glazes_and_panes.
+
+h2. Requirements
+
+h3. Sphinx
+
+Thinking Sphinx v3 is currently built for Sphinx 2.0.5 or newer, and releases since v3.1.0 expect Sphinx 2.1.2 or newer by default.
+
+h3. Rails and ActiveRecord
+
+Currently Thinking Sphinx 3 is built to support Rails/ActiveRecord 3.2 or newer. If you're using Sinatra and ActiveRecord instead of Rails, that's fine - just make sure you add the @:require => 'thinking_sphinx/sinatra'@ option when listing @thinking-sphinx@ in your Gemfile.
+
+Please note that if you're referring to polymorphic associations in your index definitions, you'll want to be using Rails/ActiveRecord 4.0 or newer. Supporting polymorphic associations and Rails/ActiveRecord 3.2 is problematic, and likely will not be addressed in the future.
+
+If you want ActiveRecord 3.1 support, then refer to the 3.0.x releases of Thinking Sphinx. Anything older than that, then you're stuck with Thinking Sphinx v2.x (for Rails/ActiveRecord 3.0) or v1.x (Rails 2.3). Please note that these older versions are no longer actively supported.
+
+h3. Ruby
+
+You'll need either the standard Ruby (v1.9.3 or newer) or JRuby (1.7.9 or newer). I'm open to patches to improve Rubinius support (if required - it may work with it right now).
+
+JRuby is only supported as of Thinking Sphinx v3.1.0, and requires Sphinx 2.1.2 or newer.
+
+h3. Database Versions
+
+MySQL 5.x and Postgres 8.4 or better are supported.
+
+h2. Contributing
+
+Please note that this project now has a "Contributor Code of Conduct":http://contributor-covenant.org/version/1/0/0/. By participating in this project you agree to abide by its terms.
+
+To contribute, clone this repository and have a good look through the specs - you'll notice the distinction between acceptance tests that actually use Sphinx and go through the full stack, and unit tests (everything else) which use liberal test doubles to ensure they're only testing the behaviour of the class in question. I've found this leads to far better code design.
+
+All development is done on the @develop@ branch; please base any pull requests off of that branch. Please write the tests and then the code to get them passing, and send through a pull request.
+
+In order to run the tests, you'll need to create a database named @thinking_sphinx@:
+
+<pre><code># Either fire up a MySQL console:
+mysql -u root
+# OR a PostgreSQL console:
+psql
+# In that console, create the database:
+CREATE DATABASE thinking_sphinx;</code></pre>
+
+You can then run the unit tests with @rake spec:unit@, the acceptance tests with @rake spec:acceptance@, or all of the tests with just @rake@. To run these with PostgreSQL, you'll need to set the @DATABASE@ environment variable accordingly:
+
+<pre><code>DATABASE=postgresql rake</code></pre>
+
+h2. Licence
+
+Copyright (c) 2007-2015, Thinking Sphinx is developed and maintained by Pat Allan, and is released under the open MIT Licence. Many thanks to "all who have contributed patches":https://github.com/pat/thinking-sphinx/contributors.

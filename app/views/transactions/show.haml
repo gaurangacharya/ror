@@ -1,0 +1,25 @@
+= render :partial => "conversations/conversation_header", locals: {other_party: conversation_other_party}
+
+.centered-section-wide
+  = render :partial => "transactions/details", locals: {role: role, tx: transaction, transaction_model: presenter.tx, listing: presenter.listing, is_author: presenter.is_author, price_break_down_locals: price_break_down_locals}
+  - if !@iframe_mode
+    = render :partial => "transactions/documents", locals: {tx: presenter.tx, is_author: presenter.is_author, listing: presenter.listing}
+    = render :partial => "conversations/messages_and_form", locals: {role: role, message_form: message_form, message_form_action: message_form_action, messages: messages}
+
+- if !@iframe_mode
+  .transaction-additional-listings-wrapper
+    %h2.marketplace-color
+      = t('.popular_experiences')
+    #additional-listings.transaction-additional-listings
+      = render 'additional_listings', presenter: presenter
+    .transaction-additional-listings-button
+      = link_to additional_listings_transaction_path(id: presenter.tx.id, page: presenter.additional_listings.next_page),
+      id: 'additional-listings-button',
+      class: 'button',
+      remote: true do
+        %img.spinner.hidden{src: 'https://s3.amazonaws.com/sharetribe/assets/ajax-loader-grey.gif'}
+        = t('.show_more')
+
+- content_for :extra_javascript do
+  :javascript
+    window.ST.transactionShow.init();

@@ -1,0 +1,25 @@
+# Logfile created on 2017-05-05 18:12:23 +0300 by logger.rb/56815
+D, [2017-05-05T18:55:33.936836 #98643] DEBUG -- :   [1m[36m (0.4ms)[0m  [1mCREATE TABLE "books" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar) [0m
+D, [2017-05-05T18:55:33.938941 #98643] DEBUG -- :   [1m[35m (0.1ms)[0m  CREATE TABLE "delayed_jobs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "priority" integer DEFAULT 0 NOT NULL, "attempts" integer DEFAULT 0 NOT NULL, "handler" text NOT NULL, "last_error" text, "run_at" datetime, "locked_at" datetime, "failed_at" datetime, "locked_by" varchar, "queue" varchar, "created_at" datetime, "updated_at" datetime) 
+D, [2017-05-05T18:55:33.939121 #98643] DEBUG -- :   [1m[36m (0.0ms)[0m  [1mselect sqlite_version(*)[0m
+D, [2017-05-05T18:55:33.939400 #98643] DEBUG -- :   [1m[35m (0.1ms)[0m  CREATE  INDEX "delayed_jobs_priority" ON "delayed_jobs" ("priority", "run_at")
+I, [2017-05-05T20:31:21.276958 #98643]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-05 20:31:21 +0300
+I, [2017-05-05T20:31:21.279235 #98643]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-05T20:31:21.279604 #98643]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-05T20:31:21.291693 #98643] FATAL -- : 
+AirbrakeTestError (AirbrakeTestError):
+  lib/airbrake/rack/middleware.rb:52:in `call'
+
+
+D, [2017-05-05T20:31:24.828916 #38411] DEBUG -- :   [1m[36m (0.4ms)[0m  [1mCREATE TABLE "books" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar) [0m
+D, [2017-05-05T20:31:24.831289 #38411] DEBUG -- :   [1m[35m (0.1ms)[0m  CREATE TABLE "delayed_jobs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "priority" integer DEFAULT 0 NOT NULL, "attempts" integer DEFAULT 0 NOT NULL, "handler" text NOT NULL, "last_error" text, "run_at" datetime, "locked_at" datetime, "failed_at" datetime, "locked_by" varchar, "queue" varchar, "created_at" datetime, "updated_at" datetime) 
+D, [2017-05-05T20:31:24.831480 #38411] DEBUG -- :   [1m[36m (0.0ms)[0m  [1mselect sqlite_version(*)[0m
+D, [2017-05-05T20:31:24.831768 #38411] DEBUG -- :   [1m[35m (0.1ms)[0m  CREATE  INDEX "delayed_jobs_priority" ON "delayed_jobs" ("priority", "run_at")
+I, [2017-05-05T20:31:26.071199 #38411]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-05 20:31:26 +0300
+I, [2017-05-05T20:31:26.074232 #38411]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-05T20:31:26.074908 #38411]  INFO -- : Completed 500 Internal Server Error in 1ms (ActiveRecord: 0.0ms)
+F, [2017-05-05T20:31:26.091425 #38411] FATAL -- : 
+AirbrakeTestError (AirbrakeTestError):
+  lib/airbrake/rack/middleware.rb:52:in `call'
+
+

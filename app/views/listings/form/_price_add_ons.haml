@@ -1,0 +1,12 @@
+.row
+  .col-12
+    %h2= t('.title')
+    .row
+      .col-12
+        = form.fields_for :add_ons do |add_on_fields|
+          = render 'listings/form/price_add_on_fields', f: add_on_fields
+        = link_to_add_fields t('.new'), form, :add_ons,
+          { partial: 'listings/form/price_add_on_fields',
+            new_object: form.object.add_ons.build(currency: form.object.currency) },
+          { class: 'button' }
+

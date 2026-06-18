@@ -1,0 +1,29 @@
+- if @person.is_affiliate && @person.referral_id
+  .row
+    .col-7
+      = @person.is_hotel? ? t("people.show.reseller_id") : t("people.show.affiliate_id")
+    .col-5
+      %strong= @person.referral_id
+
+- if @person.premium_active?
+  .row
+    .col-7
+      = t("people.show.premium_membership")
+    .col-5
+      %strong= t("people.show.active_until", date: @person.membership_expires_at.strftime("%m/%d/%Y"))
+  .row
+    .col-7
+      = t("people.show.member_id")
+    .col-5
+      %strong= @person.referral_id
+
+  %a.profile-contact-link{href: info_person_path(@person), target: '_blank'}
+    .content
+      = t("people.show.view_card")
+- elsif @person.premium_deactivated?
+  .row
+    .col-7
+      = t("people.show.premium_membership")
+    .col-5
+      %strong= t("people.show.member_inactive")
+

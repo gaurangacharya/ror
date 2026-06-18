@@ -1,0 +1,100 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t(".title")
+
+= render :partial => "admin/left_hand_navigation", locals: { links: admin_links_for(@current_community) }
+
+- person = @membership.person
+- confirmed_mail = person.confirmed_notification_email_addresses.first
+- emails = person.guest? ? person.primary_email.address : confirmed_mail || person.emails.map(&:address).join(", ")
+
+.left-navi-section
+  %h2= t(".edit_user_white_label", displayname: [person.given_name, person.family_name].join(" "), emails: emails)
+  - if person.person_white_label.new_record?
+    %p
+      %h3= t('.no_white_label')
+
+  = form_for [:admin, @current_community, @membership] do |form|
+    .row
+      .col-12
+        = form.fields_for :person do |person_form|
+          = person_form.fields_for :person_white_label do |pwl_form|
+            = pwl_form.hidden_field :id
+            -#= pwl_form.hidden_field :person_id
+            .row
+              .col-12
+                %b= t('.username')
+                = person_form.object.username
+            .row
+              .col-12
+                = pwl_form.label :domain, class: "input"
+                = pwl_form.text_field :domain, class: "text_field"
+            .row
+              .col-12
+                = pwl_form.label :email_sender, class: "input"
+                = pwl_form.email_field :email_sender, class: "text_field"
+            .row
+              .col-12
+                = pwl_form.label :wide_logo, :class => "input"
+                = render 'layouts/filename', file_field: pwl_form.object.wide_logo
+                = pwl_form.file_field(:wide_logo, :class => "file_field")
+            .row
+              .col-12
+                = pwl_form.label :logo, :class => "input"
+                = render 'layouts/filename', file_field: pwl_form.object.logo
+                = pwl_form.file_field(:logo, :class => "file_field")
+            .row
+              .col-12
+                = pwl_form.label :favicon, :class => "input"
+                = render 'layouts/filename', file_field: pwl_form.object.favicon
+                = pwl_form.file_field(:favicon, :class => "file_field")
+            .row
+              .col-12
+                = pwl_form.label :custom_color1, class: "input"
+                = pwl_form.text_field :custom_color1, maxlength: "6", class: "text_field"
+            -#.row
+              .col-12
+                = pwl_form.label :custom_color2, class: "input"
+                = pwl_form.text_field :custom_color2, maxlength: "6", class: "text_field"
+            -#.row
+              .col-12
+                = pwl_form.label :slogan_color, class: "input"
+                = pwl_form.text_field :slogan_color, maxlength: "6", class: "text_field"
+            -#.row
+              .col-12
+                = pwl_form.label :description_color, class: "input"
+                = pwl_form.text_field :description_color, maxlength: "6", class: "text_field"
+            .row
+              .col-12
+                = pwl_form.label :design, class: "input"
+                = pwl_form.select :design, [["none", ""], ["Ladera", "ladera"]]
+            .row
+              .col-12
+                = pwl_form.label :destroy, t(".destroy"), class: "input"
+                = pwl_form.check_box :_destroy, class: "text_field"
+            .row
+              .col-12
+                = person_form.label :membership_status, class: "input"
+                = person_form.select :membership_status, Person::MEMBERSHIP_STATUSES.keys
+            .row
+              .col-12
+                = person_form.label :membership_expires_at, class: "input"
+                = person_form.date_select :membership_expires_at, include_blank: true
+            .row
+              .col-12
+                = person_form.label :reviews_disabled, class: "input"
+                = person_form.check_box :reviews_disabled
+            .row
+              .col-12
+                = person_form.label :guest_type_pricing_enabled, class: "input"
+                = person_form.check_box :guest_type_pricing_enabled
+                %p.help-text
+                  %small
+                    Enable guest type pricing (Hotel Guest/Visitor) with differential pricing for this user's listings.
+    .row
+      .col-12
+        = form.button t(".save"), :class => "send_button"
+
+

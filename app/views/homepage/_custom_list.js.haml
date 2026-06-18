@@ -1,0 +1,8 @@
+$("#search-results").html("#{ j(render 'grid_item_map_content', show_distance: show_distance, shape_name_map: shape_name_map) }")
+var nextPage = #{params[:page].to_i > 1};
+if ($(window).width() > 1200) {
+$(".listings-column").scrollTop(0);
+} else if (nextPage) {
+window.scrollTo(0,0);
+}
+

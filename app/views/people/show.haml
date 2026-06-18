@@ -1,0 +1,98 @@
+- content_for :head do
+  %script(src="https://js.chargebee.com/v2/chargebee.js")
+
+- content_for :javascript do
+  initialize_profile_view("#{@person.username}");
+  ST.profile.init({
+  site: '#{APP_CONFIG.chargebee_site}',
+  generateHostedPagePath: '#{checkout_new_chargebee_path}',
+  person_id: '#{@person.id}'
+  });
+
+- content_for :title_header do
+  %h1
+    %span.profile-title= PersonViewUtils.person_display_name(@person, @current_community)
+
+.row
+  .col-8
+
+    .row.relative
+      .people-image-mobile
+        = huge_avatar_thumb(@person)
+      .profile-action-buttons-mobile
+        = render :partial => "profile_action_buttons"
+        = tripadvisor_info_badge(@person.id, false, true)
+
+    .row
+      -# render :partial => "renew_membership" unless @person.is_hotel?
+    .row
+      - if @person.description && !@person.description.blank?
+        = markdown(@person.description)
+      - elsif current_user?(@person)
+        %a{href: person_settings_path(@person)}
+          .icon-with-text-container
+            .ss-chat.icon-part
+            .ss.text-part= t(".add_description")
+
+    .row
+      %h2.people-header
+        - if listings.total_entries > 0
+          - if current_user?(@person) && params[:show_closed]
+            = pluralize(listings.total_entries, t(".listing"), t(".listings"))
+          - else
+            = pluralize(listings.total_entries, t(".open_listing"), t(".open_listings"))
+        - else
+          - if current_user?(@person) && params[:show_closed]
+            = t(".no_listings")
+          - else
+            = t(".no_open_listings")
+        %span.people-show-closed-link
+          - if current_user?(@person)
+            - if params[:show_closed]
+              = link_to t("people.profile_listings.show_only_open"), person_path(@person)
+            - else
+              = link_to t("people.profile_listings.show_also_closed"), person_path(@person, :show_closed => true)
+
+    #profile-listings-list
+      - limit = 6
+      = render :partial => 'listings/profile_listings', :locals => {person: @person, limit: limit, listings: listings}
+
+    - if @current_community.follow_in_use?
+      = render :partial => "followed_people", :locals => { person: @person, followed_people: followed_people, limit: 6 }
+
+    #people-testimonials.listing-main
+      .row
+        %h2.people-header
+          - if received_testimonials.size > 0
+            = pluralize(received_testimonials.size, t(".review"), t(".reviews"))
+            = "("
+            = stars_rating_tag @person.rating_average.to_f.round(1), readonly: true, enable_half: true, half_show: true
+            = t(".average_rating", average_rating: @person.rating_average.to_f.round(1))
+            = ")"
+          - else
+            = t(".no_reviews")
+        - if received_testimonials.size > 0
+          #profile-testimonials-list
+            = render :partial => "testimonials", :locals => {:received_testimonials => received_testimonials, :limit => 3}
+
+  .col-4
+    .row
+      .people-image
+        = huge_avatar_thumb(@person)
+    - if @person.website_url.present?
+      .row
+        = link_to @person.website_url, @person.website_url, target: '_blank'
+    .row
+      .profile-action-buttons-desktop
+        = render :partial => "profile_action_buttons"
+        = tripadvisor_info_badge(@person.id, false, true)
+
+= render 'upgrade_plan_popup', plans: @plans
+
+- content_for :extra_javascript do
+  :javascript
+    window.ST.initializeFollowButtons();
+    initRatings();
+:css
+  #people-testimonials.listing-main .star {display: inline; }
+

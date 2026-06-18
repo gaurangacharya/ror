@@ -1,0 +1,15 @@
+%h1= group.new_record? ? t(".new_group") : t('.edit_group')
+= form_for [:admin, group] do |f|
+  = f.label :is_default, t('.is_default')
+  = f.check_box :is_default
+  = f.label :active, t('.active')
+  = f.check_box :active
+  = f.label :position, t('.position')
+  = f.number_field :position
+  = label_tag :title, t('.title')
+  = f.text_field :title
+
+  .row
+    .col-12
+      = submit_tag t(".save"), class: 'button'
+

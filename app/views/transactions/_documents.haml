@@ -1,0 +1,31 @@
+- if listing.use_documents? && listing.document && listing.document.document.present? && !listing.document.docusign_id.present?
+  .message-avatar-padding
+    .row
+      .col-12
+        %h3= t("docusign.tx_documents")
+        - document = listing.document
+        %div
+          = t("docusign.tx_document_template")
+          %br/
+          = link_to document.document_file_name, document.document.url, target: '_blank'
+        %br
+        %ol
+          - tx.documents.ordered.each do |document|
+            %li
+              = link_to document.document.url, target: '_blank' do
+                = document.document_file_name
+                %br
+                = t "docusign.uploaded_at", date: l(document.created_at.in_time_zone(tx.listing.auto_time_zone), format: :short) + " " + tx.listing.friendly_tz_name, name: document.person.full_name
+
+        = form_tag upload_document_person_transaction_path(person_id: @current_user.id, id: tx.id), method: :post, multipart: true, id: "new_tx_document_form" do
+          - if is_author
+            %p= t("docusign.upload_prefilled_document")
+          - else
+            %p= t("docusign.upload_signed_document")
+          = file_field_tag :document_file, required: true, 'data-msg-required': t("docusign.tx_document_required")
+          %p
+            = submit_tag t("docusign.send"), class: "button"
+
+- content_for :extra_javascript do
+  :javascript
+    $("#new_tx_document_form").validate();

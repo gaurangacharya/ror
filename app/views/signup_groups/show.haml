@@ -1,0 +1,11 @@
+.plan-selection
+  .row--flex
+    - @groups.each do |group|
+      %div{:class => group.title === @group.title ? 'plan-selection__tab plan-selection__tab--active' : 'plan-selection__tab' }
+        = link_to group.title, signup_group_path(group.id)
+
+  - plans_count = @group.signup_plans.count
+  - col_number = plans_count ? (12.to_f/plans_count).floor : 12
+  .row
+    - @group.signup_plans.each do |plan|
+      = render 'people/signup_plan', plan: plan, col_number: col_number

@@ -1,0 +1,15 @@
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/debug_inspector-0.0.3/ext/debug_inspector
+/home/agile/.rbenv/versions/2.6.5/bin/ruby -I /home/agile/.rbenv/versions/2.6.5/lib/ruby/2.6.0 -r ./siteconf20260407-28693-z66qi5.rb extconf.rb
+creating Makefile
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/debug_inspector-0.0.3/ext/debug_inspector
+make "DESTDIR=" clean
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/debug_inspector-0.0.3/ext/debug_inspector
+make "DESTDIR="
+compiling debug_inspector.c
+linking shared-object debug_inspector.so
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/debug_inspector-0.0.3/ext/debug_inspector
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 debug_inspector.so ./.gem.20260407-28693-10z2qcw

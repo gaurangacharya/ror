@@ -1,0 +1,12 @@
+doc
+*.gem
+*.iml
+.bundle
+Gemfile.lock
+pkg/*
+.rakeTasks
+.yardoc
+spike.rb
+html
+.idea
+*.swp

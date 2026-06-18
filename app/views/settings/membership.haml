@@ -1,0 +1,35 @@
+- content_for :javascript do
+  initialize_update_profile_info_form("#{I18n.locale}","#{target_user.id.to_s}", #{@current_community.real_name_required?});
+
+- content_for :title_header do
+  %h1= t("layouts.no_tribe.settings_membership")
+
+= render :partial => "layouts/left_hand_navigation", :locals => { :links => settings_links_for(target_user, @current_community) }
+
+#person_settings_form.left-navi-section.settings-section.account-settings
+  .account-settings-row
+    %p
+    .row
+      .col-6
+        %p
+          %strong
+            = t("people.show.premium_membership")
+      .col-6
+        %h2= t("people.show.active_until", date: target_user.membership_expires_at.strftime("%m/%d/%Y"))
+
+    .row
+      .col-6
+        %p
+          %strong
+            = t("people.show.member_id")
+      .col-6
+        %h2= target_user.referral_id
+
+  .account-settings-row
+    .ss-deleteuser.account-settings-icon
+    .account-settings-text
+      %b
+        = t("settings.account.cancel_membership")
+
+    = form_tag url_for(:controller => :settings, :action => :cancel_membership, :id => target_user.username), :method => :delete do
+      = button_tag t('settings.account.cancel_membership'), :id => "delete_account_button", :data => {:confirm => t('settings.account.cancel_membership_popup')}

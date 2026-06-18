@@ -1,0 +1,993 @@
+// Home page styles
+
+@import "mixins/all";
+
+.home-toolbar {
+  @include clearfix;
+  margin-bottom: lines(0.5);
+  //border-bottom: 1px solid $border;
+
+  @include media(tablet) {
+    margin-bottom: lines(1);
+  }
+}
+
+.home-grid {
+  position: relative;
+}
+
+.home-toolbar-button-group {
+  @include button-group;
+  margin-bottom: lines(0.5);
+
+  // Leave room for filters button on the left side
+  width: 100%;
+
+  &.filters-enabled {
+    width: 50%;
+    padding-left: lines(0.5 / 2);
+  }
+
+  @include media(tablet) {
+    &, &.filters-enabled {
+      float: right;
+      width: auto;
+    }
+  }
+}
+
+.home-toolbar-button-group-button {
+  @include button($link);
+  @include button-group-button;
+  @include ellipsis;
+
+  // Notice: hard-coded for three buttons
+  width: 50%;
+
+  @include media(tablet) {
+    width: auto;
+    min-width: lines(5);
+  }
+}
+
+.home-toolbar-button-text {
+  display: none;
+
+  @include media(tablet) {
+    margin-left: lines(0.25);
+    display: inline-block;
+  }
+}
+
+/**
+  Hidden on mobile if this class is present. Doesn't affect
+  on desktop
+*/
+.home-toolbar-filters-mobile-hidden {
+  display: none;
+
+  @include media(tablet) {
+    display: block;
+  }
+}
+
+.home-toolbar-show-filters-button-container {
+  width: 50%;
+  float: left;
+  padding-right: lines(0.5 / 2);
+}
+
+.home-toolbar-show-filters-button {
+  @include button($link);
+  @include button-group-button-padding;
+  @include neutral-button-color;
+  @include selected-button-color;
+  @include ellipsis;
+  width: 100%;
+  margin: 0;
+  line-height: $default-button-line-height;
+
+  @include media(tablet) {
+    display: none;
+  }
+}
+
+.home-map > .map {
+  height: lines(10.5); // Magical number, this just looks good on iPhone
+
+  @include media(tablet) {
+    height: 30em;
+  }
+}
+
+.home-list-item {
+  position: relative;
+  margin-bottom: lines(0.5);
+  border-bottom: 1px solid $border;
+  min-height: lines(3.5);
+
+  @include media(tablet) {
+    padding-bottom: lines(1);
+    margin-bottom: lines(1);
+    height: lines(6);
+  }
+}
+
+$image-width: lines(7.5); // FIXME
+$image-height: image-height($image-width);
+$image-padding: lines(1);
+$home-list-image-size-mobile: lines(3);
+$home-list-image-padding-mobile: lines(0.5);
+.home-list-image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.home-list-image-container-desktop {
+  @extend .home-list-image-container;
+  height: $image-height;
+  width: $image-width;
+  display: none;
+
+  @include media(tablet) {
+    display: block;
+  }
+}
+
+.home-list-image-container-mobile {
+  @extend .home-list-image-container;
+  width: $home-list-image-size-mobile;
+  height: $home-list-image-size-mobile;
+  display: block;
+
+  @include media(tablet) {
+    display: none;
+  }
+}
+
+.home-list-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  @include border-radius($default-border-radius);
+}
+
+.home-no-image {
+  text-align: center;
+  padding-top: lines(2);
+  background: $highlight;
+  height: 100%;
+  width: 100%;
+  // FIXME Tee parempi no image
+}
+
+.home-list-details-with-image {
+  margin-left: $home-list-image-size-mobile + $home-list-image-padding-mobile;
+
+  @include media(tablet) {
+    margin-left: $image-width + $image-padding;
+  }
+}
+
+$home-list-avatar-size: em(40);
+$home-list-avatar-size-mobile: em(30);
+$home-list-avatar-padding: lines(0.25);
+.home-list-title,
+.browsing-list-item-title {
+  margin: 0;
+  padding: 0;
+  font-weight: 700;
+  @include normal-type;
+  line-height: lines(0.65);
+  padding-bottom: lines(0.25);
+
+  @include media(tablet) {
+    @include big-type;
+  }
+
+  // Add bottom margin so that the avatar fits there nicely
+  @include media(desktop) {
+    padding-bottom: (ems-to($home-list-avatar-size, $big-type) + (2 * ems-to($home-list-avatar-padding, $big-type)) - em(3));
+  }
+
+}
+.browsing-list-item-title {
+  padding-bottom: 0;
+}
+
+.home-share-type-link,
+.browsing-list-item-share-type-link {
+  @include share-type-link;
+  // Magic number, this just looks better
+  $padding-fine-tuning: 4;
+  padding: em(4) em(8);
+
+  position: relative;
+  display: none;
+
+  @include media(tablet) {
+    display: inline;
+    top: em($padding-fine-tuning * -1);
+  }
+}
+
+.home-list-details-right {
+  width: 142px;
+  float: right;
+  display: none;
+  margin-left: lines(1);
+  @include media(desktop) {
+    display: block;
+  }
+}
+
+.home-list-avatar,
+.browsing-list-item-avatar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: $home-list-avatar-size;
+
+  img {
+    @include border-radius($default-border-radius);
+    display: block;
+    width: 100%;
+  }
+
+  display: none;
+
+  @include media(large-mobile) {
+    display: block;
+  }
+
+}
+
+.home-list-author {
+  vertical-align: top;
+  position: absolute;
+  bottom: lines(0.5);
+
+  @include media(tablet) {
+    bottom: lines(1);
+  }
+}
+
+.home-list-author-with-listing-image,
+.browsing-list-item-author-with-listing-image {
+  left: 0;
+
+  @include media(large-mobile) {
+    left: $home-list-image-size-mobile + $home-list-image-padding-mobile;
+  }
+
+  @include media(tablet) {
+    left: $image-width + $image-padding;
+  }
+}
+
+.home-list-author-without-listing-image,
+.browsing-list-item-author-without-listing-image {
+  left: 0;
+}
+
+.home-list-author-details,
+.browsing-list-item-author-details {
+  float: left;
+  margin-left: $home-list-avatar-size + (2 * $home-list-avatar-padding);
+  height: 40px;
+  line-height: 22px;
+  max-width: lines(10);
+
+  display: none;
+
+  @include media(large-mobile) {
+    display: block;
+  }
+}
+
+.home-list-author-reviews,
+.browsing-list-item-author-reviews {
+  @include small-type;
+}
+
+.home-list-price-mobile,
+.browsing-list-item-price-mobile {
+  margin-bottom: lines(0.25, 24);
+  @include media(large-mobile) {
+    text-align: right;
+    right: 0;
+    padding-top: 10px;
+    bottom: lines(0.5, 36);
+  }
+  @include media(tablet) {
+    bottom: lines(1, 36);
+  }
+  @include media(desktop) {
+    display: none;
+  }
+}
+
+.browsing-list-item-price-mobile {
+  right: 0;
+}
+
+.home-list-price-value-mobile,
+.browsing-list-item-price-value-mobile,
+.home-list-shape-value-mobile,
+.browsing-list-item-shape-value-mobile {
+  font-size: em(24);
+  & > .smaller {
+    font-size: em(18);
+  }
+  @include media(large-mobile) {
+    font-size: em(24);
+    & > .smaller {
+      font-size: em(24);
+    }
+  }
+}
+
+.home-list-price-mobile-with-listing-image {
+  @include media(large-mobile) {
+    left: auto;
+  }
+}
+
+.home-list-price-mobile-without-listing-image {
+  @include media(large-mobile) {
+    left: auto;
+  }
+}
+
+.home-list-price,
+.browsing-list-item-price {
+  text-align: right;
+}
+
+.home-list-item-price-value,
+.browsing-list-item-price-value {
+  font-size: em(32);
+  line-height: 1;
+  font-weight: 400;
+}
+
+.home-list-listing-shape-value,
+.browsing-list-item-listing-shape-value {
+  font-size: em(24);
+  line-height: 1;
+  font-weight: 400;
+}
+
+.home-list-price-quantity,
+.browsing-list-item-price-quantity {
+  @include ellipsis;
+}
+
+.home-no-listings {
+  @include border-radius($default-border-radius);
+  padding: lines(0.5) lines(1);
+  background: $highlight;
+}
+
+.home-categories-link {
+  display: block;
+  color: $body;
+  text-transform: uppercase;
+
+  &.selected {
+    font-weight: bold;
+  }
+}
+
+.home-categories-main {
+  @extend .home-categories-link;
+
+  &.selected.has-subcategories {
+    border-bottom: 1px solid $border;
+  }
+}
+
+.home-categories-sub {
+  @extend .home-categories-link;
+  font-size: 14px;
+  margin-left: lines(0.5);
+}
+
+.home-toolbar-toggle-container {
+  margin-bottom: lines(0.5);
+}
+
+#pageless-loader {
+  padding-top: lines(0.5);
+  clear: both;
+}
+
+/* Filters */
+
+.custom-filter {
+  margin-bottom: lines(1);
+}
+
+.custom-filter-title {
+  font-weight: 700;
+  @include title-border;
+}
+
+.custom-filter-options {
+  &.scrollable {
+    max-height: 180px;
+    overflow-y: scroll;
+  }
+}
+
+.custom-filter-checkbox-label {
+  margin: 0;
+}
+
+.custom-filter-checkbox-label-text {
+  font-weight: 400;
+  margin-left: lines(0.125);
+  cursor: pointer;
+}
+
+
+////////////////////////////////////////////////
+// New list item elements (distance included) //
+////////////////////////////////////////////////
+
+.browsing-list-item {
+  position: relative;
+  padding-bottom: lines(0.5);
+  margin-bottom: lines(0.5);
+  border-bottom: 1px solid $border;
+  min-height: lines(3.5);
+
+  @include media(tablet) {
+    padding-bottom: lines(1);
+    margin-bottom: lines(1);
+    min-height: lines(6);
+  }
+}
+
+.browsing-list-item-image-container {
+  position: absolute;
+  width: $home-list-image-size-mobile;
+  height: $home-list-image-size-mobile;
+
+  @include media(tablet) {
+    height: $image-height;
+    width: $image-width;
+  }
+}
+
+.browsing-list-item-image-desktop {
+  display: none;
+  @include media(tablet) {
+    display: block;
+  }
+}
+
+.browsing-list-item-image-mobile {
+  display: block;
+  @include media(tablet) {
+    display: none;
+  }
+}
+
+.browsing-list-item-details {
+  height: 100%;
+  min-height: $home-list-image-size-mobile;
+  padding-bottom: 40px;
+  position: relative;
+  margin-left: $home-list-image-size-mobile + $home-list-image-padding-mobile;
+
+  @include media(tablet) {
+    min-height: $image-height;
+    margin-left: $image-width + $image-padding;
+  }
+}
+
+.browsing-list-item-details-right {
+  width: 142px;
+  float: right;
+  display: none;
+  margin-left: lines(1);
+  @include media(desktop) {
+    display: block;
+  }
+}
+
+.browsing-list-qr-code-right {
+  float: right;
+  width: 120px;
+  margin-left: 10px;
+}
+
+.browsing-list-item-details-container {
+  margin-left: $image-padding;
+
+  @include media(tablet) {
+    margin-left: $home-list-image-padding-mobile;
+  }
+}
+
+.browsing-list-item-distance {
+  @include small-type;
+
+  @include media(tablet) {
+    @include normal-type;
+  }
+}
+
+.browsing-list-item-author {
+  vertical-align: top;
+  position: absolute;
+  left: 0px;
+  bottom: 0;
+}
+
+//////////////////////////////////////////////////
+// Fix for fastclick & google autocomplete bug  //
+// https://github.com/ftlabs/fastclick/pull/347 //
+//////////////////////////////////////////////////
+
+.pac-item span {
+  pointer-events: none;
+}
+.home-fluid-thumbnail-grid-details-author-name {
+  display: block;
+  color: #494750;
+  height: inherit;
+  float: none;
+  line-height: 1.5;
+}
+
+.home-fluid-thumbnail-grid-details-author-rating {
+  line-height: 1;
+}
+
+.home-fluid-thumbnail-grid-details-distance {
+    float: none;
+    position: absolute;
+    top: 18px;
+    right: 6px;
+}
+.home-list-author-reviews .star, .browsing-list-item-author-reviews .star {
+  display: inline-block; 
+  vertical-align: top;
+}
+
+.auto-col { width: auto; display: inline-block; position: relative; }
+.filter-width { min-width: 200px; padding: 10px; }
+.filter-value { 
+  display: inline-block; 
+  border: 1px solid #d0d0d0; 
+  border-radius: 4px; 
+  background: #f3f3f3; 
+  padding: 4px; 
+  margin: 4px 8px 4px 0px; 
+  font-size: 12px;
+  .removable {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    color: black;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 4px;
+    &:before {
+      content: 	'⨯';
+    }
+  }
+}
+.options-selected-counter {
+  color: red;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: -10px;
+  display: inline-block;
+}
+
+.home-fluid-thumbnail-grid-item:hover ,
+.home-fluid-thumbnail-grid-item.highlighted {
+   .fluid-thumbnail-grid-image-overlay {
+    background: none;
+   }
+}
+.fluid-thumbnail-grid-image-image-container:hover {
+  color: white;
+}
+.home-fluid-thumbnail-grid-details-author-name {
+  color: #db1414;
+  line-height: 1.1;
+  height: 2em;
+  margin-top: -3px;
+  white-space: normal;
+}
+.grid-mode .home-listings {
+  display: block;
+}
+.list-mode .home-listings {
+  display: none;
+}
+.grid-mode .home-listings-list {
+  display: none;
+}
+.list-mode .home-listings-list {
+  display: block;
+}
+.view-toggle { 
+  min-width: 2em !important;
+}
+.listing-search-info {
+  padding: 14px;
+  text-align: center;
+  font-size: 14px;
+}
+@media (min-width: 1201px) {
+  .fixed-homepage {
+    position: fixed;
+    top: 130px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    border-top: 1px solid rgba(0, 0, 50, 0.1);
+    &.custom-list {
+      border-top: none;
+    }
+  }
+  .map-column     { position: fixed; top: 131px; left: 65%; bottom: 0px; right: 0; }
+  .home-map       { position: relative; height: 100%; width: 100%; }
+  .listings-column{ position: fixed; top: 131px; left: 0%; bottom: 0px; right: 35%; overflow-y: auto; overflow-x: hidden; margin: 10px 0px 10px 10px; }
+  .filter-button  { display: none; }
+  .filter-overlay {
+    position: fixed !important;
+    height: 100vh !important;
+    width: 100% !important;
+    top: 131px !important;
+    left: 0px;
+    z-index: 100 !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+    display: none;
+  }
+  .scrollable-categories {
+    position: fixed !important;
+    width: 65%;
+    height: 100%;
+    top: 131px !important;
+    left: 0px;
+    z-index: 102;
+    &.toggle-menu {
+      overflow-y: scroll;
+      a {
+        padding: 0.25em 0.75em;
+      }
+      a.toggle-menu-subitem {
+         padding-left: 1.5em;
+      }
+    }
+  }
+}
+.toggle.inverted {
+  color: white;
+  background: #db1414;
+}
+@media (max-width: 1200px) {
+  .fixed-homepage {
+    clear: both;
+    border-top: 1px solid rgba(0, 0, 50, 0.1);
+    padding-top: 10px;
+    &.custom-list {
+      border-top: none;
+    }
+  }
+  .map-column     { height: 30em; }
+  .home-map       { position: relative; height: 100%; width: 100%; }
+  .auto-col       { display: none; }
+  .auto-col.mob-visible { display: inline-block; }
+  .filter-button  { display: inline-block; width: auto; cursor: pointer; }
+  .home-toolbar-button-group.filters-enabled { position: absolute; top: 10px; right: 0px; width: 120px; margin-right: 0px; display: block }
+  .home-toolbar-filters#home-toolbar-filters { position: relative; }
+  .scrollable-categories {
+    max-height: 280px;
+    overflow-y: scroll;
+  }
+}
+
+.star {
+    font-size: 12px;
+    margin-top: 3px;
+}
+.home-toolbar { 
+  .ss-dropdown.icon-dropdown {
+    display: none;
+  }
+}
+.toggle-header-container, .home-toolbar-button-group-button {
+    padding: 0 0.75em;
+    height: 35px;
+    line-height: 33px;
+}
+.home-toolbar-button-group-button {
+  padding-top: 0.25em;
+}
+
+
+/*----------  Homepage map view  ----------*/
+.homepage {
+  .home-toolbar .row {
+    margin: 0;
+  }
+
+  .map-column {
+    margin-bottom: 15px;
+  }
+  .results-toggle-container {
+    display: none;
+  }
+}
+
+@include media(tablet) {
+  .homepage {
+    &.page-content.no-cover-photo {
+      padding: 12px 0;
+    }
+
+    .wrapper {
+      max-width: 100%;
+      padding: 0 25px;
+    }
+
+    .toggle-header-container {
+      font-size: 14px;
+      line-height: 35px;
+
+      .icon-dropdown {
+        top: 1px;
+      }
+    }
+
+    .fixed-homepage,
+    .map-column,
+    .listings-column,
+    .filter-overlay {
+      top: 140px;
+    }
+
+    .map-column {
+      margin-bottom: 0;
+    }
+
+
+    .listings-column {
+      margin: 25px 0 10px;
+
+      .flash-notifications {
+        padding-right: 25px;
+      }
+    }
+  }
+}
+
+@media (min-width: 1201px) {
+  .homepage {
+    .map-column {
+      left: 55%;
+    }
+
+    .listings-column {
+      right: 45%;
+    }
+
+    .fixed-homepage.custom-list {
+      .listings-column {
+        right: 0;
+      }
+    }
+
+    .toggle.with-borders.toggled {
+      background: #9d3531;
+      border-radius: 0.3125em;
+    }
+
+    .toggle-menu {
+      background: white;
+      border: 1px solid #e8e8e8 !important;
+      border-radius: 0.3125em;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.08);
+      color: #3c3c3c;
+      margin-top: 10px;
+
+      &.scrollable-categories {
+        border-radius: 0;
+        box-shadow: none;
+        padding: 16px;
+        padding-bottom: 140px;
+      }
+
+      .toggle-menu-subitem, 
+      a {
+        color: #3c3c3c;
+        padding-left: .75em;
+
+        &:hover {
+          background: #e8e8e8;
+        }
+      }
+    }
+
+    .home-toolbar-filters {
+      margin-left: -5px;
+    }
+
+    .home-toolbar-toggle-container {
+      margin: 0;
+      padding: 0 5px;
+    }
+
+    .listings-column {
+      margin: 25px 0 10px 25px;
+    }
+
+    .home-fluid-thumbnail-grid-wide .home-fluid-thumbnail-grid {
+      margin-right: 0;
+    }
+
+    .home-fluid-thumbnail-grid-wide .home-fluid-thumbnail-grid-item {
+      width: 33.333%;
+    }
+
+    .home-listings-list {
+      padding-right: 25px;
+    }
+  }
+}
+
+@media (min-width: 1440px) {
+  .homepage {
+    .home-fluid-thumbnail-grid-wide .home-fluid-thumbnail-grid-item {
+      width: 33%;
+    }
+    .fixed-homepage.custom-list {
+      .listings-column {
+        .home-fluid-thumbnail-grid-wide .home-fluid-thumbnail-grid-item {
+          width: 25%;
+        }
+      }
+    }
+  }
+}
+.crossed {
+  color: #808080;
+  position: relative;
+  display: block;
+  position: relative;
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 30%;
+    left: -10%;
+    right: -10%;
+    bottom: 25%;
+    display: block;
+    background: linear-gradient(to left top, transparent 42.75%, rgba(255, 0, 0, 1) 49.5%, rgba(255, 0, 0, 1)  50.5%, transparent 54.25%);
+  }
+  &.listing-price-amount {
+    color: #808080;
+  }
+  &.inline-crossed {
+    display: inline-block;
+  }
+}
+
+.home-scroll-down-message {
+  position: sticky;
+  color: red;
+  bottom: 100px;
+  text-align: center;
+}
+
+@media (min-width: 800px) {
+  .home-scroll-down-message {
+    display: none;
+  }
+  .homepage {
+    .map-column {
+      .results-toggle-button {
+        display: none;
+      }
+    }
+
+    .listings-column {
+      .map-toggle-container {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .homepage {
+    .home-toolbar-filters {
+      .filter-button {
+        z-index: 2;
+      }
+      .home-toolbar-toggle-container {
+        z-index: 2;
+      }
+       #grid-list-buttons.map-visible-2nd-page {
+        display: none;
+      }
+    }
+    &.page-content.no-cover-photo {
+      position: relative;
+    }
+
+    .map-column {
+      &.map-hidden-2nd-page {
+        display: none;
+      }
+      &.map-visible-2nd-page {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        .results-toggle-button {
+          display: block;
+        }
+      }
+      .results-toggle-button {
+        display: none;
+        position: absolute;
+        bottom: 25px;
+        left: 10px;
+        .home-toolbar-button-group-button {
+          width: 100%;
+        }
+      }
+    }
+
+    .listings-column {
+      &.map-hidden-2nd-page {
+        .map-toggle-container {
+          display: flex;
+        }
+      }
+      &.map-visible-2nd-page {
+        display: none;
+      }
+      .map-toggle-container {
+        display: none;
+        .map-toggle-button {
+          margin: 0 auto;
+          .home-toolbar-button-group-button {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.filters-quick-categories {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  .filters-quick-category {
+    flex: 33%;
+    text-align: center;
+    .fa-solid {
+      font-size: 30px;
+    }
+  }
+}
+
+@media (min-width: 800px) {
+  .filters-quick-categories {
+    display: none;
+  }
+}

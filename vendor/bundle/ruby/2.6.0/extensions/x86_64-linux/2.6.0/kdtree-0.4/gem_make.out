@@ -1,0 +1,23 @@
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/kdtree-0.4/ext/kdtree
+/home/agile/.rbenv/versions/2.6.5/bin/ruby -I /home/agile/.rbenv/versions/2.6.5/lib/ruby/2.6.0 -r ./siteconf20260407-28693-1b3tffa.rb extconf.rb
+creating Makefile
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/kdtree-0.4/ext/kdtree
+make "DESTDIR=" clean
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/kdtree-0.4/ext/kdtree
+make "DESTDIR="
+compiling kdtree.c
+kdtree.c: In function ‘kdtree_persist’:
+kdtree.c:409:11: warning: unused variable ‘str’ [-Wunused-variable]
+  409 |     VALUE str;
+      |           ^~~
+At top level:
+cc1: note: unrecognized command-line option ‘-Wno-self-assign’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-parentheses-equality’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-constant-logical-operand’ may have been intended to silence earlier diagnostics
+linking shared-object kdtree.so
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/kdtree-0.4/ext/kdtree
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 kdtree.so ./.gem.20260407-28693-1370mko

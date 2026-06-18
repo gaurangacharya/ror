@@ -1,0 +1,55 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t("admin.coupons.coupons")
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  .row
+    .col-12
+      %h1= t(".coupon")
+
+      = form_for @coupon, url: admin_coupon_path(@coupon), method: :put do |f|
+        %h2= t(".edit")
+        .row
+          .col-2
+            = label_tag :code, t('admin.coupons.index.coupon_code')
+          .col-6
+            = f.text_field :code, placeholder: t("admin.coupons.index.code_placeholder")
+        .row
+          .col-2
+            = label_tag :value, t('admin.coupons.index.coupon_value')
+          .col-2
+            = f.text_field :value, value: @coupon.value.to_i
+          .col-2
+            = label_tag :value, "%"
+
+        .row
+          .col-2
+            = label_tag :valid_until, t('admin.coupons.index.valid_until')
+          .col-4
+            = f.text_field :valid_until, value: @coupon.valid_until&.strftime("%m/%d/%Y"), autocomplete: "off"
+        .row
+          .col-12
+            = submit_tag t("admin.coupons.index.save"), class: 'button'
+  %h3= t(".usage")
+  %table#admin_transactions
+    %thead
+      %tr
+        %th=t(".date")
+        %th=t(".user")
+
+    %tbody
+      - @coupon.coupon_usages.order('id desc').all.each do |cu|
+        %tr
+          %td= cu.created_at.strftime("%m/%d/%Y %H:%M")
+          %td
+            = link_to cu.person.full_name, person_path(cu.person)
+- content_for :extra_javascript do
+  :javascript
+    var options = #{{locale: I18n.locale, localized_dates: datepicker_localized_dates}.to_json.html_safe};
+    $.fn.datepicker.dates[options.locale] = options.localized_dates;
+    $("#coupon_valid_until").datepicker({autoclose: true, weekStart: 1, language: options.locale})
+

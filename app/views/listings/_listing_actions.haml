@@ -1,0 +1,225 @@
+- if @listing.closed?
+  .listing-view-admin-links
+    .listing-view-admin-link
+      .icon-with-text-container
+        = icon_tag("lock", ["icon-part"])
+        .text-part= t("listings.reply_link.listing_closed")
+    - if @listing_presenter.is_authorized
+      .listing-view-admin-link
+        %a.action-link{href: edit_listing_path(@listing)}
+          .icon-with-text-container
+            = icon_tag("unlock", ["icon-part"])
+            .text-part= t("listings.edit_links.reopen_listing")
+- else
+
+  - if @listing_presenter.is_author
+    = render partial: "delivery_opts", locals: { delivery_opts: @listing_presenter.delivery_opts, is_author: @listing_presenter.is_author }
+  - elsif @listing.musement_widget_id.present?
+    %div{"data-musement-widget" => @listing.musement_widget_id, "data-cid" => @listing.author.username}
+  - else
+
+    = form_tag @listing_presenter.form_path, :method => :get, :id => "booking-dates" do
+      - ext_booking = @listing.has_fareharbor_booking_url? || @listing.has_rezdy_booking_url? || @listing.ext_booking_url.present?
+      - if @listing.call_for_price || ext_booking
+
+      - elsif @listing_presenter.quantity_per_day_or_night?
+        = render partial: 'no_avail_note'
+        - @listing_presenter.blocked_dates_result.on_success do |blocked_dates|
+          - content_for :extra_javascript do
+            :javascript
+              window.ST.FromToDatePicker.setupPerDayOrNight(#{raw @listing_presenter.datepicker_per_day_or_night_setup(blocked_dates).to_json});
+          .input-daterange.input-group.clearfix#datepicker{:data => {:locale => I18n.locale, :dateformat => t("datepicker.format")}}
+            .datepicker-start-wrapper
+              = label_tag t(".booking_from")
+              %input.input-sm.form-control.required#start-on{:type => 'text', :name => "start_on", :placeholder => t("datepicker.format"), :data => { :output => "booking-start-output" }, :autocomplete => 'off' }
+              %input#booking-start-output{:type => 'hidden', :name => 'start_on'}
+
+            .datepicker-end-wrapper
+              = label_tag t(".booking_to")
+              %input.input-sm.form-control.required#end-on{:type => 'text', :name => "end_on", :placeholder => t("datepicker.format"), :data => { :output => "booking-end-output" }, :autocomplete => 'off'}
+              %input#booking-end-output{:type => 'hidden', :name => 'end_on'}
+
+        - @listing_presenter.blocked_dates_result.on_error do
+          = t("listings.listing_actions.unable_load_availability")
+
+      - elsif FeatureFlagHelper.feature_enabled?(:availability_per_hour) && @listing_presenter.booking_per_hour?
+        .input-daterange.input-group.clearfix
+          = render partial: 'no_avail_note'
+          .datepicker-per-hour
+            .field
+              = label_tag t(".booking_date")
+              %input.input-sm.form-control.required#start-on{ :type => 'text',
+                :name => "start_on_show", :placeholder => t("datepicker.format"),
+                :data => { :locale => I18n.locale, :dateformat => t("datepicker.format") },
+                :autocomplete => 'off',
+                :required => true }
+            .field
+              = label_tag :start_time do 
+                = t(".start_time") 
+                %br
+                %small.bookind-date-timezone= "(#{@listing.friendly_tz_name})"
+              = select_tag 'start_time', options_for_select([]), id: 'start_time', :required => true
+
+            - if @listing.fixed_units.present?
+              = hidden_field_tag :end_time
+            - else
+              .field
+                = label_tag :end_time do
+                  = t(".end_time")
+                  %br
+                  %small.bookind-date-timezone= "(#{@listing.friendly_tz_name})"
+                = select_tag 'end_time', options_for_select([]), id: 'end_time', :required => true
+
+          = hidden_field_tag 'per_hour', '1'
+        - content_for :extra_javascript do
+          = js_t ["listings.listing_actions.select_one"], true
+          :javascript
+            window.ST.FromToDatePicker.setupPerHour(#{raw @listing_presenter.datepicker_per_hour_setup.to_json});
+
+      = render 'listing_actions_add_ons', presenter: @listing_presenter
+
+      - if @listing.need_quantity_input? && !ext_booking
+        .quantity-wrapper.input-group.clearfix
+          .quantity-label-wrapper
+            %label.quantity-label{for: 'quantity'}
+              = ListingViewUtils.translate_quantity(@listing.unit_type, @listing.unit_selector_tr_key)
+          .quantity-input.input-sm.required
+            %input#quantity{type: 'number', placeholder: t("listings.quantity_placeholder"), name: 'quantity', value: 1, min: 1, step: 1}
+      
+      - if !@listing.call_for_price && !ext_booking
+        = render partial: "delivery_opts", locals: { delivery_opts: @listing_presenter.delivery_opts, is_author: @listing_presenter.is_author }
+        - if @listing.booking? && @listing.deposit && @listing.deposit > 0
+          .row
+            .col-12
+              .delivery-title
+                = t("listings.show.security_deposit", sum: MoneyViewUtils.to_humanized(@listing.deposit))
+
+          .row
+            .col-12
+              %span.shipping-options-label
+                = t("listings.show.security_deposit_notice")
+
+
+      = hidden_field_tag(:listing_id, @listing.id)
+
+      - if @listing.has_fareharbor_booking_url?
+        - content_for :extra_javascript do
+          %script{src: 'https://fareharbor.com/embeds/api/v1/?autolightframe=yes', type: 'text/javascript'}
+        %a.enabled-book-button.with-fp{href: @listing.adjusted_fareharbor_booking_url(@current_user ? @current_user.username : guest_or_session_referral(@person_white_label))}
+          .content
+            = action_button_label(@listing)
+
+      - elsif @listing.has_rezdy_booking_url?
+        - content_for :extra_javascript do
+          %script{src: 'https://ownoutdoors.rezdy.com/pluginJs?script=unified-modal', type: 'text/javascript'}
+        %a.enabled-book-button.button-booking.rezdy.rezdy-modal.with-fp{href: @listing.ext_booking_url, style: 'padding-top: 0.8em'}
+          = action_button_label(@listing)
+
+      - elsif @listing.has_memberdeals_booking_url?
+        - ext_booking_url = "#{@listing.ext_booking_url}&_xcid=#{@current_user ? @current_user.username : guest_or_session_referral(@person_white_label)}"
+        %a.enabled-book-button.with-fp{href: ext_booking_url, style: 'padding-top: 0.8em'}
+          = action_button_label(@listing)
+
+      - elsif @listing.ext_booking_url.present?
+        %a.enabled-book-button.with-fp{href: @listing.ext_booking_url, target: '_blank'}
+          .content
+            = action_button_label(@listing)
+
+      - elsif @listing.call_for_price
+        %button.enabled-book-button
+          .content
+            = t("listings.call_for_price.contact")
+
+      - elsif @listing_presenter.quantity_per_day_or_night?
+        - @listing_presenter.blocked_dates_result.on_success do
+          %button.enabled-book-button
+            .content
+              = action_button_label(@listing)
+
+        - @listing_presenter.blocked_dates_result.on_error do
+          %button.disabled-book-button{disabled: true}
+            .content
+              = action_button_label(@listing)
+      - else
+        %button.enabled-book-button
+          .content
+            = action_button_label(@listing)
+
+      - if @listing_presenter.customer_message_under_book.present?
+        %p
+          =@listing_presenter.customer_message_under_book
+
+    - if !@listing.call_for_price
+      .row
+        .col-12
+          = render :partial => "listing_conversations/payment_methods", locals: { stripe_in_use: @listing_presenter.stripe_in_use, paypal_in_use: @listing_presenter.paypal_in_use }
+    
+    - if !@listing_presenter.is_authorized  &&  @listing_presenter.booking?
+      = render 'listings/working_time_slots/small_calendar', presenter: @listing_presenter
+
+  - if @listing_presenter.is_authorized
+    .listing-view-admin-links
+      .listing-view-admin-link
+        %a.icon-with-text-container{href: edit_listing_path(@listing)}
+          = icon_tag("edit", ["icon-part"])
+          .text-part= t("listings.edit_links.edit_listing")
+      - if @listing_presenter.show_manage_availability
+        - availability_link_id = "edit-listing-availability-#{SecureRandom.urlsafe_base64(5)}"
+        .listing-view-admin-link
+          - if FeatureFlagHelper.feature_enabled?(:availability_per_hour) && (@listing_presenter.booking_per_hour? || @listing_presenter.booking_per_day_or_night?)
+            = link_to new_listing_working_time_slot_path(@listing_presenter.listing), remote: true, class: 'icon-with-text-container', id: 'edit-listing-availability-link' do
+              = icon_tag("calendar", ["icon-part"])
+              .text-part= @listing.booking_per_day_or_night? ? t("listings.edit_links.add_new_working_time_date_slot") : t("listings.edit_links.add_new_working_time_slot")
+
+            - content_for :extra_javascript do
+              = js_t ["listings.listing_actions.select_one"], true
+
+      .listing-view-admin-link
+        %a.icon-with-text-container{href: close_person_listing_path(@current_user, @listing), data: { method: "put", remote: "true"}}
+          = icon_tag("lock", ["icon-part"])
+          .text-part= t("listings.edit_links.close_listing")
+
+      .listing-view-admin-link
+        %a.icon-with-text-container{href: copy_listing_listing_path(@listing), data: {method: :post}}
+          %i.ss-addfile.icon-part
+          .text-part= t("listings.edit_links.copy_listing")
+
+      - if @listing_presenter.is_marketplace_admin
+        .listing-view-admin-link
+          %a#embed-link.icon-with-text-container{href: "#"}
+            %i.ss-share.icon-part
+            .text-part= t("listings.edit_links.embed_booking_script")
+
+        = render layout: "layouts/lightbox", locals: { id: "embed_script_content", style: 'width: 600px'} do
+          %h2= t("listings.edit_links.embed_booking_script_info")
+          %br
+          %textarea{cols: 120, rows: 16, style: 'max-width: 100%'}
+            = "#{render partial: 'booking_embed_script'}"
+        - content_for :extra_javascript do
+          :javascript
+             $('#embed-link').click(function() { $('#embed_script_content').lightbox_me({centered: true, zIndex: 1000000}); });
+
+      - if @listing_presenter.is_marketplace_admin
+        .listing-view-admin-link#toggle-featured
+          = render partial: 'featured'
+        .listing-view-admin-link
+          = link_to move_to_top_person_listing_path(@current_user, @listing), data: { method: "put" } do
+            .icon-with-text-container
+              = icon_tag("star", ["icon-part"])
+              .text-part= t("listings.edit_links.move_to_top")
+
+        .listing-view-admin-link
+          = link_to show_in_updates_email_person_listing_path(@current_user, @listing), data: { method: "put", remote: "true" }, :id => "add-to-updates-email"  do
+            .icon-with-text-container
+              = icon_tag("mail", ["icon-part"])
+              .text-part#add-to-updates-email-text{data: {:"action-loading" => t("listings.edit_links.show_in_updates_email_loading"), :"action-error" => t("listings.edit_links.show_in_updates_email_error"), :"action-success"=> t("listings.edit_links.show_in_updates_email_success")}}= t("listings.edit_links.show_in_updates_email")
+
+- if @listing_presenter.is_authorized
+  = render layout: "layouts/lightbox", locals: { id: "working_time_slot_lightbox"} do
+    #wrap-working-time-slot
+  - if @listing_presenter.show_manage_availability
+    - content_for :extra_javascript do
+      :javascript
+        $(function(){
+          if(window.location.hash == '#manage-availability') $("#edit-listing-availability-link").click();
+        });

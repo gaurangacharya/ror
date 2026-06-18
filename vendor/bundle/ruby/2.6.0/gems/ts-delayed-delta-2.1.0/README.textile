@@ -1,0 +1,72 @@
+h1. Delayed Deltas for Thinking Sphinx
+
+h2. Installation
+
+This version works with Thinking Sphinx v1.5.0, v2.1.0 and v3.x.
+
+In your @Gemfile@, it'll likely look something like this:
+
+<pre><code>gem 'ts-delayed-delta', '~> 2.1'</code></pre>
+
+Or, if you're referring directly to the git repository:
+
+<pre><code>gem 'ts-delayed-delta',
+  :git    => 'git://github.com/pat/ts-delayed-delta.git',
+  :branch => 'master',
+  :ref    => 'use-latest-commit-here'</code></pre>
+
+And given this gem's built for Delayed Job, we're presuming you've got that set up (with the database table), and you know how to run it. This gem no longer provides a custom task for that purpose - there's no need.
+
+h2. Usage
+
+In your index definitions, make sure you set the @:delta@ setting to @ThinkingSphinx::Deltas::DelayedDelta@:
+
+<pre><code>ThinkingSphinx::Index.define :book, :with => :active_record, :delta => ThinkingSphinx::Deltas::DelayedDelta do
+  # ...
+end</code></pre>
+
+For those still on pre-v3 versions of Thinking Sphinx, the delta option goes within the define_index block:
+
+<pre><code>define_index do
+  # ...
+
+  set_property :delta => ThinkingSphinx::Deltas::DelayedDelta
+end</code></pre>
+
+If you've never used delta indices before, you'll want to add the boolean column named delta to each model that is using the approach. It probably doesn't hurt to add an index to that column as well.
+
+<pre><code>add_column :books, :delta, :boolean, :default => true, :null => false
+add_index  :books, :delta</code></pre>
+
+And that's pretty much it. Make sure Delayed Job is running, and it'll take care of the jobs to keep your Sphinx indices up to date.
+
+Please keep in mind that you need to run the Delayed Job workers on the same machine as Sphinx, as direct access to Sphinx files (and the Sphinx command-line tools) is essential.
+
+h2. Contributing
+
+Contributions are very much welcome - but keep in mind the following:
+
+* Keep patches in a separate branch
+* Don't mess with the version number. I'll take care of that when the patch is merged in.
+* Please write tests - currently, there's only acceptance tests in place, because the underlying code is simple enough. If you get stuck into anything complex, unit tests are a smart move.
+
+h2. Contributors
+
+* "Ryan Schlesinger":http://github.com/ryansch (Allowing installs as a plugin)
+* "Maximilian Schulz":http://max.jungeelite.de (Ensuring compatibility with Bundler)
+* "Edgars Beigarts":http://github.com/ebeigarts (Adding intelligent description for tasks)
+* "Alexander Simonov":http://simonov.me/ (Explicit table definition)
+* "David Goodlad":http://david.goodlad.ca/ (Delayed Job/ActiveRecord load order fix)
+* "Ben Hutton":http://www.benhutton.com/ (Delayed Job compatibility update)
+* "Reinier de Lange":http://www.nedforce.nl/ (Fix for table name reference)
+* "Enrico Brunetta":http://github.com/enrico (Adding Railtie for Rails 3)
+* "Jonathan Viney":https://github.com/jviney and "James Healy":http://yob.id.au/ (Rails 3.2 deprecation fixes)
+* "Georg Ledermann":http://www.georg-ledermann.de (DJ 2.0.x backwards compatibility)
+* "Jonathan Lim":http://snowblink.co.uk (Cleaning up version references)
+* "Manjunath Manohar":https://github.com/manjunath-nm89 (Allow setting of job queue, smarter cleaning up of jobs)
+* "Mikko Koski":https://github.com/rap1ds (Ensure new jobs are created if all existing jobs are failures)
+* "Jason Barnabe":https://github.com/JasonBarnabe (Fix Rails 5.x compatibility)
+
+h2. Copyright
+
+Copyright (c) 2009-2018, Thinking Sphinx Delayed Deltas (ts-delayed-delta) is developed and maintained by Pat Allan, and is released under the open MIT Licence. Many thanks to "all who have contributed patches":https://github.com/pat/ts-delayed-delta/contributors.

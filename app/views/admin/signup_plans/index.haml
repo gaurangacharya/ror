@@ -1,0 +1,44 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t(".signup_plans")
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  .row
+    .col-12
+      %h1= t(".signup_plans")
+
+      = link_to t('.add_plan'), new_admin_signup_plan_path, class: 'button'
+
+      %table
+        %thead
+          %tr
+            %th
+            %th= t(".code")
+            %th= t(".active")
+            %th= t(".group")
+            %th= t(".title")
+            %th= t(".subtitle")
+            %th= t(".price_title")
+            %th
+        %tbody
+          - @plans.each do |plan|
+            %tr
+              %td= plan.position
+              %td= plan.code
+              %td
+                - if plan.active
+                  %i.ss-check
+              %td= plan.signup_group&.title
+              %td= plan.title
+              %td= plan.subtitle
+              %td= plan.price_title
+              %td
+                = link_to edit_admin_signup_plan_path(plan) do
+                  %i.ss-draw.icon-fix{title: t('.edit')}
+                = link_to admin_signup_plan_path(plan), method: :delete,
+                  data: {confirm: t('.are_you_sure')} do
+                  %i.ss-delete.icon-fix{title: t('.delete')}

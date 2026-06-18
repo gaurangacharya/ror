@@ -1,0 +1,23 @@
+# Used in Docker/Dokku builds (copied to config/database.yml).
+# Credentials come from DATABASE_URL set by dokku mysql:link.
+production:
+  adapter: mysql2
+  url: <%= ENV['DATABASE_URL'] %>
+  encoding: utf8
+  pool: <%= ENV.fetch("DB_POOL") { 5 } %>
+
+staging:
+  adapter: mysql2
+  url: <%= ENV['DATABASE_URL'] %>
+  encoding: utf8
+  pool: <%= ENV.fetch("DB_POOL") { 5 } %>
+
+development:
+  adapter: mysql2
+  url: <%= ENV.fetch('DATABASE_URL') { 'mysql2://user:pass@127.0.0.1/dummy' } %>
+  encoding: utf8
+
+test:
+  adapter: mysql2
+  url: <%= ENV.fetch('DATABASE_URL') { 'mysql2://user:pass@127.0.0.1/dummy' } %>
+  encoding: utf8

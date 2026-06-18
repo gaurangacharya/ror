@@ -1,0 +1,58 @@
+= render :partial => 'layouts/head'
+= javascript_include_tag "https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.6.4/iframeResizer.contentWindow.min.js"
+
+%body
+
+  #sidewinder-wrapper
+    %article.page-content
+      .wrapper
+        = yield
+
+    -# Most of the JavaScript should be for performance reasons at the end of the body
+    - maps_key = MarketplaceHelper.google_maps_key(@current_community.id)
+    - key_param = maps_key ? "&key=#{maps_key}" : ""
+    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places#{key_param}"
+
+    -# load Facebook SDK for the whole page
+    = render :partial => "layouts/facebook_sdk"
+
+    -# Initialize global I18n variable and load translations there
+    :javascript
+      window.I18n = {};
+
+    = javascript_include_tag "i18n/#{I18n.locale}"
+
+    = javascript_include_tag 'application'
+
+    :javascript
+      window.ST.jsonTranslations = #{raw JSONTranslations.get(I18n.locale)}
+
+    :javascript
+      $(function() {
+        if ('touchAction' in document.body.style) {
+          document.body.style.touchAction = 'manipulation';
+        } else {
+          window.FastClick.attach(document.body, { excludeNode: '^pac-'} );
+        }
+      });
+
+    -# Disable animations on tests
+    - if Rails.env.test?
+      :javascript
+        $(function() {
+          $.transit.enabled = false;
+        });
+
+    = content_for :extra_javascript
+
+    :javascript
+      $(document).ready(function() { initialize_defaults("#{I18n.locale}"); #{yield :javascript} });
+
+    = render :partial => 'analytics/bottom_scripts'
+
+    = render :partial => "layouts/noscript"
+    #iframe-bottom{"data-iframe-height" => "here"}
+    :javascript
+      if ('parentIFrame' in window) {
+        parentIFrame.resize();
+      }

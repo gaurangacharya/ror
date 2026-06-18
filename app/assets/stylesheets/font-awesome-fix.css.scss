@@ -1,0 +1,30 @@
+@import "font-awesome/functions";
+@import "font-awesome/variables";
+@import "font-awesome/mixins";
+@import "font-awesome/core";
+@import "font-awesome/sizing";
+@import "font-awesome/fixed-width";
+@import "font-awesome/list";
+@import "font-awesome/bordered-pulled";
+// @import "font-awesome/animated";
+@import "font-awesome/rotated-flipped";
+@import "font-awesome/stacked";
+@import "font-awesome/icons";
+@import "font-awesome/screen-reader";
+// @import "font-awesome/solid";
+// @import "font-awesome/regular";
+// @import "font-awesome/brands";
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: $fa-font-display;
+  src: url(fa-font-path('fa-solid-900.woff2')) format('woff2'),
+    url(fa-font-path('fa-solid-900.ttf')) format('truetype');
+}
+
+.fas,
+.#{$fa-css-prefix}-solid {
+  font-weight: 900;
+}

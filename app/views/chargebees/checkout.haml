@@ -1,0 +1,25 @@
+- content_for :head do
+  %script(src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="#{APP_CONFIG.chargebee_site}")
+
+- content_for :title_header do
+  %h1= t('.title')
+
+.signup-form.centered-section
+  .row.error-container.hidden
+    .col-12
+      %p= t('.there_where_errors')
+  .row
+    .col-12
+      = label_tag :period_unit, t('.period_unit')
+      = select_tag :period_unit, options_for_select([[t('.monthly'), 'month'], [t('.annual'), 'year']], params[:period_unit])
+  .row
+    .col-12
+      = submit_tag t('.submit'), id: 'chargebee_submit', class: 'button'
+
+- content_for :javascript do
+  window.ST.chargebee.init({
+  site: '#{APP_CONFIG.chargebee_site}',
+  person_id: '#{@person.id}',
+  generateHostedPagePath: '#{checkout_new_chargebee_path}',
+  successPath: '#{search_with_locale_path(locale: I18n.locale)}',
+  });

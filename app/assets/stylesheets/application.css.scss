@@ -1,0 +1,26 @@
+// The fonts file has to be the first one, since there are @imports in the fonts file
+//= require ./fonts
+
+// Vendor
+//= require jquery.nouislider
+//= require jquery.fileupload
+//= require datepicker3
+//= require selectize
+//= require jquery.raty
+//= require jquery.tipsy
+//= require fullcalendar
+//= require jquery.ui.core
+//= require jquery.ui.menu
+//= require jquery.ui.autocomplete
+//= require jquery.ui.theme
+//= require magnific-popup
+//= require jquery.minicolors
+
+//= require ./reset
+//= require ./main
+
+//= require_tree ./partials
+//= require_tree ./views
+
+@import "font-awesome-fix";
+

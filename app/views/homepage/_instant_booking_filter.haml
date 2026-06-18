@@ -1,0 +1,40 @@
+.auto-col.toggle-container.home-toolbar-toggle-container#hth
+  - value = params[:instant_booking].to_s.present? && 'all' != params[:instant_booking] ? params[:instant_booking].to_s : 'all'
+  .toggle.with-borders{data: {toggle: '#home-toolbar-instant'}, class: (value == 'all' ? '' : 'inverted') }
+    .toggle-header-container
+      .toggle-header
+        = t("homepage.instant_booking.#{value}")
+      = icon_tag("dropdown", ["icon-dropdown"])
+
+    .home-toolbar-share-type-menu.toggle-menu.hidden#home-toolbar-instant
+      .filter-width
+        - ['all', 'yes', 'no'].each do |value|
+          .custom-filter-checkbox-container
+            %label.custom-filter-checkbox-label
+              = radio_button_tag "instant_booking", value, params[:instant_booking] == value, style: 'display: none'
+              %span.custom-filter-checkbox-label-text{id: "ibs-#{value}"}
+                = t("homepage.instant_booking.#{value}")
+- if params[:instant_booking] != 'yes'
+  - content_for :extra_javascript do
+    :javascript
+      $(function(){
+        var _mob = true;
+        minwidth(768, function() {
+            _mob = false;
+            $("#hth").tipsy({gravity: 's', html: true, trigger: 'manual'}).tipsy('show');
+          }, function() {
+            _mob = true;
+          }, false);
+        if($(".filter-button:visible").size()) {
+          $(".filter-button").tipsy({gravity: 'w', html: true, trigger: 'manual'}).tipsy('show');
+        }
+      });
+:css
+  .tipsy { z-index: 5 }
+  .tipsy-inner {
+    line-height: 1.2em;
+    max-width: 120px;
+  }
+  body[class*=SearchBar__mobileSearchOpen] .tipsy { display: none !important; }
+  .tipsy-inner .hlt { color: #ff0000; font-weight: bold; }
+  .tipsy-n .tipsy-inner { max-width: 200px; }

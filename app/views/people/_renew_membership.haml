@@ -1,0 +1,29 @@
+- if current_user?(@person) && !@person.is_vendor? && !@person.premium_active?
+  .row.membership-info
+    .col-12
+      = link_to  "#", id: 'toggle-membership', class: 'profile-contact-link' do
+        .content= t("people.new.become_member")
+  .row.membership-info.hidden
+    .col-12
+      %h3= t("people.new.vendor_membership")
+    .col-12
+      .info-text-icon
+        = icon_tag("information")
+      .info-text-content
+        %p= t("people.new.membership_note")
+    .col-12
+      = form_tag url_for(:controller => :settings, :action => :renew_membership, :person_id => @person.username), id: 'pending_consent_form' do
+        = render partial: 'people/coupon_form'
+        %br
+        %br
+        = render partial: 'people/stripe_checkout'
+        .row
+          = button_tag t("people.new.purchase"), id: 'send-add-card'
+
+- content_for :extra_javascript do
+  :javascript
+    $('#toggle-membership').click(function(){
+      $(".membership-info").toggle();
+      return false;
+    });
+    if(#{params[:preselect] == 'premium'}) $('#toggle-membership').click();

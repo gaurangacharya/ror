@@ -1,0 +1,139 @@
+%tr
+  %td.content-title{:align => "left"}
+    = t("emails.receipt_to_payer.payment_was_cancelled", :listing_title => listing_title, :refund_sum => refund_sum, :recipient_full_name => recipient_given_name).html_safe
+
+%tr
+  %td.content-main-cell{:align => "left"}
+    %table.content-main-table-buyer
+      %tbody
+        %tr
+          %td.body-font{:width => "200"}
+            %strong= t("emails.receipt_to_payer.product")
+          %td.body-font
+            %strong= product_title
+        - if duration.present? || listing_quantity > 1
+          %tr
+            %td.body-font{:width => "250"}
+              = price_per_unit_title
+            %td.body-font
+              = listing_price
+        - if booking.present?
+          - if !booking.per_hour?
+            %tr
+              %td.body-font{colspan: 2}
+                %b
+                  - if listing.booking_per_day?
+                    = use_new_translation("transactions.initiate.booked_days_label", count: duration).or_fallback_to("transactions.initiate.booked_days")
+                  - else
+                    = use_new_translation("transactions.initiate.booked_nights_label", count: duration).or_fallback_to("transactions.initiate.booked_nights")
+                %br
+                = l booking.start_on, format: :long_with_abbr_day_name
+                = "-"
+                - if listing.booking_per_day?
+                  = l (booking.end_on - 1.day), format: :long_with_abbr_day_name
+                  = "(#{pluralize(duration, t("listing_conversations.preauthorize.day"), t("listing_conversations.preauthorize.days"))})"
+                - else
+                  = l booking.end_on, format: :long_with_abbr_day_name
+                  = "(#{pluralize(duration, t("listing_conversations.preauthorize.night"), t("listing_conversations.preauthorize.nights"))})"
+          - else
+            %tr
+              %td{colspan: 2}
+                = t('transactions.initiate.booked_hours_label', count: duration)
+            %tr
+              %td.body-font{colspan: 2}
+                = l booking.start_time.to_date, format: :long_with_abbr_day_name
+                = '-'
+                = t("transactions.initiate.start_end_time",
+                  start_time: l(booking.start_time, format: :hours_only),
+                  end_time: l(booking.end_time, format: :hours_only))
+            - if duration.present? && listing.availability != 'none'
+              %tr
+                %td.body-font{:width => "250"}
+                  = t("emails.receipt_to_payer.duration")
+                %td.body-font
+                  = duration
+
+            - elsif listing_quantity > 1
+              %tr
+                %td.body-font{:width => "250"}
+                  = quantity_selector_label || t("emails.receipt_to_payer.quantity")
+                %td.body-font
+                  = listing_quantity
+
+
+
+        - elsif duration.present? && listing.availability != 'none' && !listing.need_quantity_input?
+          %tr
+            %td.body-font{:width => "250"}
+              = t("emails.receipt_to_payer.duration")
+            %td.body-font
+              = duration
+
+        - elsif listing_quantity > 1
+          %tr
+            %td.body-font{:width => "250"}
+              = quantity_selector_label || t("emails.receipt_to_payer.quantity")
+            %td.body-font
+              = listing_quantity
+        %tr{:height => '30'}
+          %td.body-font{:width => "250"}
+            = t("emails.receipt_to_payer.subtotal") #listing_title
+          %td.body-font
+            = subtotal
+
+        - if shipping_total.present?
+          %tr
+            %td.body-font
+              = t("emails.paypal_new_payment.shipping_total")
+            %td.body-font
+              = shipping_total
+
+        %tr.with-top-border.with-bottom-border
+          %td.body-font
+            %strong=t("emails.receipt_to_payer.total")
+          %td.body-font
+            %strong= payment_total
+
+        %tr.with-top-border.with-bottom-border
+          %td.body-font
+            %strong=t("emails.receipt_to_payer.refund")
+          %td.body-font
+            %strong= refund_sum
+        
+        %tr{:height => '30'}
+        %tr
+          %td.body-font{colspan: 2}
+            %strong= t("emails.receipt_to_payer.pickup_location")
+        %tr
+          %td.body-font{colspan: 2}
+            - if listing.origin_loc
+              = link_to listing.origin_loc&.address, "https://maps.google.com/maps?q=#{Rack::Utils.escape listing.origin_loc&.address}", target: "_blank"
+
+        %tr{:height => '10'}
+        %tr
+          %td.body-font{colspan: 2}
+            %strong= t("emails.receipt_to_payer.return_instructions")
+        %tr
+          %td.body-font{colspan: 2}
+            = listing.answers_for_field_name("Rental Return Instructions")
+
+        %tr{:height => '10'}
+        - if listing_image
+          %tr
+            %td{colspan: 2, align: :center}
+              = link_to(listing_url(@url_params.merge(id: listing.id))) do
+                %img{src: "#{listing.community.full_url}#{listing_image.image.url(:medium)}", alt: listing.title, title: listing.title}
+        - else 
+          %tr
+            %td.body-font{colspan: 2}
+              = link_to(listing.title, listing_url(@url_params.merge(id: listing.id)))
+
+        
+        - if deposit.present?
+          %tr.with-top-border
+            %td
+              %b=t("emails.payment_receipt_to_payer.deposit")
+            %td
+              %b= deposit
+
+= render :partial => "person_mailer/action_button_v2", :locals => { :text => t("emails.conversation_status_changed.view_thread"), :url => conversation_url}

@@ -1,0 +1,60 @@
+-#
+  Listing image for grid
+
+  Includes:
+  - Listing image
+  - Overlay (transparent gradient black)
+  - Listing price
+  - Adds `modifier_class` which can be used for view specific fine tunings
+
+= link_to(ext_path_to_listing(listing: listing), :class => "#{modifier_class} fluid-thumbnail-grid-image-item-link") do
+  .fluid-thumbnail-grid-image-image-container{:class => "#{modifier_class}"}
+    - with_first_listing_image(listing) do |first_image_url|
+      = image_tag first_image_url, {:alt => listed_listing_title(listing), :class => "#{modifier_class} fluid-thumbnail-grid-image-image"}
+
+    .fluid-thumbnail-grid-image-overlay{:class => "#{modifier_class}"}
+    .fluid-thumbnail-grid-image-title{:class => "#{modifier_class}"}
+      = listing.title
+
+    - if !listing.hide_price
+      .fluid-thumbnail-grid-image-price-container{:class => "#{modifier_class}"}
+        - if listing.restaurant
+          %span.fluid-thumbnail-grid-image-type{:class => "#{modifier_class}"}
+            = listing.restaurant_price
+        - elsif listing.call_for_price
+          %span.fluid-thumbnail-grid-image-type{:class => "#{modifier_class}"}
+            = t("listings.call_for_price.title")
+        - elsif Listing.semi_premium_pricing?(listing)
+          %div.crossed
+            %span.fluid-thumbnail-grid-image-price
+              = MoneyViewUtils.to_humanized(listing.price)
+              - price_unit = price_quantity_slash_unit(listing)
+            - if !price_unit.blank?
+              - price_text = " " + price_unit
+              %span.fluid-thumbnail-grid-image-quantity{:title => price_text}
+                = price_text
+          %span.fluid-thumbnail-grid-image-price
+            = MoneyViewUtils.to_humanized(listing.price/2)
+            - price_unit = price_quantity_slash_unit(listing)
+          - if !price_unit.blank?
+            - price_text = " " + price_unit
+            %span.fluid-thumbnail-grid-image-quantity{:title => price_text}
+              = price_text
+          - if !@current_user&.premium_pricing?(listing)
+            %div.member-price-notice
+              = t("listings.member_price")
+
+        - elsif listing.price
+          %span.fluid-thumbnail-grid-image-price
+            = MoneyViewUtils.to_humanized(listing.price)
+            - price_unit = price_quantity_slash_unit(listing)
+          - if !price_unit.blank?
+            - price_text = " " + price_unit
+            %span.fluid-thumbnail-grid-image-quantity{:title => price_text}
+              = price_text
+          - if @current_user&.hotel_pricing?(listing)
+            %br
+            = t("listings.hotel_commission", number: @current_community.hotel_percent_user.to_i)
+        - else
+          %span.fluid-thumbnail-grid-image-type{:class => "#{modifier_class}"}
+            = shape_name(listing)

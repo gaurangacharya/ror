@@ -1,0 +1,137 @@
+%section#hero__hero__0.hero__section--light
+  .hero__content
+    .hero__content-container
+      %h1.hero__title= @community_customization.try(:slogan) || 'Rent | Buy | OwnOutdoors'
+      %h3.hero__subtitle
+        - description = @community_customization.try(:description)
+        - if description
+          = description
+        - else
+          Outdoor Experiences, Adventure & Gear
+          %span{:style => "white-space: nowrap"} - Anywhere!
+      .hero__search-bar-padding
+        %form#hero__hero__0__search-form.hero__search-bar--combined{:action => "/s", :method => "get"}
+          .hero__search-input-container--combined
+            %button.hero__search-icon--combined{:type => "submit"}
+              %svg.hero__search-icon-svg{:version => "1.1", :viewbox => "27 19 22 22", :xmlns => "http://www.w3.org/2000/svg", "xmlns:xlink" => "http://www.w3.org/1999/xlink"}
+                %g#icon_search{:fill => "none", "fill-rule" => "evenodd", :stroke => "none", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "1", :transform => "translate(38.000000, 30.000000) scale(-1, 1) translate(-38.000000, -30.000000) translate(28.000000, 20.000000)"}
+                  %path#line{:d => "M14.6666667,14.6666667 L19.3254458,19.3254458", :stroke => "#525961", "stroke-width" => "2"}
+                  %circle#Oval{:cx => "8", :cy => "8", :r => "8", :stroke => "#525961", "stroke-width" => "2"}
+            - search_placeholder = @community_customization.try(:search_placeholder) || 'Keyword (e.g. Kayak)'
+            %input.hero__keyword-search-input--combined{:name => "q", :placeholder => search_placeholder, :type => "search"}/
+            %input.hero__location-search-input--combined{:name => "lq", :placeholder => "Location", :type => "search"}/
+          %button.hero__search-button.hero__search-button--combined{:type => "submit"} Search
+          %input{:name => "ls", :type => "hidden"}/
+          %input{:name => "lc", :type => "hidden"}/
+          %input{:name => "boundingbox", :type => "hidden"}/
+          %input{:name => "distance_max", :type => "hidden"}/
+%section#categories__categories__1.categories__section
+  .categories__content
+    %h1.categories__title Popular Activities &amp; Fun
+    .categories__paragraph--markdown
+    .categories__categories
+      .categories__category--4
+        %a{:href => "/s?category=water-sports"}
+          .categories__categories__1__categories__category-content.categories__category-content{:style => "background-image: url(#{asset_path('ownOutDoors_category-Water-Sports_BG.jpg')})"}
+            %h3.categories__category-title Water Sports
+      .categories__category--4
+        %a{:href => "/s?category=boating"}
+          .categories__categories__1__categories__category-content.categories__category-content{:style => "background-image: url(#{asset_path('ownOutDoors_category-Boating_BG.jpg')})"}
+            %h3.categories__category-title Boating
+      .categories__category--4
+        %a{:href => "/s?category=motorcycles-scooters-bicycling"}
+          .categories__categories__1__categories__category-content.categories__category-content{:style => "background-image: url(#{asset_path('ownOutDoors_category-Bicycles-Scooters-Motorcycles_BG.jpg')})"}
+            %h3.categories__category-title Motorcycles, Scooters, Bicycling
+      .categories__category--4
+        %a{:href => "/s?category=fishing"}
+          .categories__categories__1__categories__category-content.categories__category-content{:style => "background-image: url(#{asset_path('ownOutDoors_category-fishing_BG.jpg')})"}
+            %h3.categories__category-title Fishing
+%section#info__info-1-column__2.info__section--background-image--light{:style => "background-image: url('#{asset_path('ownOutDoors_infoSectionBG.jpg')}'); "}
+  .info__content--single-column
+    %h1.info__title--single-column About OwnOutdoors
+    .info__paragraph--markdown
+      %p Rent, Buy or Sell Outdoor Experiences, Adventure &amp; Gear - Anywhere! We are a one-stop shop to find outdoor fun. From renting a kayak or boat to finding snorkeling or diving tours, you can find it here at a great price and convenient location!
+    %a.info__button.info__info-1-column__2__info__button{:href => "/signup"} Sign up
+%section#listings__listings__3.listings__section
+  .listings__content
+    %h1.listings__title Featured Listings - Water Sports!
+    .listings__paragraph--markdown
+      %p Find your favorite activity on the water! From Kayaks and Paddleboards, Diving and Snorkeling gear and tours, to Parasailing and Waverunners, we are continuously adding listings so you can find your type of Fun!
+    .listings__listings.owl-carousel.owl-theme
+      - @featured_listings.each do |listing|
+        .listings__wrapper
+          .listings__listing
+            %a{:href => listing_path(listing)}
+              - image = listing.listing_images.first
+              .listings__listing-image.owl-lazy{"data-src" => (image ? image.image.url(:big) : nil)}
+              %h3.listings__listing-title= listing.title
+            .listings__listing-info
+              .listings__listings__3__listings__price-container.listings__price-container
+                %span.listings__price-amount= humanized_money_with_symbol(listing.price)
+                %span.listings__price-unit= " / " + (ListingViewUtils.translate_unit(listing.unit_type, listing.unit_selector_tr_key) rescue "item")
+              %a.listings__listings__3__listings__author-link.listings__author-link{:href => person_path(listing.author)}
+                .listings__author-container
+                  .listings__author-avatar-container
+                    .listings__author-avatar{:style => "background-image: url(#{listing.author.image.present? ? listing.author.image.url(:thumb) : missing_avatar(:thumb, listing.author.is_vendor)})"}
+                  %span.listings__author-name= PersonViewUtils::person_entity_display_name(listing.author, @current_community.name_display_type)
+%section#reviews__reviews__3.reviews__section
+  .reviews__content
+    %h1.reviews__title Our customers trust us
+    .reviews__reviews.owl-carousel.owl-theme
+      - @reviews.each do |review|
+        .reviews__wrapper
+          .reviews__review
+            - if review.title.present?
+              %h3.reviews__review-title= review.title
+            .reviews__review-info
+              .reviews__review-content= review.content
+              .reviews__review-author= "- #{review.author}"
+
+%footer#footer__footer__4.footer__container--light
+  .footer__content
+    .footer__links-container--center
+      %ul.footer__link-list
+        %li.footer__link-list-item
+          %a.footer__link{:href => "/infos/about"} About
+        %li.footer__link-list-item
+          %a.footer__link{:href => "/infos/how_to_use"} How it works
+        - if !@person_white_label
+          %li.footer__link-list-item
+            %a.footer__link{:href => "/user_feedbacks/new"} Contact us
+    %hr.footer__separator/
+    .footer__copyrights--markdown
+      %p 
+        &copy;
+        = Date.today.year 
+        OwnOutdoors Marketplace. All rights reserved.
+      %p 
+        Ruby on Rails (RoR) custom development by 
+        %a{:href => 'https://ithouse.io', :target => '_blank'} IT House
+    .footer__ta-badge
+      %svg{:height => "32", :viewbox => "0 0 100 16", :width => "200", :xmlns => "http://www.w3.org/2000/svg"}
+        %path{:d => "M99.461,11.876c-0.296,-0 -0.54,0.243 -0.54,0.539c0,0.296 0.244,0.539 0.54,0.539c0.296,0 0.539,-0.243 0.539,-0.539c0,-0.296 -0.243,-0.539 -0.539,-0.539Zm-0,0.994c-0.25,-0 -0.455,-0.205 -0.455,-0.455c0,-0.249 0.205,-0.455 0.455,-0.455c0.249,0 0.454,0.206 0.454,0.455c0,0 0,0 0,0c0,0.25 -0.205,0.455 -0.454,0.455Zm0.175,-0.547c-0,-0.098 -0.07,-0.156 -0.173,-0.156l-0.172,0l-0,0.491l0.085,0l-0,-0.178l0.092,0l0.089,0.178l0.091,0l-0.096,-0.196c0.054,-0.024 0.087,-0.08 0.084,-0.139Zm-0.176,0.082l-0.084,-0l0,-0.163l0.084,0c0.057,0 0.091,0.029 0.091,0.081c0,0.053 -0.034,0.083 -0.091,0.083l-0,-0.001Zm-91.408,-3.573c-0,-0 -0,-0 -0,-0c-0,1.159 -0.954,2.113 -2.113,2.113c-1.159,-0 -2.113,-0.954 -2.113,-2.113c0,-1.159 0.954,-2.113 2.113,-2.113c0,-0 0,-0 0,-0c1.159,-0 2.113,0.954 2.113,2.113Zm11.911,-0c-0,-0 -0,-0 -0,-0c-0,1.159 -0.954,2.113 -2.113,2.113c-1.159,-0 -2.113,-0.954 -2.113,-2.113c0,-1.159 0.954,-2.113 2.113,-2.113c1.159,-0 2.113,0.954 2.113,2.113Zm-0.482,-6.498c-2.16,-1.474 -4.767,-2.334 -7.586,-2.334c-2.702,-0.005 -5.342,0.809 -7.572,2.334l-4.323,-0l1.945,2.117c-1.236,1.124 -1.941,2.721 -1.939,4.393c0,3.282 2.661,5.944 5.944,5.944c1.498,0.002 2.942,-0.565 4.04,-1.584l1.905,2.073l1.905,-2.073c1.098,1.019 2.541,1.585 4.039,1.583c3.283,0 5.947,-2.661 5.947,-5.944c0.002,-1.672 -0.703,-3.268 -1.939,-4.393l1.945,-2.117l-4.311,0.001Zm-13.531,10.532c-2.221,0 -4.022,-1.801 -4.022,-4.022c-0,-2.222 1.801,-4.023 4.022,-4.023c2.222,-0 4.023,1.801 4.023,4.023c0,2.221 -1.801,4.022 -4.023,4.022Zm5.946,-4.138c-0,-2.648 -1.926,-4.918 -4.465,-5.89c2.856,-1.19 6.072,-1.19 8.928,-0c-2.538,0.971 -4.463,3.243 -4.463,5.89Zm9.966,0.116c-0,2.221 -1.802,4.022 -4.023,4.022c-2.222,0 -4.023,-1.801 -4.023,-4.022c-0,-2.222 1.801,-4.023 4.023,-4.023c2.222,-0 4.023,1.801 4.023,4.023l-0,-0Zm14.109,-3.742l0.936,0l-0,1.852l-1.095,-0c-0.843,-0 -1.384,0.414 -1.384,1.257l-0,4.655l-2.002,0l0,-7.764l2.002,0l-0,1.305c0.175,-0.923 0.812,-1.305 1.543,-1.305l0,0Zm4.02,-1.846c-0,0.663 -0.546,1.209 -1.209,1.209c-0.664,0 -1.21,-0.546 -1.21,-1.209c0,-0.684 0.525,-1.225 1.21,-1.225c0.684,-0 1.209,0.541 1.209,1.225l-0,-0Zm-2.207,1.846l1.995,0l-0,7.764l-1.996,0l0.001,-7.764Zm7.492,-0.131c-0.85,-0.004 -1.679,0.273 -2.356,0.788l0,-0.657l-1.995,0l-0,10.043l1.995,0l0,-2.935c0.677,0.515 1.506,0.792 2.356,0.788c2.217,-0 4.012,-1.797 4.012,-4.014c0,-2.216 -1.795,-4.013 -4.012,-4.013l0,0Zm-0.176,6.193c-1.196,0 -2.18,-0.984 -2.18,-2.18c0,-1.196 0.984,-2.18 2.18,-2.18c1.196,0 2.181,0.984 2.181,2.18c-0,1.196 -0.984,2.18 -2.18,2.18l-0.001,0Zm40.781,-0.75c0,1.497 -1.284,2.584 -3.053,2.584c-1.836,-0 -3.119,-1.113 -3.119,-2.706l0,-0.043l1.953,-0l0,0.043c0,0.665 0.475,1.112 1.182,1.112c0.678,-0 1.133,-0.331 1.133,-0.823c0,-0.466 -0.315,-0.727 -1.162,-0.961l-1.116,-0.304c-1.172,-0.318 -1.844,-1.082 -1.844,-2.096c-0,-1.303 1.229,-2.249 2.924,-2.249c1.711,0 2.86,0.947 2.86,2.356l0,0.044l-1.84,-0l0,-0.044c0,-0.479 -0.448,-0.853 -1.02,-0.853c-0.6,-0 -1.02,0.275 -1.02,0.67c0,0.405 0.299,0.64 1.065,0.84l1.165,0.319c1.564,0.417 1.893,1.378 1.893,2.111l-0.001,-0Zm-29.508,-4.655c-0.678,-0.515 -1.507,-0.792 -2.357,-0.788c-2.217,0 -4.014,1.797 -4.014,4.013c0,2.217 1.797,4.014 4.014,4.014c0.85,0.004 1.679,-0.273 2.356,-0.788l-0,0.656l1.995,0l0,-7.764l-1.995,0l0.001,0.657Zm-0,3.225c-0,1.196 -0.985,2.18 -2.181,2.18c-1.196,0 -2.18,-0.984 -2.18,-2.18c0,-1.196 0.984,-2.18 2.18,-2.18c1.196,0.001 2.18,0.985 2.18,2.18l0.001,0Zm9.205,-3.225c-0.677,-0.515 -1.506,-0.792 -2.356,-0.788c-2.217,0 -4.014,1.797 -4.014,4.013c0,2.217 1.797,4.014 4.014,4.014c0.85,0.004 1.679,-0.273 2.356,-0.788l-0,0.656l1.996,0l-0,-10.527l-1.996,-0l-0,3.42Zm-2.18,5.405c-0,0 -0.001,0 -0.001,0c-1.196,0 -2.18,-0.984 -2.18,-2.18c0,-1.196 0.984,-2.18 2.18,-2.18c1.196,0 2.181,0.984 2.181,2.18l-0,0c-0,1.196 -0.985,2.18 -2.181,2.18c0,0 -0,0 -0,0l0.001,0Zm13.446,-6.061l1.995,0l0,7.763l-1.995,0l-0,-7.763Zm2.207,-1.846l-0,-0c-0,0.663 -0.546,1.209 -1.209,1.209c-0.664,0 -1.21,-0.546 -1.21,-1.209l0,-0c0,-0.684 0.525,-1.225 1.21,-1.225c0.684,-0 1.208,0.54 1.208,1.224l0.001,0.001Zm11.448,1.715c-2.217,-0 -4.014,1.797 -4.014,4.013c0,2.217 1.797,4.013 4.014,4.013c2.216,0 4.012,-1.796 4.012,-4.013c-0,-2.216 -1.797,-4.014 -4.013,-4.014l0.001,0.001Zm-0,6.193c-1.196,0 -2.18,-0.984 -2.18,-2.18c-0,-1.196 0.984,-2.18 2.18,-2.18c1.196,-0 2.18,0.984 2.18,2.18c-0,1.196 -0.984,2.179 -2.18,2.179c-0,0 -0.001,0 -0.001,0l0.001,0.001Zm-57.093,-7.045l-2.835,-0l0,8.746l-1.989,0l-0,-8.746l-2.835,-0l0,-1.781l7.658,-0l0.001,1.781Zm40.505,0.982l2.096,0l-2.679,7.764l-2.401,0l-2.665,-7.764l2.097,0l1.776,5.638l1.776,-5.638Zm25.069,0l0.935,0l0,1.852l-1.094,-0c-0.843,-0 -1.385,0.414 -1.385,1.257l0,4.655l-2.001,0l0,-7.764l2.001,0l0,1.305c0.175,-0.923 0.812,-1.305 1.544,-1.305Z"}  
+      %span Reviews Powered by Tripadvisor
+
+- content_for :extra_javascript do
+  :javascript
+    window.ST.initializeLocationSearch({
+      form: '#hero__hero__0__search-form',
+      search: '#hero__hero__0__search-form [name=lq]',
+      status: '#hero__hero__0__search-form [name=ls]',
+      coordinate: '#hero__hero__0__search-form [name=lc]',
+      boundingbox: '#hero__hero__0__search-form [name=boundingbox]',
+      maxDistance: '#hero__hero__0__search-form [name=distance_max]'
+    })
+
+    $(document).ready(function($) {
+      $('.owl-carousel').owlCarousel({
+        items: 1,
+        mouseDrag: false,
+        dots: true,
+        nav: false,
+        lazyLoad: true,
+        autoplay: true,
+        autoplayHoverPause: true
+      });
+    });
+

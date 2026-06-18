@@ -1,0 +1,22 @@
+@import "mixins/all";
+
+.subcategory-label {
+  margin-left: lines(1);
+}
+
+.top-level-category-divider-wrapper {
+  padding-top: lines(0.25);
+  padding-bottom: lines(0.25);
+}
+.top-level-category-divider {
+  background-color: $highlight;
+  height: 1px;
+}
+
+.listed-category-col {
+  margin-bottom: 0;
+}
+
+.quick-filter-icon {
+  font-size: 30px;
+}

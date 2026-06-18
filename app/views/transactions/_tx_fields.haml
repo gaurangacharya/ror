@@ -1,0 +1,9 @@
+- if transaction_model.fields.any?
+  .tx-fields
+    - transaction_model.fields.each do |field|
+      .row
+        .col-6
+          #{field.title}
+        .col-6.field-value
+          #{field.to_s}
+

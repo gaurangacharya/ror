@@ -1,0 +1,14 @@
+- add_ons = presenter.listing.add_ons
+- if add_ons.any?
+  .listing_add_ons
+    - add_ons.each_with_index do |add_on, index|
+      - box_id = "add_on_ids_#{index}"
+      = label_tag box_id do
+        = check_box_tag "add_on_ids[]", add_on.id, false, id: box_id
+        = MoneyViewUtils.to_humanized(add_on.price_for_user(current_person))
+        = ' '
+        - with_quantity_text(@current_community, @listing) do |text|
+          = text
+        = ' '
+        = add_on.title
+

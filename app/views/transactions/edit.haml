@@ -1,0 +1,43 @@
+- content_for :title_header do
+  %h1
+    = t('.title')
+.centered-section-wide
+  .row
+    .col-12
+      .initiate-transaction-booking-wrapper
+        - if @presenter.booking.per_hour
+          %span.initiate-transaction-booking-label
+            = t('transactions.initiate.booked_hours_label', count: @presenter.booking.duration)
+          %span.initiate-transaction-booking-value
+            = l @presenter.booking.start_time.to_date, format: :long_with_abbr_day_name
+            = '-'
+            - if !@presenter.listing.fixed_units.present?
+              = t("transactions.initiate.start_end_time",
+                start_time: l(@presenter.booking.start_time, format: :hours_only),
+                end_time: l(@presenter.booking.end_time, format: :hours_only))
+              = t("transactions.initiate.duration_in_hours", count: @presenter.booking.duration)
+            - else
+              = t("transactions.initiate.start_time",
+                start_time: l(@presenter.booking.start_time, format: :hours_only))
+
+        - else
+          %span.initiate-transaction-booking-label
+            - if @presenter.tx.unit_type == :day
+              = use_new_translation("transactions.initiate.booked_days_label", count: @presenter.booking.duration).or_fallback_to("transactions.initiate.booked_days")
+            - else
+              = use_new_translation("transactions.initiate.booked_nights_label", count: @presenter.booking.duration).or_fallback_to("transactions.initiate.booked_nights")
+          %span.initiate-transaction-booking-value
+            = l @presenter.booking.start_on, format: :long_with_abbr_day_name
+            = "-"
+            - if @presenter.tx.unit_type == :day
+              = l (@presenter.booking.end_on - 1.day), format: :long_with_abbr_day_name
+              = "(#{pluralize(duration, t("listing_conversations.preauthorize.day"), t("listing_conversations.preauthorize.days"))})"
+            - else
+              = l @presenter.booking.end_on, format: :long_with_abbr_day_name
+              = "(#{pluralize(presenter.booking.duration, t("listing_conversations.preauthorize.night"), t("listing_conversations.preauthorize.nights"))})"
+
+  .row
+    .col-12
+      = render 'booking_form',
+        presenter: @presenter,
+        listing_presenter: @listing_presenter

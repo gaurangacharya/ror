@@ -1,0 +1,21 @@
+= form_for [:admin, review] do |form|
+  .row
+    .col-2
+      = form.label :title, t('.title')
+    .col-6
+      = form.text_field :title
+  .row
+    .col-2
+      = form.label :content, t('.content')
+    .col-6
+      = form.text_area :content
+  .row
+    .col-2
+      = form.label :author, t('.author')
+    .col-6
+      = form.text_field :author
+
+  .row
+    .col-12
+      = submit_tag t(".create"), class: 'button'
+

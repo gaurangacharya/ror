@@ -1,0 +1,53 @@
+= form_for person, url: create_person_chargebee_path, remote: true, html: { id: 'chargebee-checkout' } do |form|
+  .row
+    .col-12
+      = form.label :email, t('.email')
+      = form.text_field :email, class: :text_field, maxlength: '255',
+        required: true, email: true,
+        remote: "/people/check_email_availability_and_validity",
+        'data-msg-remote': email_not_accepted_message
+
+      = form.label :given_name, t('.first_name')
+      = form.text_field :given_name, class: :text_field,
+        required: true, maxlength: 30
+
+      = form.label :family_name, t('.last_name')
+      = form.text_field :family_name, class: :text_field,
+        required: true, maxlength: 30
+
+      = form.label :username, t('.username')
+      = form.text_field :username, class: :text_field, maxlength: '20',
+        required: true,minlength: 3, maxlength: 20, valid_username: true,
+        remote: "/people/check_username_availability",
+        'data-msg-remote': t("people.new.username_is_in_use"),
+        'data-msg-valid_username': t("people.new.username_is_invalid")
+
+      = form.label :password, t('common.password')
+      = form.password_field :password, class: :text_field, maxlength: "255",
+        id: "person_password1", required: true, minlength: 4
+
+      = form.label :password2, t('.password_again')
+      = form.password_field :password2, class: :text_field, maxlength: "255",
+        required: true, minlength: 4, equalTo: "#person_password1"
+
+      = form.label :phone_number, t('.phone')
+      = form.text_field :phone_number, class: :text_field, maxlength: '255',
+        required: true, phoneNumber: true
+
+      = form.label :period_unit, t('.period_unit')
+      = select_tag :period_unit, options_for_select([[t('.monthly'), 'month'], [t('.annual'), 'year']], params[:period_unit])
+      = form.hidden_field :chargebee_plan_id, value: params[:plan_id]
+      = form.hidden_field :signup_plan_id, value: params[:signup_plan_id]
+
+  .row.error-container.hidden
+    .col-12
+      %p= t('.there_where_errors')
+  .row
+    .col-12
+      - button_text = signup_plan&.create_account_button_text.present? ? signup_plan.create_account_button_text : t('.create_new_account')
+      = submit_tag button_text, class: 'button'
+    .col-12
+      %span#cb-loader.cb-subscribe-process.hidden
+        Processing&hellip;
+
+

@@ -1,0 +1,21 @@
+- content_for :javascript do
+  initialize_give_feedback_form("#{I18n.locale}","#{t('error_messages.testimonials.you_must_select_a_grade')}","#{t('error_messages.testimonials.you_must_explain_not_neutral_feedback')}");
+
+- content_for :extra_javascript do
+  :javascript
+    initRatings();
+    
+.centered-section.testimonial-form
+  %h2= t(".give_feedback_to", :person => transaction.other_party(@current_user).name(@current_community))
+  %p= t(".this_will_be_shown_in_profile", :person => PersonViewUtils.person_display_name_for_type(transaction.other_party(@current_user), "first_name_only"))
+  = form_for testimonial, :url => person_message_feedbacks_path(:person_id => @current_user.id, :message_id => transaction.id) do |form|
+    = form.error_messages
+    = form.label :text, t('.textual_feedback')
+    = form.text_area :text, :placeholder => t(".default_textual_feedback")
+    = form.label :grade, t(".grade")
+    .row
+      .col-12
+        = stars_rating_tag 0, disable_after_rate: false, readonly: false, averageAsDefault: false, cancel: false, targetScore: "#testimonial_grade", scoreName: "testimonial[grade]", star_off: 'star-c3.png', star_on: 'star-66.png'
+        = form.hidden_field :grade
+        #testimonial-grade-error
+    = form.button t(".send_feedback"), :class => "send_button", :id => "send_testimonial_button"

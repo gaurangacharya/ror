@@ -1,0 +1,34 @@
+= label_tag t(".coupon")
+= text_field_tag :coupon
+#coupon-message-ok.hidden
+  %br
+  .info-text-icon
+    = icon_tag("information")
+  .info-text-content
+    = t(".coupon_message_ok").html_safe
+#coupon-message-error.hidden
+  %label.error
+    = t(".coupon_message_error").html_safe
+- content_for :extra_javascript do
+  :javascript
+    $("#coupon").change(function(){
+      var v = $("#coupon").val();
+      $("#coupon-message-ok, #coupon-message-error").hide();
+      if (v) {
+        $.ajax({
+          type: "GET",
+          url: "#{check_coupon_people_path}",
+          data: {coupon: v},
+          dataType: "JSON",
+          success: function(resp) {
+            if (resp.value) {
+              $("#coupon-message-ok").show();
+              $("#coupon-message-ok .value").text(resp.value);
+              $("#coupon-message-ok .price").text(((100-resp.value)/100.0*99).toFixed(1));
+            } else {
+              $("#coupon-message-error").show();
+            }
+          }
+        });
+      }
+    });

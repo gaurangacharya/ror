@@ -1,0 +1,6 @@
+- align = "left" unless defined? align
+
+%tr
+  %td.action-button-cell{:align => align || "left"}
+    %a.email-action-button{:href => url, :target => "_blank"}
+      = text

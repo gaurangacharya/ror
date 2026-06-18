@@ -1,0 +1,32 @@
+@import "./ladera/fonts";
+@import "./ladera/variables";
+
+.layout.ladera {
+  .main-table {
+    background-color: $background-color;
+
+    .centered-table {
+      .service-name {
+        border: none;
+      }
+
+      .unsubscribe-footer {
+        border: none;
+      }
+
+      .content-main-table-buyer {
+        background-color: $background-color;
+        padding: 0;
+      }
+
+      .with-top-border {
+        border: none;
+      }
+
+      .with-bottom-border {
+        border: none;
+      }
+    }
+  }
+}
+

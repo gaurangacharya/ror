@@ -1,0 +1,33 @@
+= form_for presenter.tx, url: update_booking_person_transaction_path(@current_user.username, presenter.tx.id) do |tx_form|
+  .datepicker-per-hour
+    .field
+      = label_tag t(".booking_date")
+      %input.input-sm.form-control.required#start-on{ :type => 'text',
+        :name => "start_on_show", :placeholder => t("datepicker.format"),
+        :data => { :locale => I18n.locale, :dateformat => t("datepicker.format") },
+        :autocomplete => 'off',
+        :required => true }
+    .field
+      = label_tag :start_time do
+        = t(".start_time")
+        %br
+        %small.bookind-date-timezone= "(#{presenter.listing.friendly_tz_name})"
+      = select_tag 'start_time', options_for_select([]), id: 'start_time', :required => true
+
+    - if presenter.listing.fixed_units.present?
+      = hidden_field_tag :end_time
+    - else
+      .field
+        = label_tag :end_time do
+          = t(".end_time")
+          %br
+          %small.bookind-date-timezone= "(#{presenter.listing.friendly_tz_name})"
+        = select_tag 'end_time', options_for_select([]), id: 'end_time', :required => true
+    .field
+      = tx_form.button t('.update'), type: :submit
+
+- content_for :extra_javascript do
+  = js_t ["listings.listing_actions.select_one"], true
+  :javascript
+    window.ST.FromToDatePicker.setupPerHour(#{raw listing_presenter.datepicker_per_hour_setup.merge(booking_duration: presenter.booking.duration).to_json});
+

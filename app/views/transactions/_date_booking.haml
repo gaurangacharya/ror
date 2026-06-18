@@ -1,0 +1,23 @@
+.transaction-schedule
+  %h2 
+    = t("availability.schedule", date: I18n.l(transaction_model.booking.start_time.to_date, format: :long))
+  - schedule_info = transaction_schedule_data(transaction_model)
+  %div.booked-wrapper{style: "height: #{schedule_info[:height]}px"}
+    .day-slots 
+      - 0.upto(47).each do |time_offset|
+        - offset = time_offset.to_f / 2 * AvailabilityMask::HOUR_HEIGHT - schedule_info[:top]
+        - next if offset < 0
+        - next if offset >= schedule_info[:height]
+        .time-slot{style: "top: #{offset}px; "}
+          = Listing::WorkingTimeSlot.format_time(time_offset / 2, time_offset % 2 * 30)
+
+    - schedule_info[:working].each do |time_slot_info|
+      %div.working-slot{style: "top: #{time_slot_info[:top] - schedule_info[:top]}px; height: #{time_slot_info[:height]}px", title: [time_slot_info[:start], time_slot_info[:end]].join("-")}
+        %i.ss-clock
+
+    - schedule_info[:booked].each do |time_slot_info|
+      %div.booked-slot{style: "top: #{time_slot_info[:top] - schedule_info[:top]+1}px; height: #{time_slot_info[:height]-3}px", class: time_slot_info[:transaction_id] == transaction_model.id ? 'current-tx' : ''}
+        = link_to person_transaction_path(@current_user, time_slot_info[:transaction_id]) do
+          = [time_slot_info[:start], time_slot_info[:end]].join("-")
+          = time_slot_info[:status]
+          = PersonViewUtils.person_display_name(time_slot_info[:person], @current_community)

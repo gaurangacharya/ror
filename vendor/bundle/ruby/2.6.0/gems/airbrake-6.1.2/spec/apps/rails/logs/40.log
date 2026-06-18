@@ -1,0 +1,4 @@
+# Logfile created on 2017-05-08 19:22:44 +0300 by logger.rb/56815
+D, [2017-05-08T19:46:22.411889 #56121] DEBUG -- :   [1m[36m (0.5ms)[0m  [1mCREATE TABLE "books" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar(255)) [0m
+D, [2017-05-08T19:46:22.417326 #56121] DEBUG -- :   [1m[35m (0.1ms)[0m  CREATE TABLE "delayed_jobs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "priority" integer DEFAULT 0 NOT NULL, "attempts" integer DEFAULT 0 NOT NULL, "handler" text NOT NULL, "last_error" text, "run_at" datetime, "locked_at" datetime, "failed_at" datetime, "locked_by" varchar(255), "queue" varchar(255), "created_at" datetime, "updated_at" datetime) 
+D, [2017-05-08T19:46:22.417680 #56121] DEBUG -- :   [1m[36m (0.1ms)[0m  [1mCREATE INDEX "delayed_jobs_priority" ON "delayed_jobs" ("priority", "run_at")[0m

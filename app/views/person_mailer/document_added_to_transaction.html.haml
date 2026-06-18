@@ -1,0 +1,8 @@
+- url = person_message_url(@recipient, @url_params.merge({:id => @tx_model.conversation_id.to_s}))
+
+%tr
+  %td{:align => "left"}
+    %font{body_font}
+      = @message
+
+= render :partial => "action_button", :locals => { :text => t("emails.new_message.view_message"), :url => url}

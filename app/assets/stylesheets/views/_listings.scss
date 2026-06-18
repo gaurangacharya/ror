@@ -1,0 +1,550 @@
+@import "mixins/all";
+
+.listing-details-container {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+.listing-description-content {
+  ol {
+    padding-left: 1.5em
+  }
+  blockquote {
+    border-left: .25em solid #c3c3c3;
+    padding: 0 1em;
+    color: gray;
+  }
+  hr {
+    border-bottom: 1px solid #c3c3c3;
+    margin-bottom: 1em;
+  }
+}
+.listing-description-youtube-wrapper {
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  position: relative;
+  margin-bottom:lines(1);
+}
+.listing-description-youtube-iframe {
+  width:100%;
+  height:100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+// Social buttons
+.listing-social {
+  @include clearfix();
+}
+
+.listing-fb-like-button,
+.listing-tweet-button {
+  float: left;
+  margin-right: lines(1);
+}
+
+.listing-tweet-button {
+  padding-top: 4px; // Extra top padding to align with fb like button
+}
+
+// Listing price
+.listing-price {
+  clear: both; // Price floats to left
+}
+
+.listing-price-amount {
+  @include huge-type;
+  color: $light-body;
+  display: block;
+  float: left;
+  margin-right: lines(0.25);
+}
+
+.listing-price-quantity {
+  vertical-align: top;
+  $hugeTypeLineHeight: lines(2);
+  $hugeTypeFontSize: em($huge-type);
+  $hugeTypeMargin: ($hugeTypeLineHeight - $hugeTypeFontSize) / 2; // Calculate the top margin based on the huge type
+  $positionFineTune: em(2); // hugeTypeMargin calculates the correct position, but due to the different font size, some finetuning is needed
+  // Use position relative, since the element is inline (no top-margin/padding should be used)
+  position: relative;
+  top: $hugeTypeMargin + $positionFineTune;
+  color: $aside;
+}
+
+.listing-paypal-fee-info-link {
+  cursor: pointer;
+}
+
+// Listing quantity input
+.quantity-wrapper {
+  width: 100%;
+  margin-bottom: lines(0.75);
+}
+.quantity-label-wrapper {
+  float: left;
+  width: 100%;
+}
+.quantity-label {
+  float: left;
+  width: auto;
+  font-weight: bold;
+  padding: lines(0.35) lines(0.35) 0 0;
+  margin: auto em(100) auto 0;
+}
+.quantity-input {
+  margin-left: em(-100);
+  width: em(100);
+  float: left;
+}
+.quantity-input input{
+  width: 100%;
+}
+.quantity-input input:focus {
+  outline-width: 0;
+}
+
+// Listing author
+$listing-author-avatar-width: 54;
+$listing-author-avatar-height: 54;
+
+.listing-author {
+  position: relative;
+}
+
+.listing-author-avatar {
+  width: em($listing-author-avatar-width);
+  height: em($listing-author-avatar-height);
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  > a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.listing-author-avatar-image {
+  @include border-radius(50%);
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.listing-author-details {
+  width: 100%;
+  padding-left: em($listing-author-avatar-width);
+  min-height: em($listing-author-avatar-height);
+  padding-left: em($listing-author-avatar-width) + lines(0.75);
+  margin-top: lines(0.25); // Author box looks a bit better when given a bit more room
+  margin-bottom: lines(0.75); // Author box looks a bit better when given a bit more room
+}
+
+.listing-author-name {
+  @include big-type;
+  height: em($listing-author-avatar-width, 22) / 2;
+  line-height: em($listing-author-avatar-width, 18) / 2;
+}
+
+.listing-author-name-link {
+  display: block;
+  @include ellipsis;
+}
+
+.listing-author-contact-button {
+  @include grey-button;
+  width: 100%;
+}
+
+// Listing author activity
+
+.listing-author-activity {
+  @include clearfix();
+}
+
+.listing-author-activity-icon {
+  font-size: 32px;
+  line-height: (em(32, 32) * 1.5);
+  display: block;
+  float: left;
+  width: em(32, 32);
+}
+
+.listing-author-activity-item {
+  float: left;
+  width: lines($right-column-1-3) - 0.75em - em(32) - lines(1); // FIXME!!!
+  margin-left: lines(0.5);
+}
+
+.listing-author-activity-description {
+  @include small-type;
+  color: $border;
+}
+
+// Map
+.listing-map {
+  width: 100%;
+  height: lines(8);
+}
+
+.listing-view-admin-links {
+  margin: lines(0.5) 0; // Some top & bottom margin to give links some space
+}
+
+.map-link {
+  float: right;
+  font-size: em(14);
+  margin-top: 0.2em;
+}
+
+// Delivery options
+.delivery-title {
+  margin-bottom: 0;
+}
+
+.delivery-label {
+  display: inline;
+  width: auto;
+  margin-left: lines(0.2);
+}
+
+.book-button {
+  margin-top: 0;
+  width: 100%;
+  text-align: center;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+// Transaction action button
+.enabled-book-button {
+  @include big-button($link);
+  @extend .book-button;
+}
+
+.disabled-book-button {
+  @include big-button($link);
+  @extend .book-button;
+
+  &, &:hover {
+    background-color: $border;
+  }
+}
+
+// Transaction action button
+.book-button .content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.checkbox-option {
+  &.selected {
+
+  }
+  &.not-selected {
+    color: $border;
+  }
+}
+
+.checkbox-option-checkmark {
+  display: inline-block;
+  width: 20px;
+  color: $link;
+}
+
+.listings-how-paypal-works-link {
+  font-size: em(14);
+}
+@media (max-width: 480px) {
+  .checkbox-group {
+    .col-4 {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.order-listings {
+  clear: both;
+  font-size: 14px;
+  line-height: 42px;
+  margin-bottom: 42px;
+  padding: 0;
+  white-space: nowrap;
+  @include media(tiny-mobile) {
+    clear: none;
+    float: right;
+    margin-bottom: 8px;
+    padding-left: 6px;
+  }
+
+  @include media(mobile) {
+    clear: none;
+    float: left;
+    margin-bottom: 8px;
+    padding-left: 0px;
+  }
+  @include media(tablet) {
+    clear: none;
+    float: right;
+    margin-bottom: 8px;
+    padding-left: 6px;
+  }
+  @include media(desktop) {
+    margin-bottom: 0px;
+  }
+
+  .caption {
+    height: 42px;
+    line-height: 42px;
+    min-height: 42px;
+    vertical-align: top;
+    padding-top: 2px;
+  }
+  .order-listings__select {
+    display: inline-block;
+    select {
+      width: auto;
+    }
+  }
+}
+select#sort_order, .order-listings .caption {
+  border-width: 0px;
+  height: 35px;
+  line-height: 33px;
+  min-height: 35px;
+  font-family: 'Source Sans Pro', helvetica, sans-serif;
+  color: #3c3c3c;
+  padding: 0px 8px;
+  margin-top: 0px;
+}
+.order-listings .caption {
+  display: none;
+  vertical-align: inherit;
+  @include media(tablet) {
+    display: inline-block;
+  }
+}
+#calendar {
+  .fc-event, .fc-event-dot {
+    background-color: #d0fad0;
+    color: black;
+  } 
+} 
+.cal-booked-time-slots {
+  .fc-event-dot { 
+    background-color: white; 
+  }
+  background-color: #f6eaa9 !important; 
+}
+.fc-unthemed {
+  .fc-list-item.cal-booked-time-slots:hover td { 
+    background: #a0a0a0; 
+  }
+}
+#calendar {
+  .fc-view-container { background: #f5f8f8; }
+
+  .fc-event, .fc-event-dot {
+    background-color: #d0fad0;
+    color: black;
+  } 
+  tbody {
+    tr:nth-child(odd), tr:nth-child(even) { 
+      background-color: initial;
+      &.cal-booked-time-slots { 
+        background-color: #f6eaa9; 
+      }
+      &.fc-list-item.cal-working-time-slots {
+        background-color: #d0fad0;
+        .fc-event-dot {
+          background-color: green;
+        }
+      }
+    } 
+  }
+
+}
+.delete-slot { background: red; }
+
+.legend-padd {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 11px;
+  line-height: 16px;
+  border-radius: 4px;
+  padding: 0px 6px;
+  &.red {
+    background: #f6a2a1;
+    border-color: red;
+  }
+  &.green {
+    background: #d0fad0;
+  }
+  &.yellow {
+    background: #f6eaa9;
+  }
+  &.grey {
+    background: #f5f8f8;
+    border-color: #b0b0b0;
+    border-width: 1px;
+    border-style: solid;
+  }
+}
+.legend-center {
+  margin-top: 10px;
+  text-align: center;
+}
+.day-availability-none { background: #f5f8f8; }
+.day-availability-free { background: #d0fad0; }
+.day-availability-full { background: #f5f8f8; }
+#calendar .day-availability-full { background: #f5f8f8;  }
+.day-availability-partial { background: #f6eaa9; }
+#calendar.small-calendar {
+  .fc-basic-view .fc-body .fc-row { min-height: 1em !important; }
+  .fc-view-container { background: #f5f8f8; }
+  .fc-bgevent { opacity: 1; }
+  &.fc th, &.fc td { 
+    cursor: pointer; 
+    border-color: transparent; 
+    &:first-child {
+      border-radius: 0;
+    }
+  }
+  .fc-day-top {
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 4px;
+  }
+  .fc-day-number {
+    float: none;
+  }
+  .fc-day-header.fc-widget-header {
+    background: #dfe7e9;
+    text-transform: uppercase;
+    font-weight: normal;
+    font-size: 13px;
+
+  }
+  .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 0;
+    background: #f5f8f8;
+    padding: 8px 0px;
+    h2 {
+      text-transform: uppercase;
+      font-size: 18px;
+    }
+    .fc-center {
+      padding-top: 6px;
+    }
+  }
+
+  .fc-state-hover,  .fc-state-down,   .fc-state-active,   .fc-state-disabled, .fc-state-default {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    &:hover, &:active {
+      color: black;
+    }
+  }
+}
+
+.slot-item {
+  display: inline-block;
+  margin-right: 40px;
+}
+.slot-row {
+  margin-bottom: 20px;
+  select {
+    height: 42px !important;
+    min-width: 116px;
+  }
+}
+#working_time_slot_lightbox {
+  h2 {
+    font-size: 1.375em;
+    line-height: 1.09091em;
+    margin-bottom: 0.375em;
+  }
+  width: 550px; 
+  @media (max-width: 550px) {
+    width: 100%;
+  }
+  .row.submit { margin-bottom: 0px; }
+  .row.submit .text-right { 
+    text-align: right; 
+    a.button {
+      display: inline-block;
+      margin: 0.375em 0px 3px 0px; 
+    }
+  }
+  button { 
+    margin: 0.375em 0px 3px 0px; 
+  }
+}
+.transaction-schedule {
+  .time-slot {  position: absolute; right: 0px; border-bottom: 1px solid black;   z-index: 1; left: 0; text-align: left; height: 22px; padding: 4px;  }
+  .working-slot { background: #d0fad0; position: absolute; left: 0px;  right:0px;  z-index: 0;  padding :2px; }
+  .working-slot i { z-index: 10; display: inline-block; margin-left: 44px; margin-top: 4px; font-size: 12px;}
+  .working-slot .info { display: inline-block; padding-left: 40px}
+  .booked-slot { background: #f6eaa9 ; width: 70%; position: absolute; right: 1px; border: 1px solid brown; z-index: 2; padding: 2px; border-radius: 5px}
+  .booked-wrapper {position: relative; height: 360px; background: #f3f3f3; font-size: 12px; line-height: 1em; font-weight: normal; border: 1px solid black;}
+  .booked-slot a { color: black; }
+  .current-tx { background: #4a90e2; border-color: blue; }
+  .booked-slot.current-tx a { color: white; font-weight: bold;}
+}
+.small_description {
+  font-size: 12px;
+  line-height: 1.1em;
+  padding-bottom: 10px;
+}
+.justified {
+  text-align: justify;
+  p { 
+    margin-right: 14px;
+  }
+}
+.fc-unthemed td.fc-today {
+    background: #ffff00;
+}
+.member-price-notice {
+    background: red;
+    color: white;
+    padding: 2px;
+    line-height: 1.1em;
+}
+
+.lightbox#popup_for_qr {
+  max-width: none;
+  .image-special-deal {
+    margin-top: 30px;
+  }
+}
+
+.price_add_on_fields,
+.price_service_fee_fields,
+.price_tax_fields {
+  position: relative;
+  border: 2px solid #c3c3c3;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  & > legend {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  & .price_add_on_delete {
+    position: absolute;
+    right: 10px;
+  }
+}

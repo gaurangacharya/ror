@@ -1,0 +1,9 @@
+.row.filter
+  .col-9
+    = form_for @presenter.filter, as: :f, method: :get, url: person_inbox_path(current_person.username) do |f|
+      = f.label :group_by_username
+      = f.check_box :group_by_username
+
+      = f.button t("conversations.index.filter.apply")
+  .col-3.export-csv
+    = link_to t("conversations.index.filter.export"), export_person_inbox_path(person_id: current_person.username, format: :csv)

@@ -1,0 +1,14 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t("admin.reviews.reviews")
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  .row
+    .col-12
+      %h1= t("admin.reviews.new_review")
+
+      = render 'form', review: @review

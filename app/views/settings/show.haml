@@ -1,0 +1,150 @@
+- content_for :javascript do
+  initialize_update_profile_info_form("#{I18n.locale}","#{target_user.id.to_s}", #{@current_community.real_name_required?});
+
+- content_for :extra_javascript do
+  - maps_key = MarketplaceHelper.google_maps_key(@current_community.id)
+  - key_param = maps_key ? "?key=#{maps_key}" : ""
+  - needs_maps = !FeatureFlagHelper.feature_enabled?(:topbar_v1) || search_mode == :keyword
+  = javascript_include_tag "//maps.googleapis.com/maps/api/js#{key_param}" if needs_maps
+  :javascript
+    $('#person_embed_document_button_color').minicolors({});
+
+- content_for :title_header do
+  %h1= t("layouts.no_tribe.settings")
+
+= render :partial => "layouts/left_hand_navigation", :locals => { :links => settings_links_for(target_user, @current_community) }
+
+#person_settings_form.left-navi-section.settings-section
+  %p
+    = t("settings.profile.these_fields_are_shown_in_your")
+    = link_to(t("settings.profile.profile_page"), target_user) + "."
+
+  = form_for target_user do |form|
+
+    = form.label :is_vendor, t("people.new.is_vendor")
+    -# Seller type
+    - if target_user.premium_active?
+      = t("people.new.vendor_membership")
+    - elsif target_user.is_vendor?
+      = t("people.new.vendor_business")
+    - else
+      = t("people.new.vendor_individual")
+
+    = form.label :given_name, t("settings.profile.given_name")
+    = form.text_field :given_name, :class => "text_field", :maxlength => "30"
+    .inline-label-container
+      = form.label :family_name, t("settings.profile.family_name"), :class => "inline"
+      %small
+        - if ["first_name_with_initial", "first_name_only"].include? @current_community.name_display_type
+          = t("settings.profile.#{@current_community.name_display_type}")
+    = form.text_field :family_name, :class => "text_field", :maxlength => "30"
+
+    -# Display name
+    .inline-label-container
+      = form.label :display_name, t("settings.profile.display_name"), class: "inline"
+    %span.alert-box-icon
+      = icon_tag("information", ["icon-fix"])
+    %small
+      = t("settings.profile.display_name_description")
+    = form.text_field :display_name, class: "text_field", :maxlength => "60"
+
+    -# Location
+    .inline-label-container
+      = form.label :street_address, t("settings.profile.street_address"), :class => "inline"
+      %small
+        = t('settings.profile.default_in_listing')
+    %span.alert-box-icon
+      = icon_tag("information", ["icon-fix"])
+    %small
+      = t("settings.profile.location_description")
+    = form.text_field :street_address, :class => "text_field", :onkeyup => "timed_input(this)"
+    #settings_map_canvas.map
+      - content_for :extra_javascript do
+        :javascript
+          source = document.getElementById("person_street_address");
+          $(document).ready(function(){
+            googlemapMarkerInit("settings_map_canvas","person_location","person_street_address", true, #{tribe_latitude}, #{tribe_longitude});
+            });
+
+    -# Phone number
+    .inline-label-container
+      = form.label :phone_number, t("settings.profile.phone_number"), :class => "inline"
+      %small
+        = t('settings.profile.invisible')
+    = form.text_field :phone_number, :class => "text_field", :maxlength => "25"
+
+    -# Website URL
+    .website-url{class: target_user.is_vendor? ? "" : "hidden" }
+      = form.label :website_url, t("settings.profile.website_url"), :class => "inline"
+      = form.text_field :website_url, :class => "text_field", placeholder: "http://www.yoursite.com"
+
+    -# Guest Type Pricing Feature
+    - if target_user.is_vendor?
+      .guest-type-pricing-section
+        = form.label :guest_type_pricing_enabled, class: "input" do
+          = form.check_box :guest_type_pricing_enabled
+          = "Enable Guest Type Pricing"
+        %small.form-text.text-muted
+          Enable this feature if you offer different pricing for hotel guests vs. visitors. You'll be able to set visitor pricing when creating or editing listings.
+
+    -# Profile picture
+    = form.label :image, t("settings.profile.profile_picture")
+    = form.file_field :image, :size => 30, :id => "avatar_file"
+
+    -# About text
+    = form.label :description, t("settings.profile.about_you"), :class => "input"
+    %span.alert-box-icon
+      = icon_tag("information", ["icon-fix"])
+    %small
+      - markdown_popup_link = link_to t("settings.profile.format_markdown_link"), "#", id: "markdown-popup-link"
+      = raw t("settings.profile.format_markdown", link: markdown_popup_link)
+
+    = form.text_area :description, :class => "update_profile_description_text_area"
+    = form.fields_for :location do |loc|
+      = loc.hidden_field :address, :value => target_user.location.address
+      = loc.hidden_field :google_address, :value => target_user.location.google_address
+      = loc.hidden_field :latitude, :value => target_user.location.latitude
+      = loc.hidden_field :longitude, :value => target_user.location.longitude
+
+    -# TripAdvisor Location ID
+    = form.label :tripadvisor_location_id, t("settings.profile.tripadvisor_location_id"), :class => "input"
+    = form.text_field  :tripadvisor_location_id, :class => "text_field"
+
+    -# Referral Location
+    .inline-label-container
+      = form.label :referral_address, t("settings.profile.referral_address"), :class => "inline"
+    %span.alert-box-icon
+      = icon_tag("information", ["icon-fix"])
+    %small
+      = t("settings.profile.location_description")
+    = form.text_field :referral_address, :class => "text_field", :onkeyup => "timed_input(this)"
+    - if target_user.referral_location && target_user.referral_location.has_coords?
+      = link_to t("settings.profile.check_location"), "/s?"+target_user.referral_location.bounding_box_params, target: '_blank'
+    -# TripAdvisor Location ID
+    = form.label :customer_message_under_book, t("settings.profile.customer_message_under_book"), :class => "input"
+    = form.text_field  :customer_message_under_book, :class => "text_field"
+
+    = form.label :embed_document, t('settings.profile.embed_document'), class: 'input'
+    = render "layouts/info_text", text: t("settings.profile.embed_document_info")
+    = form.text_field :embed_document, placeholder: t('settings.profile.embed_document_placeholder')
+
+    = form.label :embed_document_button_color, t('settings.profile.embed_document_button_color'), class: 'input'
+    = render "layouts/info_text", text: t("settings.profile.embed_document_button_color_info")
+    = form.text_field :embed_document_button_color, placeholder: t('settings.profile.embed_document_button_color_placeholder')
+
+    = form.label :pdf, t("settings.profile.pdf"), class: 'input'
+    - if form.object.pdf.file?
+      .pdf-original-filename
+        = form.object.pdf.original_filename
+    = form.file_field :pdf
+
+    .checkbox-container
+      = form.check_box :delete_pdf
+      = form.label :delete_pdf, t("settings.profile.delete_pdf"), class: 'light'
+
+    %br
+    %br
+
+    = form.button t("settings.save_information"), :class => "send_button"
+
+= render :partial => 'layouts/markdown_help'

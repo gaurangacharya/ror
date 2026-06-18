@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+version=$1
+engine=$2
+name="$engine-$version"
+bucket="thinking-sphinx"
+directory="ext/sphinx"
+prefix="`pwd`/$directory"
+file="ext/$name.tar.gz"
+
+if [ "$engine" == "sphinx" ]; then
+  url="http://sphinxsearch.com/files/$name-release.tar.gz"
+else
+  url="https://github.com/manticoresoftware/manticore.git"
+fi
+
+download_and_compile_source () {
+  if [ "$engine" == "sphinx" ]; then
+    download_and_compile_sphinx
+  else
+    download_and_compile_manticore
+  fi
+}
+
+download_and_compile_sphinx () {
+  curl -O $url
+  tar -zxf $name-release.tar.gz
+  cd $name-release
+  ./configure --with-mysql --with-pgsql --enable-id64 --prefix=$prefix
+  make
+  make install
+  cd ..
+  rm -rf $name-release.tar.gz $name-release
+}
+
+download_and_compile_manticore () {
+  git clone $url $engine
+  cd $engine
+  git checkout $version
+  mkdir build
+  cd build
+  cmake -D WITH_MYSQL=TRUE -D WITH_PGSQL=TRUE -D DISABLE_TESTING=TRUE -D CMAKE_INSTALL_PREFIX=$prefix ..
+  make -j4
+  make install
+  cd ../..
+  rm -rf $engine
+}
+
+load_cache () {
+  mkdir ext
+  curl -o $file http://$bucket.s3.amazonaws.com/bincaches/$name.tar.gz
+  tar -zxf $file
+}
+
+push_cache () {
+  tar -czf $file $directory
+  aws s3 cp $file s3://$bucket/bincaches/$name.tar.gz --acl public-read
+}
+
+if curl -i --head --fail http://$bucket.s3.amazonaws.com/bincaches/$name.tar.gz
+then
+  load_cache
+else
+  download_and_compile_source
+  push_cache
+fi

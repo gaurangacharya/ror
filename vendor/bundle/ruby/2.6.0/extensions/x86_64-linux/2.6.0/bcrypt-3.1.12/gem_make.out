@@ -1,0 +1,19 @@
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/bcrypt-3.1.12/ext/mri
+/home/agile/.rbenv/versions/2.6.5/bin/ruby -I /home/agile/.rbenv/versions/2.6.5/lib/ruby/2.6.0 -r ./siteconf20260407-28693-190enol.rb extconf.rb
+creating Makefile
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/bcrypt-3.1.12/ext/mri
+make "DESTDIR=" clean
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/bcrypt-3.1.12/ext/mri
+make "DESTDIR="
+compiling bcrypt_ext.c
+compiling crypt.c
+compiling crypt_blowfish.c
+compiling crypt_gensalt.c
+compiling wrapper.c
+linking shared-object bcrypt_ext.so
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/bcrypt-3.1.12/ext/mri
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 bcrypt_ext.so ./.gem.20260407-28693-1b5q1ic

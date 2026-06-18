@@ -1,0 +1,20 @@
+$("#search-results").html("<%= escape_javascript(render :partial => 'grid_item_map_content', :locals => {show_distance: show_distance, shape_name_map: shape_name_map }) %>")
+<% community_location_lat = @current_community.location ? @current_community.location.latitude : nil %>
+<% community_location_lon = @current_community.location ? @current_community.location.longitude : nil %>
+initialize_listing_map(
+  <%= raw @listings.map { |l| {category: l[:category_id], id: l[:id], icon: l[:icon_name], latitude: l[:latitude], longitude: l[:longitude], title: l[:title] } }.to_json %>,
+  "<%= community_location_lat %>",
+  "<%= community_location_lon %>",
+  <%= raw viewport.to_json %>,
+  "<%= I18n.locale %>",
+  "<%= @current_community.use_community_location_as_default %>", true);
+if ($(window).width() > 1200) {
+  $(".listings-column").scrollTop(0);
+} else {
+  <% if params[:page].to_i > 1 %>
+    $("#map-column, #listings-column, #grid-list-buttons").removeClass('map-visible-2nd-page');
+    $("#map-column, #listings-column").addClass('map-hidden-2nd-page');
+    window.scrollTo(0,0);
+  <% end %>
+}
+initRatings();

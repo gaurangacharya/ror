@@ -1,0 +1,41 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t(".fingerprints")
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  .row
+    .col-12
+      %h1= t(".fingerprints")
+
+      = form_tag '', :method => :get do
+        .row
+          .col-8
+            = text_field_tag :code, params[:code], placeholder: t('.search_by_code')
+          .col-4
+            = submit_tag t(".search"), class: 'button search-button'
+
+      = will_paginate(@fingerprints)
+
+      %table.small-codes
+        %thead
+          %tr
+            %th= t(".code")
+            %th= t(".user_agent")
+            %th= t(".last_ip")
+            %th= t(".created")
+            %th= t(".updated")
+        %tbody
+          - @fingerprints.each do |fp|
+            %tr
+              %td= link_to fp.hash_code, admin_fingerprint_path(fp)
+              %td= fp.user_agent
+              %td= link_to fp.last_ip, "https://ipinfo.io/#{fp.last_ip}", target: "_blank"
+              %td= fp.created_at.strftime("%m/%d/%Y %H:%M")
+              %td= fp.updated_at.strftime("%m/%d/%Y %H:%M")
+
+:css
+  .small-codes { font-size: 13px; }

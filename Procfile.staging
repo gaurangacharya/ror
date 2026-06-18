@@ -1,0 +1,2 @@
+worker: /usr/local/rvm/bin/rvm 3.2.2 do bundle exec sidekiq -q default -q paperclip -q mailers
+search: /usr/local/rvm/bin/rvm 3.2.2 do bundle exec rake ts:configure ts:start_attached

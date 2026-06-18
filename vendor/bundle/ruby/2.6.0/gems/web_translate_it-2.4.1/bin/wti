@@ -1,0 +1,125 @@
+#!/usr/bin/env ruby
+
+$PROGRAM_NAME = 'wti'
+
+require 'trollop'
+require 'web_translate_it'
+
+show_commands = <<-EOS
+Usage: wti <command> [options]+ <filename>
+
+The most commonly used wti commands are:
+   pull        Pull target language file(s)
+   push        Push master language file(s)
+   match       Display matching of local files with File Manager
+   add         Create and push a new master language file
+   rm          Delete a master language file from a project
+   addlocale   Add a new locale to the project
+   rmlocale    Delete a locale from a project
+   status      Fetch and display project statistics
+   init        Configure your project to sync
+
+See `wti <command> --help` for more information on a specific command.
+
+[options] are:
+EOS
+
+SUB_COMMANDS = %w(pull push match add addlocale status st init)
+global_options = Trollop::options do
+  stop_on SUB_COMMANDS
+  banner show_commands
+  version "wti version #{WebTranslateIt::Util.version}"
+end
+
+command = ARGV.shift # get the subcommand
+command_options = case command
+  when "pull"
+    Trollop::options do
+      banner <<-EOS
+wti pull [filename] - Pull target language file(s)
+[options] are:
+EOS
+      opt :locale, "ISO code of locale(s) to pull", :type => :string
+      opt :all,    "Pull all files"
+      opt :force,  "Force pull (bypass conditional requests to WTI)"
+      opt :config, "Path to a configuration file", :short => "-c", :default => ".wti"
+      opt :debug,  "Display debug information"
+    end
+  when "push"
+    Trollop::options do
+      banner <<-EOS
+wti push [filename] - Push master language file(s)
+[options] are:
+EOS
+      opt :locale, "ISO code of locale(s) to push", :type => :string
+      opt :target, "Upload all target files"
+      opt :force,  "Force push (bypass conditional requests to WTI)"
+      opt :low_priority, "WTI will process this file with a low priority"
+      opt :merge,  "Force WTI to merge this file"
+      opt :ignore_missing, "Force WTI to not obsolete missing strings"
+      opt :minor, "Minor Changes. When pushing a master file, prevents target translations to be flagged as `to_verify`."
+      opt :label,  "Apply a label to the changes", :type => :string
+      opt :config, "Path to a configuration file", :short => "-c", :default => ".wti"
+      opt :all,    "DEPRECATED -- See `wti push --target` instead"
+      opt :debug,  "Display debug information"
+    end
+  when "add"
+    Trollop::options do
+      banner "wti add filename - Create and push a new master language file"
+      opt :low_priority, "WTI will process this file with a low priority"
+      opt :config, "Path to a configuration file", :short => "-c", :default => ".wti"
+      opt :debug,  "Display debug information"
+    end
+  when "rm"
+    Trollop::options do
+      banner "wti rm filename - Delete a master language file"
+      opt :config, "Path to a configuration file", :short => "-c", :default => ".wti"
+      opt :debug,  "Display debug information"
+    end
+  when "addlocale"
+    Trollop::options do
+      banner "wti addlocale localename - Add a new locale to the project"
+      opt :config, "Path to a configuration file", :short => "-c", :default => ".wti"
+      opt :debug,  "Display debug information"
+    end
+  when "rmlocale"
+    Trollop::options do
+      banner "wti rmlocale localename Delete a locale from the project"
+      opt :config, "Path to a configuration file", :short => "-c", :default => ".wti"
+      opt :debug,  "Display debug information"
+    end
+  when "status"
+    Trollop::options do
+      banner "wti status - Fetch and display project statistics"
+      opt :config, "Path to a configuration file", :short => "-c", :default => ".wti"
+      opt :debug,  "Display debug information"
+    end
+  when "init"
+    Trollop::options do
+      banner "wti init [api_token] - Configure your project to sync"
+      opt :config, "Path to a configuration file", :short => "-c", :default => ".wti"
+      opt :debug,  "Display debug information"
+    end
+  when "match"
+    Trollop::options do
+      banner "wti match - Display matching of local files with File Manager"
+      opt :config, "Path to a configuration file", :short => "-c", :default => ".wti"
+      opt :debug,  "Display debug information"
+    end
+  else
+    if command.nil?
+      puts show_commands
+      exit
+    else
+      Trollop::die "Unknown subcommand #{command.inspect}"
+    end
+  end
+
+begin
+  WebTranslateIt::Connection.turn_debug_on if command_options.debug
+  WebTranslateIt::CommandLine.new(command, command_options, global_options, ARGV, File.expand_path("."))
+rescue Interrupt => e
+  puts StringUtil.failure("\nQuitting...")
+  exit 1
+end
+ 

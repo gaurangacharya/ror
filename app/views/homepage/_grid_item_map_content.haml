@@ -1,0 +1,9 @@
+%div.home-fluid-thumbnail-grid-wide
+  .home-fluid-thumbnail-grid.home-listings
+    = render partial: "grid_item", collection: @listings, as: :listing, locals: { show_distance: show_distance }
+  .home-listings-list
+    = render partial: "list_item_with_distance", collection: @listings, as: :listing, locals: { show_distance: show_distance, shape_name_map: shape_name_map}
+  .row.listing-search-info 
+    = page_entries_info @listings, model: "Listing"
+  .row
+    = will_paginate(@listings, inner_window: 1, outer_window: 1, renderer: RemoteLinkPaginationHelper::LinkRenderer, params: {controller: 'homepage', action: 'index'} )

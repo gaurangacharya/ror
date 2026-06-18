@@ -1,0 +1,41 @@
+---
+# Sidekiq configuration for OwnOutdoors
+# This replaces the delayed_job configuration
+
+# Number of worker threads
+:concurrency: 5
+
+# Queues to process (in order of priority)
+:queues:
+  - default
+  - paperclip
+  - mailers
+  - transactions
+
+# Redis connection settings
+:redis:
+  url: <%= ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') %>
+
+# Logging
+:logfile: ./log/sidekiq.log
+
+# Process lifecycle
+:timeout: 25
+:retry: 3
+
+# Development/test specific settings
+development:
+  :concurrency: 2
+  :redis:
+    url: redis://localhost:6379/0
+
+test:
+  :concurrency: 1
+  :redis:
+    url: redis://localhost:6379/1
+
+production:
+  :concurrency: 10
+  :redis:
+    url: <%= ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') %>
+  :logfile: ./log/sidekiq.log 

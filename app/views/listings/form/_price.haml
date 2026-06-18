@@ -1,0 +1,223 @@
+- payment_gateway = @listing_presenter.commission[:payment_gateway]
+.price-container
+  - if @listing_presenter.shape[:price_enabled]
+    = form.label :price, t(".price")
+    = form.text_field :price, :class => "price-field", :maxlength => "10", :placeholder => "0", :value => (@listing.price ? @listing.price.to_s: 0)
+    = render partial: "listings/form/price_currency", locals: {form: form}
+    
+    - if @current_user&.guest_type_pricing_enabled? || @current_user&.person_white_label&.ladera_enabled? || @current_user&.has_admin_rights?(@current_community)
+      .visitor-price-container
+        = form.label :visitor_price, "Visitor Price"
+        = form.text_field :visitor_price, :class => "price-field", :maxlength => "10", :placeholder => "0", :value => (@listing.visitor_price ? @listing.visitor_price.to_s: 0)
+        %small.form-text.text-muted
+          = "This price will be shown to visitors. Hotel guests will see the standard price above."
+        - if @current_user&.has_admin_rights?(@current_community) && !(@current_user&.guest_type_pricing_enabled? || @current_user&.person_white_label&.ladera_enabled?)
+          %small.form-text.text-warning
+            %strong Admin Note:
+            You can edit visitor pricing for any listing. For this to take effect, the listing author needs to enable "Guest Type Pricing" in their profile or you need to enable the Ladera design for them.
+
+    - if @listing_presenter.unit_options.empty?
+      -# No-op
+    - elsif @listing_presenter.unit_options.length == 1
+      - unit_option = @listing_presenter.unit_options.first
+      .quantity-description
+        = t(".per")
+        = unit_option[:display]
+      = hidden_field_tag("listing[unit]", unit_option[:value])
+    - else
+      .quantity-description
+        = t(".per")
+      %select.js-listing-unit{name: "listing[unit]"}
+        - @listing_presenter.unit_options.each do |unit_option|
+          %option{value: unit_option[:value], selected: unit_option[:selected], data: { kind: unit_option[:kind] }}
+            = unit_option[:display]
+
+    %small
+      - payment_fee_info_link = capture do
+        %a.listing-payment-fee-info-link#payment_fee_info_link{href: '#'}
+          = payment_gateway == :paypal ? t(".paypal_fee_info_link_text") : t(".payment_fee_info_link_text")
+      - if @listing_presenter.commission[:seller_commission_in_use]
+        - content_for :seller_commission_js do
+          :javascript
+            $(function() {
+              updateSellerGetsValue(
+                #{raw @listing_presenter.currency_opts.to_json},
+                "#listing_price",
+                "#fee_display",
+                #{@listing_presenter.commission[:commission_from_seller]},
+                #{@listing_presenter.commission[:minimum_commission].format(decimal_mark: ".", delimiter: "", symbol: false)},
+                true);
+            });
+        - if run_js_immediately
+          = yield :seller_commission_js
+        - else
+          - content_for :extra_javascript do
+            = yield :seller_commission_js
+        - if payment_gateway.present?
+          - if payment_gateway == [:paypal, :stripe]
+            = t(".after_service_fee_you_will_get_payment_text", :sum_with_currency => '<span id="fee_display"></span>', :payment_fee_info_link => payment_fee_info_link).html_safe
+          - if payment_gateway == :paypal
+            = t(".after_service_fee_you_will_get_paypal_text", :sum_with_currency => '<span id="fee_display"></span>', :paypal_fee_info_link => payment_fee_info_link).html_safe
+          - if payment_gateway == :stripe
+            = t(".after_service_fee_you_will_get_stripe_text", :sum_with_currency => '<span id="fee_display"></span>', :payment_fee_info_link => payment_fee_info_link).html_safe
+        - else
+          = t(".after_service_fee_you_will_get", :sum_with_currency => '<span id="fee_display"></span>').html_safe
+
+- if payment_gateway.present?
+  = render layout: "layouts/lightbox", locals: { id: "payment_fee_info_content"} do
+    - if payment_gateway == :paypal
+      %h2= t("common.payment_fee_info.title_paypal")
+    - else
+      %h2= t("common.payment_fee_info.title")
+
+    - if payment_gateway == [:paypal, :stripe]
+      %p
+        = t("common.payment_fee_info.info")
+      %h4
+        = t("common.payment_fee_info.stripe")
+
+
+    - if payment_gateway == :stripe || payment_gateway == [:paypal, :stripe]
+      - text_with_line_breaks_html_safe do
+        - link_to_stripe = link_to(t("common.stripe_fee_info.link_to_stripe_text"), @listing_presenter.stripe_fees_url, target: "_blank")
+        = t("common.stripe_fee_info.body_text", link_to_stripe: link_to_stripe, stripe_commission: @listing_presenter.commission[:stripe_commission]).html_safe
+
+    - if payment_gateway == [:paypal, :stripe]
+      %h4= t("common.payment_fee_info.paypal")
+      - text_with_line_breaks_html_safe do
+        - link_to_paypal = link_to(t("common.paypal_fee_info.link_to_paypal_text"), @listing_presenter.paypal_fees_url, target: "_blank")
+        = t("common.paypal_fee_info.body_text", link_to_paypal: link_to_paypal, paypal_commission: @listing_presenter.commission[:paypal_commission]).html_safe
+
+    - if payment_gateway == :paypal
+      - text_with_line_breaks_html_safe do
+        - link_to_paypal = link_to(t("common.paypal_fee_info.link_to_paypal_text"), @listing_presenter.paypal_fees_url, target: "_blank")
+        = t("common.paypal_only_fee_info.body_text", link_to_paypal: link_to_paypal).html_safe
+
+  - if run_js_immediately
+    :javascript
+      $('#payment_fee_info_link').click(function() { $('#payment_fee_info_content').lightbox_me({centered: true, zIndex: 1000000}); return false});
+  - else
+    - content_for :extra_javascript do
+      :javascript
+        $('#payment_fee_info_link').click(function() { $('#payment_fee_info_content').lightbox_me({centered: true, zIndex: 1000000}); ; return false});
+
+= render 'listings/form/price_add_ons', form: form, presenter: @listing_presenter
+= render 'listings/form/price_tax', form: form, presenter: @listing_presenter
+= render 'listings/form/price_service_fee', form: form, presenter: @listing_presenter
+
+#deposit-wrapper.price-container
+  - if @listing_presenter.shape[:price_enabled]
+    = form.label :deposit, t(".deposit")
+    = render partial: "layouts/info_text", locals: { text: t(".deposit_note") }
+    = form.text_field :deposit, :class => "price-field", :maxlength => "10", :placeholder => "0", :value => (@listing.deposit ? @listing.deposit.to_s: 0)
+    = render partial: "listings/form/price_currency", locals: {form: form}
+
+.restaurant-price-container.hidden
+  %br
+  = form.label :restaurant_price, t("listings.restaurant_price"), :class => "inline"
+  = form.select :restaurant_price, Listing::RESTAURANT_PRICES.keys
+
+= form.label :call_for_price, :class => "input" do
+  = form.check_box :call_for_price
+  = t('listings.call_for_price.title') 
+= render partial: "layouts/info_text", locals: { text: t("listings.call_for_price.note") }
+
+= form.label :hide_price, :class => "input" do
+  = form.check_box :hide_price
+  = t('listings.hide_price')
+
+= form.label :restaurant, :class => "input" do
+  = form.check_box :restaurant
+  = t('listings.restaurant.title')
+
+= form.label :gift_card, :class => "input" do
+  = form.check_box :gift_card
+  = t('listings.gift_card')
+
+= form.label :auto_confirm, :class => "input" do
+  = form.check_box :auto_confirm
+  = t('.auto_confirm')
+= render partial: "layouts/info_text", locals: { text: t("listings.form.price.auto_confirm_note") }
+
+- if @current_user.is_affiliate? || @current_user.has_admin_rights?(@current_community)
+  = form.label :affiliate_pricing, :class => "input" do
+    = form.check_box :affiliate_pricing
+    = t('listings.affiliate_pricing.title') 
+  = render partial: "layouts/info_text", locals: { text: t("listings.affiliate_pricing.note") }
+
+= form.label :booking_mode, t("listings.booking_mode"), :class => "inline"
+= form.select :booking_mode, [ "none", "hour", "day", "night" ] 
+
+%div
+  %i.ss-info
+  %a#pricing_info_link{href: '#'}= t("listings.pricing_info_link") 
+
+= form.label :min_units, t("listings.min_units")
+= form.text_field :min_units
+
+= form.label :fixed_units, t("listings.fixed_units")
+= form.text_field :fixed_units
+= render partial: "layouts/info_text", locals: { text: t("listings.form.price.fixed_units_note") }
+
+= form.label :slot_15min_increment, t("listings.slot_15min_increment")
+= form.check_box :slot_15min_increment, disabled: @listing.working_time_slots.any?
+= render partial: "layouts/info_text", locals: { text: t("listings.form.price.increment_15min_note") }
+
+= form.label :capacity, t("listings.capacity")
+= form.text_field :capacity
+
+.row
+  .col-10
+    = form.label :min_quantity, t("listings.min_quantity")
+    = form.text_field :min_quantity
+  .col-2
+    = form.label :show_min_quantity, t("listings.show_min_quantity")
+    = form.check_box :show_min_quantity
+
+.row
+  .col-10
+    = form.label :max_quantity, t("listings.max_quantity")
+    = form.text_field :max_quantity
+  .col-2
+    = form.label :show_max_quantity, t("listings.show_max_quantity")
+    = form.check_box :show_max_quantity
+
+= render layout: "layouts/lightbox", locals: { id: "pricing_info_content"} do
+  %div{style: 'font-size: 12px; line-height: 1.1em '}
+    = render partial: "listings/pricing_rules"
+
+- if run_js_immediately
+  :javascript
+    $('#pricing_info_link').click(function() { $('#pricing_info_content').lightbox_me({centered: true, zIndex: 1000000}); return false});
+    window.ST.bookingModes = #{raw AvailabilitySearchService::BOOKING_MODES_BY_UNIT.to_json};
+    window.ST.initBookingModeCheck();
+- else
+  - content_for :extra_javascript do
+    :javascript
+      $('#pricing_info_link').click(function() { $('#pricing_info_content').lightbox_me({centered: true, zIndex: 1000000}); ; return false});
+      window.ST.bookingModes = #{raw AvailabilitySearchService::BOOKING_MODES_BY_UNIT.to_json};
+      window.ST.initBookingModeCheck();
+
+- if @current_user.has_admin_rights?(@current_community)
+  = form.label :ext_booking_url, t("listings.ext_booking_url")
+  = form.text_field :ext_booking_url
+
+- if @current_user.has_admin_rights?(@current_community)
+  = form.label :ext_booking_url_direct, class: 'input' do
+    = form.check_box :ext_booking_url_direct
+    = t(".ext_booking_url_direct")
+
+- if @current_user.has_admin_rights?(@current_community)
+  = form.label :musement_widget_id, t("listings.musement_widget_id")
+  = form.text_field :musement_widget_id
+
+- if @current_user.has_admin_rights?(@current_community)
+  = form.label :instant_booking, class: 'input' do
+    = form.check_box :instant_booking
+    = t("listings.instant_booking")
+
+- if @current_user.has_admin_rights?(@current_community)
+  = form.label :guest_only, class: 'input' do
+    = form.check_box :guest_only
+    = t("listings.guest_only")
+

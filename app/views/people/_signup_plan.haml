@@ -1,0 +1,21 @@
+- if plan
+  %div{class: "col-#{col_number}"}
+    .plan-section
+      .plan-section-header
+        %h2
+          = plan.title
+        %p
+          = plan.subtitle&.html_safe
+        %h3
+          = plan.price_title&.html_safe
+
+      .plan-section-body
+        =raw plan.plan_body
+      .plan-section-footer
+        - button_text = plan.signup_button_text.present? ? plan.signup_button_text : 'Sign Up'
+        - if plan.free?
+          = link_to button_text, sign_up_path(profile_type: 'personal', signup_plan_id: plan.id), class: 'button'
+        - else
+          = link_to button_text, new_chargebee_path(plan_id: plan.code, period_unit: 'month', signup_plan_id: plan.id), class: 'button'
+
+

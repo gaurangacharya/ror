@@ -1,0 +1,48 @@
+- index = email_form.index
+- email = email_form.object
+.account-settings-email-row{:class => ((index % 2 == 0) ? "account-settings-email-row-highlight" : "")}
+  = email_form.hidden_field :id
+  = email_form.hidden_field :_destroy
+  .account-settings-email-row-address
+    = email.address
+  .account-settings-email-row-delete
+    - can_delete = target_user.can_delete_email(email)
+    - disabled_class = can_delete ? "" : "disabled"
+    - if can_delete
+      = link_to person_email_path(target_user.username, email.id), :method => :delete, :data => {:confirm => t("settings.account.email.remove_confirmation")}, :class => "account-settings-email-row-delete-link" do
+        .settings-email-mobile-label-container
+          .visible-desktop.settings-email-mobile-label
+            = icon_tag("cross", ["account-settings-email-row-delete-cross", disabled_class])
+          .hidden-desktop.settings-email-mobile-label.settings-email-mobile-label{:class => disabled_class}
+            = t("settings.account.email.remove_title")
+    - else
+      .settings-email-mobile-label-container
+        .visible-desktop.settings-email-mobile-label
+          = icon_tag("cross", ["account-settings-email-row-delete-cross icon-fix", disabled_class])
+        .hidden-desktop.settings-email-mobile-label.settings-email-mobile-label{:class => disabled_class}
+          = t("settings.account.email.remove_title")
+  .account-settings-email-row-send-notification
+    .settings-email-mobile-label-container
+      .settings-email-mobile-label
+        = email_form.check_box :public, :class => "account-settings-email-row-send-notification-checkbox"
+      .hidden-desktop.settings-email-mobile-label.settings-email-mobile-label-right
+        = t("settings.account.email.public_title_mobile")
+  .account-settings-email-row-send-notification
+    .settings-email-mobile-label-container
+      .settings-email-mobile-label
+        = email_form.check_box :send_notifications, :class => "account-settings-email-row-send-notification-checkbox"
+      .hidden-desktop.settings-email-mobile-label.settings-email-mobile-label-right
+        = t("settings.account.email.receive_notifications_title_mobile")
+  .account-settings-email-row-confirmed
+    .hidden-desktop.settings-email-mobile-label
+      %b
+        = t("settings.account.email.confirmation_title_mobile")
+    .settings-email-mobile-label.settings-email-mobile-label-right
+      - if email.confirmed_at
+        .account-settings-email-row-confirmation-content
+          = icon_tag("check", ["icon-fix"])
+      - else
+        = t("settings.account.email.status_pending")
+        %small= link_to(t("settings.account.email.confirmation_resend"), send_confirmation_person_email_path(target_user, email), :method => :post, :class => "account-settings-email-row-resend-link")
+
+

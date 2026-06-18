@@ -1,0 +1,20 @@
+- value = params[:affiliate].to_s.present? ? params[:affiliate].to_s : 'all'
+.auto-col.toggle-container.home-toolbar-toggle-container
+  .toggle.with-borders{data: {toggle: '#home-toolbar-affiliate'}, class: value == 'all' ? '' : 'inverted'}
+    .toggle-header-container
+      .toggle-header
+        = t("homepage.affiliate.#{value}")
+      = icon_tag("dropdown", ["icon-dropdown"])
+
+    .home-toolbar-share-type-menu.toggle-menu.hidden#home-toolbar-affiliate
+      .filter-width
+        .custom-filter-checkbox-container
+          %label.custom-filter-checkbox-label
+            = radio_button_tag "affiliate", "only", value == 'only', style: 'display: none'
+            %span.custom-filter-checkbox-label-text
+              = t("homepage.affiliate.only")
+        .custom-filter-checkbox-container
+          %label.custom-filter-checkbox-label
+            = radio_button_tag "affiliate", "all", value == 'all', style: 'display: none'
+            %span.custom-filter-checkbox-label-text
+              = t("homepage.affiliate.all")

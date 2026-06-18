@@ -1,0 +1,99 @@
+.layout {
+  .main-table {
+    -premailer-width: 100%;
+    -premailer-height: 100%;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    border: none;
+    background-color: #ffffff;
+
+    .centered-table {
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      -premailer-width: 400;
+
+      .service-name {
+        padding-top: 20px;
+        padding-bottom: 5px;
+        border-bottom:1px dotted grey;
+        color: grey;
+        font-family: Helvetica Neue, Arial, Helvetica, Arial, sans-serif;
+        font-size:20px;
+        line-height:28px;
+      }
+
+      .recipient-name {
+        padding-top: 20px;
+        padding-bottom: 10px;
+        color: #3c3c3c;
+        font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+        font-size:14px;
+        line-height:20px;
+      }
+
+      .unsubscribe-footer {
+        padding-top: 10px;
+        padding-bottom: 30px;
+        border-top: 1px dotted grey;
+        font-family: Helvetica Neue, Arial, Helvetica, Arial, sans-serif;
+        font-size: 12px;
+      }
+
+      .invitation {
+        padding-top: 10px;
+        padding-bottom: 30px;
+        border-top:1px dotted grey;
+        color: gray;
+        font-family: Helvetica Neue, Arial, Helvetica, Arial, sans-serif;
+        font-size: 12px;
+      }
+
+      .content-title,
+      .body-font {
+        color: #3c3c3c;
+        font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .content-main-cell {
+        padding: 20px 0;
+      }
+
+      .content-main-table-seller {
+        -premailer-cellpadding: 5;
+        -premailer-cellspacing: 0;
+        -premailer-width: 100%;
+        border-collapse: collapse;
+      }
+
+      .content-main-table-buyer {
+        -premailer-cellpadding: 5;
+        -premailer-cellspacing: 0;
+        background-color: #f3f3f3;
+        font-family: Helvetica Neue,  Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        color: #3c3c3c;
+        padding: 20px;
+      }
+
+      .with-top-border {
+        border-top: 1px solid black;
+      }
+
+      .with-bottom-border {
+        border-bottom:1px solid black;
+      }
+
+      .action-button-cell {
+        padding-top: 25px;
+        padding-bottom: 35px;
+        color: #fff;
+        font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+        font-size: 16px;
+        line-height: 25px;
+      }
+    }
+  }
+}
+

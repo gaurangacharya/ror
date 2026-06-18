@@ -1,0 +1,14 @@
+= form.label :embed_document, t('.embed_document'), class: 'input'
+= render "layouts/info_text", text: t(".embed_document_info")
+= form.text_field :embed_document, placeholder: t('.embed_document_placeholder')
+
+= form.label :pdf, t(".pdf"), class: 'input'
+- if form.object.pdf.file?
+  .pdf-original-filename
+    = form.object.pdf.original_filename
+= form.file_field :pdf
+
+.checkbox-container
+  = form.check_box :delete_pdf
+  = form.label :delete_pdf, t(".delete_pdf"), class: 'light'
+

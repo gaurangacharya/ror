@@ -1,0 +1,6 @@
+- data = { locale: I18n.locale,
+  localized_dates: datepicker_localized_dates }
+- content_for :extra_javascript do
+  :javascript
+    window.ST.FromToDatePicker.setupTxDateField(#{raw data.to_json});
+

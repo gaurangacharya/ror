@@ -1,0 +1,249 @@
+# Logfile created on 2017-05-10 15:35:58 +0300 by logger.rb/56815
+D, [2017-05-10T15:35:59.069053 #94487] DEBUG -- :   [1m[35m (0.7ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+D, [2017-05-10T15:35:59.069400 #94487] DEBUG -- :   [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "books" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar)[0m
+D, [2017-05-10T15:35:59.071306 #94487] DEBUG -- :   [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "delayed_jobs"[0m
+D, [2017-05-10T15:35:59.071721 #94487] DEBUG -- :   [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "delayed_jobs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "priority" integer DEFAULT 0 NOT NULL, "attempts" integer DEFAULT 0 NOT NULL, "handler" text NOT NULL, "last_error" text, "run_at" datetime, "locked_at" datetime, "failed_at" datetime, "locked_by" varchar, "queue" varchar, "created_at" datetime, "updated_at" datetime)[0m
+D, [2017-05-10T15:35:59.072134 #94487] DEBUG -- :   [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "delayed_jobs_priority" ON "delayed_jobs" ("priority", "run_at")[0m
+D, [2017-05-10T15:35:59.075835 #94487] DEBUG -- :   [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+D, [2017-05-10T15:35:59.083209 #94487] DEBUG -- :   [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+D, [2017-05-10T15:35:59.085960 #94487] DEBUG -- :   [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+D, [2017-05-10T15:35:59.086885 #94487] DEBUG -- :   [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "test"], ["created_at", "2017-05-10 12:35:59.086211"], ["updated_at", "2017-05-10 12:35:59.086211"]]
+D, [2017-05-10T15:35:59.087096 #94487] DEBUG -- :   [1m[35m (0.0ms)[0m  [1m[36mcommit transaction[0m
+I, [2017-05-10T15:35:59.136945 #94487]  INFO -- : Started GET "/active_job" for 127.0.0.1 at 2017-05-10 15:35:59 +0300
+I, [2017-05-10T15:35:59.138773 #94487]  INFO -- : Processing by DummyController#active_job as HTML
+I, [2017-05-10T15:35:59.146934 #94487]  INFO -- :   Rendering dummy/active_job.html.erb within layouts/application
+I, [2017-05-10T15:35:59.147551 #94487]  INFO -- :   Rendered dummy/active_job.html.erb within layouts/application (0.5ms)
+I, [2017-05-10T15:35:59.147868 #94487]  INFO -- : Completed 200 OK in 9ms (Views: 2.6ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:01.158452 #94487]  INFO -- : Started GET "/active_job" for 127.0.0.1 at 2017-05-10 15:36:01 +0300
+I, [2017-05-10T15:36:01.159420 #94487]  INFO -- : Processing by DummyController#active_job as HTML
+I, [2017-05-10T15:36:01.160480 #94487]  INFO -- :   Rendering dummy/active_job.html.erb within layouts/application
+I, [2017-05-10T15:36:01.160817 #94487]  INFO -- :   Rendered dummy/active_job.html.erb within layouts/application (0.3ms)
+I, [2017-05-10T15:36:01.161194 #94487]  INFO -- : Completed 200 OK in 2ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:03.170976 #94487]  INFO -- : Started GET "/active_job" for 127.0.0.1 at 2017-05-10 15:36:03 +0300
+I, [2017-05-10T15:36:03.172004 #94487]  INFO -- : Processing by DummyController#active_job as HTML
+I, [2017-05-10T15:36:03.173112 #94487]  INFO -- :   Rendering dummy/active_job.html.erb within layouts/application
+I, [2017-05-10T15:36:03.173609 #94487]  INFO -- :   Rendered dummy/active_job.html.erb within layouts/application (0.3ms)
+I, [2017-05-10T15:36:03.173941 #94487]  INFO -- : Completed 200 OK in 2ms (Views: 1.3ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:05.183123 #94487]  INFO -- : Started GET "/resque" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.183970 #94487]  INFO -- : Processing by DummyController#resque as HTML
+I, [2017-05-10T15:36:05.185150 #94487]  INFO -- :   Rendering dummy/resque.html.erb within layouts/application
+I, [2017-05-10T15:36:05.185411 #94487]  INFO -- :   Rendered dummy/resque.html.erb within layouts/application (0.2ms)
+I, [2017-05-10T15:36:05.185694 #94487]  INFO -- : Completed 200 OK in 2ms (Views: 0.8ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:05.189835 #94487]  INFO -- : Started GET "/resque" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.190757 #94487]  INFO -- : Processing by DummyController#resque as HTML
+I, [2017-05-10T15:36:05.206111 #94487]  INFO -- :   Rendering dummy/resque.html.erb within layouts/application
+I, [2017-05-10T15:36:05.206370 #94487]  INFO -- :   Rendered dummy/resque.html.erb within layouts/application (0.2ms)
+I, [2017-05-10T15:36:05.206641 #94487]  INFO -- : Completed 200 OK in 16ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:05.210664 #94487]  INFO -- : Started GET "/" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.211448 #94487]  INFO -- : Processing by DummyController#index as HTML
+I, [2017-05-10T15:36:05.212045 #94487]  INFO -- :   Rendering dummy/index.html.erb within layouts/application
+I, [2017-05-10T15:36:05.212235 #94487]  INFO -- :   Rendered dummy/index.html.erb within layouts/application (0.1ms)
+I, [2017-05-10T15:36:05.212475 #94487]  INFO -- : Completed 200 OK in 1ms (Views: 0.7ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:05.214730 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.215581 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:05.215879 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:05.224557 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.231070 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:05.231104 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.231122 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:05.235975 #94487]  INFO -- : Started GET "/active_record_after_commit" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.236875 #94487]  INFO -- : Processing by DummyController#active_record_after_commit as HTML
+D, [2017-05-10T15:36:05.239652 #94487] DEBUG -- :   [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+D, [2017-05-10T15:36:05.240364 #94487] DEBUG -- :   [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "books" ("title") VALUES (?)[0m  [["title", "Bingo"]]
+D, [2017-05-10T15:36:05.240615 #94487] DEBUG -- :   [1m[35m (0.0ms)[0m  [1m[36mcommit transaction[0m
+I, [2017-05-10T15:36:05.244438 #94487]  INFO -- : Completed 500 Internal Server Error in 7ms (ActiveRecord: 0.5ms)
+F, [2017-05-10T15:36:05.248772 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.248834 #94487] FATAL -- : AirbrakeTestError (after_commit):
+F, [2017-05-10T15:36:05.248873 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.248891 #94487] FATAL -- : lib/airbrake/rails/active_record.rb:27:in `run_callbacks'
+lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:05.364100 #94487]  INFO -- : Started GET "/active_record_after_rollback" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.365064 #94487]  INFO -- : Processing by DummyController#active_record_after_rollback as HTML
+D, [2017-05-10T15:36:05.365359 #94487] DEBUG -- :   [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+D, [2017-05-10T15:36:05.366101 #94487] DEBUG -- :   [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "books" ("title") VALUES (?)[0m  [["title", "Bango"]]
+D, [2017-05-10T15:36:05.366342 #94487] DEBUG -- :   [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+I, [2017-05-10T15:36:05.373392 #94487]  INFO -- : Completed 500 Internal Server Error in 8ms (ActiveRecord: 0.2ms)
+F, [2017-05-10T15:36:05.379978 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.400878 #94487] FATAL -- : AirbrakeTestError (after_rollback):
+F, [2017-05-10T15:36:05.400943 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.401013 #94487] FATAL -- : lib/airbrake/rails/active_record.rb:27:in `run_callbacks'
+lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:05.406018 #94487]  INFO -- : Started GET "/notify_airbrake_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.407054 #94487]  INFO -- : Processing by DummyController#notify_airbrake_helper as HTML
+I, [2017-05-10T15:36:05.407085 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:05.410931 #94487]  INFO -- :   Rendering dummy/notify_airbrake_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:05.411223 #94487]  INFO -- :   Rendered dummy/notify_airbrake_helper.html.erb within layouts/application (0.2ms)
+I, [2017-05-10T15:36:05.411525 #94487]  INFO -- : Completed 200 OK in 4ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:05.519724 #94487]  INFO -- : Started GET "/notify_airbrake_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.520725 #94487]  INFO -- : Processing by DummyController#notify_airbrake_helper as HTML
+I, [2017-05-10T15:36:05.520759 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:05.541482 #94487]  INFO -- :   Rendering dummy/notify_airbrake_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:05.541855 #94487]  INFO -- :   Rendered dummy/notify_airbrake_helper.html.erb within layouts/application (0.3ms)
+I, [2017-05-10T15:36:05.542161 #94487]  INFO -- : Completed 200 OK in 21ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:05.546793 #94487]  INFO -- : Started GET "/notify_airbrake_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.547999 #94487]  INFO -- : Processing by DummyController#notify_airbrake_helper as HTML
+I, [2017-05-10T15:36:05.548035 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:05.551986 #94487]  INFO -- :   Rendering dummy/notify_airbrake_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:05.552277 #94487]  INFO -- :   Rendered dummy/notify_airbrake_helper.html.erb within layouts/application (0.2ms)
+I, [2017-05-10T15:36:05.552614 #94487]  INFO -- : Completed 200 OK in 5ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:05.662173 #94487]  INFO -- : Started GET "/notify_airbrake_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.663103 #94487]  INFO -- : Processing by DummyController#notify_airbrake_helper as HTML
+I, [2017-05-10T15:36:05.663133 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:05.683255 #94487]  INFO -- :   Rendering dummy/notify_airbrake_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:05.683596 #94487]  INFO -- :   Rendered dummy/notify_airbrake_helper.html.erb within layouts/application (0.3ms)
+I, [2017-05-10T15:36:05.683919 #94487]  INFO -- : Completed 200 OK in 21ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:05.689994 #94487]  INFO -- : Started GET "/notify_airbrake_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.691022 #94487]  INFO -- : Processing by DummyController#notify_airbrake_helper as HTML
+I, [2017-05-10T15:36:05.691051 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:05.694949 #94487]  INFO -- :   Rendering dummy/notify_airbrake_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:05.695250 #94487]  INFO -- :   Rendered dummy/notify_airbrake_helper.html.erb within layouts/application (0.2ms)
+I, [2017-05-10T15:36:05.695560 #94487]  INFO -- : Completed 200 OK in 4ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:05.801448 #94487]  INFO -- : Started GET "/crash?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.802450 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:05.802480 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:05.802726 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:05.812437 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.812472 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:05.812500 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.812514 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:05.817366 #94487]  INFO -- : Started GET "/crash?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.818353 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:05.818394 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:05.818646 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:05.822286 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.822341 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:05.822369 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.822395 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:05.928981 #94487]  INFO -- : Started GET "/crash?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.930119 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:05.930150 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:05.930404 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:05.940139 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.940177 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:05.940191 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.940203 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:05.943973 #94487]  INFO -- : Started GET "/crash?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:05 +0300
+I, [2017-05-10T15:36:05.944925 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:05.944957 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:05.945192 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:05.948759 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.948794 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:05.948810 #94487] FATAL -- :   
+F, [2017-05-10T15:36:05.948826 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:06.057060 #94487]  INFO -- : Started GET "/crash?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:06 +0300
+I, [2017-05-10T15:36:06.058049 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:06.058089 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:06.058364 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:06.068246 #94487] FATAL -- :   
+F, [2017-05-10T15:36:06.068279 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:06.068292 #94487] FATAL -- :   
+F, [2017-05-10T15:36:06.068304 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:06.072478 #94487]  INFO -- : Started GET "/notify_airbrake_sync_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:06 +0300
+I, [2017-05-10T15:36:06.073512 #94487]  INFO -- : Processing by DummyController#notify_airbrake_sync_helper as HTML
+I, [2017-05-10T15:36:06.073543 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:06.093948 #94487]  INFO -- :   Rendering dummy/notify_airbrake_sync_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:06.094282 #94487]  INFO -- :   Rendered dummy/notify_airbrake_sync_helper.html.erb within layouts/application (0.2ms)
+I, [2017-05-10T15:36:06.094636 #94487]  INFO -- : Completed 200 OK in 21ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:06.100060 #94487]  INFO -- : Started GET "/notify_airbrake_sync_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:06 +0300
+I, [2017-05-10T15:36:06.101100 #94487]  INFO -- : Processing by DummyController#notify_airbrake_sync_helper as HTML
+I, [2017-05-10T15:36:06.101139 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:06.124800 #94487]  INFO -- :   Rendering dummy/notify_airbrake_sync_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:06.125127 #94487]  INFO -- :   Rendered dummy/notify_airbrake_sync_helper.html.erb within layouts/application (0.2ms)
+I, [2017-05-10T15:36:06.125447 #94487]  INFO -- : Completed 200 OK in 24ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:06.129802 #94487]  INFO -- : Started GET "/notify_airbrake_sync_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:06 +0300
+I, [2017-05-10T15:36:06.130748 #94487]  INFO -- : Processing by DummyController#notify_airbrake_sync_helper as HTML
+I, [2017-05-10T15:36:06.130779 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:06.150028 #94487]  INFO -- :   Rendering dummy/notify_airbrake_sync_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:06.150320 #94487]  INFO -- :   Rendered dummy/notify_airbrake_sync_helper.html.erb within layouts/application (0.2ms)
+I, [2017-05-10T15:36:06.150625 #94487]  INFO -- : Completed 200 OK in 20ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:06.155593 #94487]  INFO -- : Started GET "/notify_airbrake_sync_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:06 +0300
+I, [2017-05-10T15:36:06.156668 #94487]  INFO -- : Processing by DummyController#notify_airbrake_sync_helper as HTML
+I, [2017-05-10T15:36:06.156705 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:06.179932 #94487]  INFO -- :   Rendering dummy/notify_airbrake_sync_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:06.180290 #94487]  INFO -- :   Rendered dummy/notify_airbrake_sync_helper.html.erb within layouts/application (0.3ms)
+I, [2017-05-10T15:36:06.180641 #94487]  INFO -- : Completed 200 OK in 24ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:06.185756 #94487]  INFO -- : Started GET "/notify_airbrake_sync_helper?foo=bar" for 127.0.0.1 at 2017-05-10 15:36:06 +0300
+I, [2017-05-10T15:36:06.186755 #94487]  INFO -- : Processing by DummyController#notify_airbrake_sync_helper as HTML
+I, [2017-05-10T15:36:06.186787 #94487]  INFO -- :   Parameters: {"foo"=>"bar"}
+I, [2017-05-10T15:36:06.207771 #94487]  INFO -- :   Rendering dummy/notify_airbrake_sync_helper.html.erb within layouts/application
+I, [2017-05-10T15:36:06.208044 #94487]  INFO -- :   Rendered dummy/notify_airbrake_sync_helper.html.erb within layouts/application (0.2ms)
+I, [2017-05-10T15:36:06.208293 #94487]  INFO -- : Completed 200 OK in 21ms (Views: 0.8ms | ActiveRecord: 0.0ms)
+I, [2017-05-10T15:36:06.212867 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:06 +0300
+I, [2017-05-10T15:36:06.213825 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:06.214066 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:06.218481 #94487] FATAL -- :   
+F, [2017-05-10T15:36:06.218540 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:06.218579 #94487] FATAL -- :   
+F, [2017-05-10T15:36:06.218594 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:06.323152 #94487]  INFO -- : Started GET "/delayed_job" for 127.0.0.1 at 2017-05-10 15:36:06 +0300
+I, [2017-05-10T15:36:06.324069 #94487]  INFO -- : Processing by DummyController#delayed_job as HTML
+I, [2017-05-10T15:36:06.355846 #94487]  INFO -- : Completed 500 Internal Server Error in 32ms (ActiveRecord: 0.3ms)
+F, [2017-05-10T15:36:06.359348 #94487] FATAL -- :   
+F, [2017-05-10T15:36:06.359387 #94487] FATAL -- : AirbrakeTestError (delayed_job error):
+F, [2017-05-10T15:36:06.359412 #94487] FATAL -- :   
+F, [2017-05-10T15:36:06.359435 #94487] FATAL -- : lib/airbrake/delayed_job.rb:11:in `block (2 levels) in <class:Airbrake>'
+lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:10.371298 #94487]  INFO -- : Started GET "/delayed_job" for 127.0.0.1 at 2017-05-10 15:36:10 +0300
+I, [2017-05-10T15:36:10.372391 #94487]  INFO -- : Processing by DummyController#delayed_job as HTML
+I, [2017-05-10T15:36:10.373320 #94487]  INFO -- : Completed 500 Internal Server Error in 1ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:10.374347 #94487] FATAL -- :   
+F, [2017-05-10T15:36:10.374379 #94487] FATAL -- : AirbrakeTestError (delayed_job error):
+F, [2017-05-10T15:36:10.374394 #94487] FATAL -- :   
+F, [2017-05-10T15:36:10.374408 #94487] FATAL -- : lib/airbrake/delayed_job.rb:11:in `block (2 levels) in <class:Airbrake>'
+lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:12.383836 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:12 +0300
+I, [2017-05-10T15:36:12.385304 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:12.385611 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:12.397588 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.397621 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:12.397634 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.397645 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:12.401679 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:12 +0300
+I, [2017-05-10T15:36:12.402599 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:12.402924 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:12.407169 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.407207 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:12.407234 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.407249 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:12.513558 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:12 +0300
+I, [2017-05-10T15:36:12.514506 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:12.514805 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:12.526530 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.526564 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:12.526577 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.526588 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:12.530386 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:12 +0300
+I, [2017-05-10T15:36:12.531211 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:12.531452 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:12.534731 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.540741 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:12.540771 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.540788 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:12.544686 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:12 +0300
+I, [2017-05-10T15:36:12.545519 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:12.545751 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:12.549271 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.549309 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:12.549323 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.549337 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:12.655761 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:12 +0300
+I, [2017-05-10T15:36:12.656718 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:12.657063 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:12.667820 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.667847 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:12.667859 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.667870 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:12.671991 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:12 +0300
+I, [2017-05-10T15:36:12.672771 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:12.673013 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:12.677606 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.677644 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:12.677680 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.677724 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'
+I, [2017-05-10T15:36:12.688309 #94487]  INFO -- : Started GET "/crash" for 127.0.0.1 at 2017-05-10 15:36:12 +0300
+I, [2017-05-10T15:36:12.689076 #94487]  INFO -- : Processing by DummyController#crash as HTML
+I, [2017-05-10T15:36:12.689329 #94487]  INFO -- : Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms)
+F, [2017-05-10T15:36:12.695078 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.695114 #94487] FATAL -- : AirbrakeTestError (AirbrakeTestError):
+F, [2017-05-10T15:36:12.695129 #94487] FATAL -- :   
+F, [2017-05-10T15:36:12.695142 #94487] FATAL -- : lib/airbrake/rack/middleware.rb:52:in `call'

@@ -1,0 +1,16 @@
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/binding_of_caller-0.7.2/ext/binding_of_caller
+/home/agile/.rbenv/versions/2.6.5/bin/ruby -I /home/agile/.rbenv/versions/2.6.5/lib/ruby/2.6.0 -r ./siteconf20260407-28693-54atv5.rb extconf.rb
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/binding_of_caller-0.7.2/ext/binding_of_caller
+make "DESTDIR=" clean
+make: *** No rule to make target 'clean'.  Stop.
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/binding_of_caller-0.7.2/ext/binding_of_caller
+make "DESTDIR="
+echo "Nada."
+Nada.
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/binding_of_caller-0.7.2/ext/binding_of_caller
+make "DESTDIR=" install
+echo "Nada."
+Nada.

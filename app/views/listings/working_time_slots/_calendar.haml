@@ -1,0 +1,14 @@
+.row
+  .col-12#calendar-container
+    #calendar
+
+- content_for :extra_javascript do
+  :javascript
+    window.ST.listingShow.setupCalendar({
+    locale: '#{I18n.locale}',
+    timeFormat: '#{t("calendar.time_format")}',
+    new_slot_path: '#{new_listing_working_time_slot_path(listing_id: presenter.listing.id)}',
+    working_time_slots_path: '#{listing_working_time_slots_path(listing_id: presenter.listing.id)}',
+    booked_time_slots_path: '#{listing_booked_time_slots_path(listing_id: presenter.listing.id)}',
+    daily: #{!!presenter.booking_per_day_or_night?}
+    });

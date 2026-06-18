@@ -1,0 +1,18 @@
+.row
+  .col-12
+    %h2= t('.title')
+    .row
+      .col-12
+        = form.label 'tax_ids'
+        - tax_options = Listing::Tax.for_person(current_person).collect { |tax| [ "#{tax.title} #{tax.percent}", tax.id ] }
+        - default_option = tax_options.empty? ? ['Add a tax', '', { disabled: true, selected: true }] : ['No tax', '']
+        = form.select 'tax_ids', [default_option] + tax_options, {}, { id: 'listing_tax_ids' }
+    .row
+      .col-12
+        -#= form.fields_for :taxes do |tax_fields|
+          = render 'listings/form/price_tax_fields', f: tax_fields
+        = link_to_add_fields t('.new'), form, :taxes,
+          { partial: 'listings/form/price_tax_fields',
+            new_object: form.object.taxes.build(person: form.object.author) },
+          { class: 'button' }
+

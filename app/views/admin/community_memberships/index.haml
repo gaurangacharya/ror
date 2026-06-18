@@ -1,0 +1,208 @@
+- content_for :javascript do
+  ST.initializeManageMembers();
+
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t("admin.communities.manage_members.manage_members")
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+- content_for :ajax_update do
+  #admin-members-saving-posting-allowed.ajax-update-notice
+    %span.ajax-update-icon{:class => "#{icon_class("loading")} icon-fix" }
+    %span.ajax-update-text
+      = t("admin.communities.manage_members.saving_user_status")
+  #admin-members-saved-posting-allowed.ajax-update-success
+    %span.ajax-update-icon{:class => "#{icon_class("check")} icon-fix" }
+    %span.ajax-update-text
+      = t("admin.communities.manage_members.save_user_status_successful")
+  #admin-members-error-posting-allowed.ajax-update-error
+    = t("admin.communities.manage_members.save_user_status_error")
+
+= render :partial => "layouts/ajax_update_notification"
+
+.left-navi-section
+  %h2= t("admin.communities.manage_members.manage_members", :community_name => @community.name(I18n.locale))
+
+  = form_tag '', :method => :get do
+    .row
+      .col-8
+        = text_field_tag :q, params[:q], placeholder: t('admin.communities.manage_members.search_by_name_email')
+      .col-4
+        = submit_tag t("admin.communities.manage_members.search"), class: 'button search-button'
+        = link_to    t("admin.communities.manage_members.reset_search"), admin_community_community_memberships_path(@current_community.id)
+
+  - if params[:q].blank?
+    #export-as-csv.right= link_to(" " + t("admin.communities.manage_members.export_all_as_csv"), {format: :csv}, {class: "js-users-csv-export " + icon_class("download")})
+
+  %a.button.import-user-form{onclick: '$(".import-user-form").toggle()', href: '#'}= t("admin.communities.redprofile_users.import")
+  .row.paypal-wizard.connect-row.import-user-form.hidden
+    %div
+      .paypal-wizard-content.connect-row
+        .col-12
+          = form_tag import_admin_redprofile_users_path, method: :post, multipart: true do
+            .row
+              = label_tag t("admin.communities.redprofile_users.csv_file")
+              = file_field_tag :file
+              = link_to reference_package_admin_redprofile_users_path(format: :xlsx) do
+                %i.ss-download
+                = t("admin.communities.redprofile_users.download_xlsx")
+            .row
+              = submit_tag t("admin.communities.redprofile_users.import"), class: 'button'
+
+  %a.button.new-user-form{onclick: '$(".new-user-form").toggle()', href: '#'}= t("admin.communities.redprofile_users.create")
+  .row.paypal-wizard.connect-row.new-user-form.hidden
+    %div
+      .paypal-wizard-content.connect-row
+        .col-12
+          = form_tag admin_redprofile_users_path, method: :post do
+            .row
+              .col-6
+                %label= t("admin.communities.redprofile_users.given_name")
+              .col-6
+                = text_field_tag 'given_name'
+            .row
+              .col-6
+                %label= t("admin.communities.redprofile_users.family_name")
+              .col-6
+                = text_field_tag 'family_name'
+            .row
+              .col-6
+                %label= t("admin.communities.redprofile_users.email")
+              .col-6
+                = text_field_tag 'email'
+            .row
+              .col-6
+                %label= t("admin.communities.redprofile_users.username")
+              .col-6
+                = text_field_tag 'username'
+            .row
+              .col-6
+                %label= t("admin.communities.redprofile_users.password")
+              .col-6
+                = text_field_tag 'password'
+            .row
+              .col-6
+                %label= t("people.new.is_vendor")
+              .col-6
+                =  select_tag :is_vendor, options_for_select([[t("people.new.vendor_business"), 1], [t("people.new.vendor_individual"), 0]])
+            .row
+              .col-6
+                %label= t("admin.communities.redprofile_users.website_url")
+              .col-6
+                = text_field_tag 'website_url'
+
+            .row
+              = submit_tag t("admin.communities.redprofile_users.create"), class: 'button'
+
+
+  %span#admin_members_count
+    = AdminCommunityMembershipsViewUtils.community_members_entries_info(@current_community.id, @memberships).html_safe
+    - if params[:q].present?
+      = t("admin.communities.manage_members.for_search_terms", terms: "<strong>#{h params[:q]}</strong>".html_safe).html_safe
+  = form_tag admin_community_community_memberships_path, method: :post, id: "pretend-form"
+  %form
+    %table#admin_members_list
+      %thead
+        %tr
+          %th= render partial: "layouts/sort_link", locals: { column: "name", direction: sort_link_direction("name"), title: t("admin.communities.manage_members.name") }
+          %th= render partial: "layouts/sort_link", locals: { column: "display_name", direction: sort_link_direction("display_name"), title: t("admin.communities.manage_members.display_name")}
+          %th= render partial: "layouts/sort_link", locals: { column: "email", direction: sort_link_direction("email"), title: t("admin.communities.manage_members.email") }
+          %th= render partial: "layouts/sort_link", locals: { column: "is_confirmed", direction: sort_link_direction("is_confirmed"), title: t("admin.communities.manage_members.is_confirmed") }
+          %th= render partial: "layouts/sort_link", locals: { column: "join_date", direction: sort_link_direction("join_date"), title: t("admin.communities.manage_members.join_date") }
+
+          - if @current_community.require_verification_to_post_listings
+            %th{:style => "text-align: center"}= render partial: "layouts/sort_link", locals: { column: "posting_allowed", direction: sort_link_direction("posting_allowed"), title: t("admin.communities.manage_members.posting_allowed") }
+          %th= t("admin.communities.manage_members.admin")
+          %th= t("admin.communities.manage_members.ban_user")
+          %th= t("admin.communities.manage_members.premium")
+          %th= t("admin.communities.manage_members.plan")
+          %th= t("admin.communities.manage_members.signup_plan")
+          %th= "Guest Pricing"
+          %th
+            %span{title: t("admin.communities.manage_members.edit_title")}
+              = t("admin.communities.manage_members.edit")
+          %th= t("admin.communities.manage_members.login_as")
+      %tbody
+        - @memberships.each do |membership|
+          - member = membership.person
+          - unless member.blank?
+            %tr{class: "member-#{membership.status}"}
+              %td.admin-members-full-name
+                = link_to [member.given_name, member.family_name].join(" "), member
+              %td
+                = member.display_name
+              %td
+                - confirmed_mail = member.confirmed_notification_email_addresses.first
+                = member.guest? ? member.primary_email.address : confirmed_mail || member.emails.map(&:address).join(", ")
+              %td
+                - if member.is_confirmed?
+                  %i.ss-check
+                - else
+                  %i.ss-ban
+              %td
+                %span= l(membership.created_at, format: :short_date)
+              - if @current_community.require_verification_to_post_listings
+                %td{:style => "text-align: center"}= check_box_tag "posting-allowed[#{member.id}]", member.id, membership.can_post_listings, :class => "admin-members-can-post-listings"
+
+              %td{:style => "text-align: center"}
+                = check_box_tag "is_admin[#{member.id}]", member.id, member.is_marketplace_admin?(@current_community), :class => "admin-members-is-admin", :disabled => member.eql?(@current_user) || membership.status == 'banned'
+
+              %td{:style => "text-align: center"}
+                = check_box_tag "is_banned[#{member.id}]", member.id, membership.status == 'banned', data: {ban_url: ban_admin_community_community_membership_path(@current_community.id, membership.id), unban_url: unban_admin_community_community_membership_path(@current_community.id, membership.id), confirm_ban: t("admin.communities.manage_members.ban_user_confirmation"), confirm_unban: t("admin.communities.manage_members.unban_user_confirmation")}, class: "admin-members-ban-toggle"
+              %td{:style => "text-align: center"}
+                = check_box_tag "is_premium[#{member.id}]", member.id, member.premium? && member.premium_valid_date?,
+                  data: {premium_on_url: premium_on_admin_community_community_membership_path(@current_community.id, membership.id),
+                  premium_off_url: premium_off_admin_community_community_membership_path(@current_community.id, membership.id),
+                  confirm_premium_off: t("admin.communities.manage_members.premium_off_confirmation"),
+                  confirm_premium_on: t("admin.communities.manage_members.premium_on_confirmation")},
+                  class: "admin-members-premium-toggle"
+              %td
+                = member.cb_item&.name
+              %td
+                = member.signup_plan&.title
+              %td{:style => "text-align: center"}
+                - if member.guest_type_pricing_enabled? || member.person_white_label&.ladera_enabled?
+                  %i.ss-check{title: "Guest type pricing enabled"}
+                - else
+                  %i.ss-ban{title: "Guest type pricing disabled"}
+              %td
+                = link_to edit_admin_community_community_membership_path(id: membership.id), title: t("admin.communities.manage_members.edit_title") do
+                  %i.ss-paintroller
+              %td
+                %a.pretend-user{data: {username: member.username}, href: '#'}
+                  %i.ss-login{title: t("admin.communities.manage_members.login_as")}
+
+  .row
+    .col-12
+      = will_paginate @memberships
+- content_for :extra_javascript do
+  :javascript
+    $(document).on("click", ".admin-members-ban-toggle", function(){
+      var banned = this.checked;
+      var admin_cb = $(this).parent().prev("td").find("input:checkbox");
+      var row = $(this).parent().parent()[0];
+      if(banned) {
+        if(confirm($(this).data("confirm-ban"))) {
+          $.ajax({type: "PUT", url: $(this).data("ban-url"), dataType: "JSON", success: function(resp) { row.className = "member-"+resp.status; }});
+        } else {
+          this.checked = false;
+        }
+      }
+      if(!banned) {
+        if(confirm($(this).data("confirm-unban"))) {
+          $.ajax({type: "PUT", url: $(this).data("unban-url"), dataType: "JSON", success: function(resp) { row.className = "member-"+resp.status; }});
+        } else {
+          this.checked = true;
+        }
+      }
+    });
+    $(document).on("click", "a.pretend-user", function(){
+      var e = $("#pretend-form")
+      var u = $(this).data("username");
+      e.attr('action', "#{admin_community_community_memberships_path(@current_community)}/"+u+"/pretend");
+      e.submit();
+      return false;
+    });

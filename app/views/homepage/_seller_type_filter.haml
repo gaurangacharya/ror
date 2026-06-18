@@ -1,0 +1,33 @@
+- count_selected = 0
+- param_name = 'vendor'
+- subtitle = []
+- ['0','1'].each do |option|
+  - if params[param_name].present? && params[param_name].include?(option)
+    - count_selected += 1
+    - subtitle << [t("homepage.filters.seller_type.individual"), t("homepage.filters.seller_type.vendor")][option.to_i]
+
+.auto-col.toggle-container.home-toolbar-toggle-container
+  .toggle.with-borders{data: {toggle: "#home-toolbar-filter-menu-vendor"}, class: count_selected > 0 ? 'inverted' : ''}
+    .toggle-header-container
+      .toggle-header
+        - if count_selected > 0
+          = subtitle.join(", ")
+        - else 
+          = t("homepage.filters.seller_type.title")
+
+      = icon_tag("dropdown", ["icon-dropdown"])
+
+    .toggle-menu.hidden{id: "home-toolbar-filter-menu-vendor"}
+      .filter-width
+        - [[t("homepage.filters.seller_type.vendor"), "1"], [t("homepage.filters.seller_type.individual"), "0"]].each do |title, value|
+          .custom-filter-checkbox-container
+            %label.custom-filter-checkbox-label
+              = check_box_tag param_name+"[]", value, params[param_name].present? && params[param_name].include?(value)
+              %span.custom-filter-checkbox-label-text
+                = title
+
+            - if params[param_name].present?
+              - content_for :selected_filters do
+                %span.filter-value
+                  = title
+                  %span.removable{data: {input: param_name}}

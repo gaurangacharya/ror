@@ -1,0 +1,12 @@
+- if @current_user.has_admin_rights?(@current_community)
+  - if @listing.featured?
+    = link_to featured_listing_path(@listing), method: :put, remote: true do
+      .icon-with-text-container
+        %i.ss-dislike.icon-part
+        .text-part= t(".remove_featured")
+  - else
+    = link_to featured_listing_path(@listing), method: :put, remote: true do
+      .icon-with-text-container
+        %i.ss-like.icon-part
+        .text-part= t(".add_featured")
+

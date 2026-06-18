@@ -1,0 +1,73 @@
+a.ta-summary-title {
+  display: inline-block;
+  &:link, &:hover, &:focus, &:visited {
+    color: #00AA6C;
+    text-decoration: underline;
+  }
+}
+.ta-reviews-image {
+  float: left;
+  display: inline-block;
+  width: 33%;
+  img {
+    width: 90%;
+  }
+}
+.ta-reviews-text {
+  display: inline-block;
+  margin-left: 10px;
+}
+.ta-reviews-line:after {
+  clear: both;
+}
+.ta-badge-images {
+  img {
+    max-width: 40%;
+  }
+}
+.people-image, .people-image-mobile {
+  position: relative;
+}
+.ta-small-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  .ta-badge-images {
+    img { width: 60px; max-width: 60px; }
+    float: left;
+    margin-right: 6px;
+  }
+  .ta-reviews-line {
+    background: white;
+    font-size: 11px;
+    margin-left: 8px;
+    display: inline-block;
+    padding: 4px;
+    line-height: 1.4em;
+    vertical-align: middle;
+  }
+  .ta-badge > div:first-child {
+    margin-left: 0;
+  }
+}
+@media(max-width: 767px) {
+  .ta-small-badge.ta-list_item {
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: inherit;
+    width: auto;
+  }
+}
+@media(min-width: 768px) {
+  .ta-small-badge.ta-list_item {
+    left: inherit;
+    right: 100px;
+    width: auto;
+  }
+}
+@media (min-width: 20em) {
+  .home-fluid-thumbnail-grid-wide .home-fluid-thumbnail-grid-item {
+    position: relative;
+  }
+}

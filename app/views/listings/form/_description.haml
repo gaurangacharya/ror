@@ -1,0 +1,25 @@
+= form.label :description, t('listings.form.description.detailed_description'), :class => "input"
+- markdown_popup_link = link_to t("settings.profile.format_markdown_link"), "#", id: "markdown-popup-link"
+- info_text = t("listings.form.description.youtube_info_markdown", link: markdown_popup_link).html_safe
+= render partial: "layouts/info_text", locals: { text:  info_text}
+= form.text_area(:description, :maxlength => "5000", :class => "listing_description_textarea")
+
+- if @current_user.has_admin_rights?(@current_community)
+  = form.label :description_from_provider, t('listings.form.description.detailed_description_from_provider'), :class => "input"
+  = form.text_area(:description_from_provider, :maxlength => "5000", :class => "listing_description_textarea")
+
+  = form.label :description_closing, t('listings.form.description.detailed_description_closing'), :class => "input"
+  = form.text_area(:description_closing, :maxlength => "5000", :class => "listing_description_textarea")
+
+= form.label :use_documents, class: 'input' do
+  = form.check_box :use_documents
+  = t("docusign.use_documents")
+
+#use-documents{style: @listing.use_documents? ? '' : 'display: none'}
+  = form.label :document_id, t("listings.form.description.document_template")
+  = render partial: "layouts/info_text", locals: { text: t("listings.form.description.select_document_template_info") }
+  = form.select :document_id, document_template_select_options(@listing.document_id)
+
+  = label_tag :document, t("listings.form.description.upload_document")
+  = text_field_tag :document_title, '', placeholder: t('listings.form.description.document_title')
+  = file_field_tag :document_file

@@ -1,0 +1,13 @@
+%p
+  - service_name = @current_community&.full_name(I18n.locale)
+  = t("emails.welcome_member_email.welcome_to_marketplace", service_name: service_name)
+
+%p REFERRAL_ID
+
+%p
+  = t("emails.welcome_member_email.affiliate_id")
+
+%p AFFILIATE_ID
+
+%p
+  = t("emails.welcome_email.love_marketplace_crew").html_safe

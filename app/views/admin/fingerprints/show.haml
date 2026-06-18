@@ -1,0 +1,64 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t("admin.fingerprints.fingerprints")
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  .row
+    .col-12
+      %h1= t(".fingerprint")
+      - fp = @fingerprint
+      %table.small-codes
+        %tbody
+          %tr
+            %th= t(".code")
+            %td= link_to fp.hash_code, admin_fingerprint_path(fp)
+          %tr
+            %th= t(".user_agent")
+            %td= fp.user_agent
+          %tr
+            %th= t(".last_ip")
+            %td= link_to fp.last_ip, "https://ipinfo.io/#{fp.last_ip}", target: "_blank"
+          %tr
+            %th= t(".created")
+            %td= fp.created_at.strftime("%m/%d/%Y %H:%M")
+          %tr
+            %th= t(".updated")
+            %td= fp.updated_at.strftime("%m/%d/%Y %H:%M")
+          %tr
+            %th= t(".details")
+            %td
+              %a.button{href: "#", onclick: "$('#browser-details').toggle()"}= t(".click_to_show")
+              #browser-details{style: 'display: none'}
+                %table.small-codes
+                  %tbody
+                    - fp.components.each do |key, value|
+                      %tr
+                        %th= key
+                        %td= value.inspect
+
+      %h2= t(".usages")
+      %table
+        %thead
+          %tr
+            %th= t(".ip_address")
+            %th= t(".person")
+            %th= t(".last_seen")
+            %th= t(".created")
+        %tbody
+          - fp.usages.each do |us|
+            %tr
+              %td= link_to us.ip_address, "https://ipinfo.io/#{us.ip_address}", target: "_blank"
+              %td
+                - if us.person
+                  = link_to us.person.full_name, person_path(username: us.person.username), target: "_blank"
+              %td= us.last_seen_at.strftime("%m/%d/%Y %H:%M")
+              %td= us.created_at.strftime("%m/%d/%Y %H:%M")
+
+
+
+
+

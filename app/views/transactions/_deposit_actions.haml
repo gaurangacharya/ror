@@ -1,0 +1,12 @@
+.conversation-status
+  .inbox-horizontally-aligned-status
+    = form_tag preauth_deposit_person_transaction_path(person_id: @current_user.id, id: transaction_model.id), method: :post do
+      .row
+        .col-12
+          %label= t(".security_deposit", sum: MoneyViewUtils.to_humanized(transaction_model.deposit))
+      .row
+        .col-12
+          %p= t(".deposit_notice")
+          = render partial: "layouts/info_text", locals: {text: t(".deposit_help") }
+      .row
+        = submit_tag t(".charge_deposit"), class: 'button'

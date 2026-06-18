@@ -1,0 +1,37 @@
+- fields = [:first_name, :last_name, :street1, :street2, :postal_code, :city, :state_or_province, :country]
+- starter = transaction_model.starter
+.shipping-address-container
+  %h2
+    = t("listing_conversations.guest.title")
+  .shipping-address-name= t("transactions.guest.first_name")
+  .shipping-address-row= starter.given_name
+  
+  .shipping-address-name= t("transactions.guest.last_name")
+  .shipping-address-row= starter.family_name
+  
+  .shipping-address-name= t("transactions.guest.email")
+  .shipping-address-row= starter.primary_email.address
+
+  - if starter.phone_number.present?
+    .shipping-address-name= t("transactions.guest.phone")
+    .shipping-address-row= starter.phone_number
+
+  - if starter.notes.present?
+    .shipping-address-name= t("transactions.guest.notes")
+    .shipping-address-row= starter.notes
+
+  .shipping-address-name= t("transactions.guest.hotel_guest")
+  .shipping-address-row= starter.hotel_guest ? 'Yes' : 'No'
+
+  - if starter.name_on_reservation.present?
+    .shipping-address-name= t("transactions.guest.name_on_reservation")
+    .shipping-address-row= starter.name_on_reservation
+
+  - if starter.is_hotel_guest?
+    .shipping-address-name= t("transactions.guest.by_hotel")
+    .shipping-address-row= starter.hotel.full_name
+
+  - if starter.booking_string.present?
+    .shipping-address-name= t("transactions.guest.dates")
+    .shipping-address-row= starter.booking_string
+

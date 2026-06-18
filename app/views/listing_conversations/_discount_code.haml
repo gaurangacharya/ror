@@ -1,0 +1,35 @@
+#coupon-message-ok.hidden
+  %br
+  .info-text-icon
+    = icon_tag("information")
+  .info-text-content
+    = t("listing_conversations.guest.discount_message_ok").html_safe
+#coupon-message-error.hidden
+  %label.error
+    = t("listing_conversations.guest.discount_message_error").html_safe
+- content_for :extra_javascript do
+  :javascript
+    $("#referral_id").change(function(){
+      var v = $("#referral_id").val();
+      $("#coupon-message-ok, #coupon-message-error").hide();
+      if (v) {
+        $.ajax({
+          type: "GET",
+          url: "#{check_referral_coupon_people_path}",
+          data: {code: v},
+          dataType: "JSON",
+          success: function(resp) {
+            if (resp.value) {
+              var x_price = parseFloat($("#subtotal-price").data("price"));
+              var x_shipping = parseFloat($("#shipping-price").data("price"));
+              $("#coupon-message-ok").show();
+              $("#coupon-message-ok .value").text(resp.value);
+              $("#coupon-message-ok .price").text(((100-resp.value)/100.0*x_price+x_shipping).toFixed(2));
+            } else {
+              $("#coupon-message-error").show();
+            }
+          }
+        });
+      }
+    });
+

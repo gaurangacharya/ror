@@ -1,0 +1,44 @@
+.row-with-divider.without-margin.conversation-row{:class => conversation.should_notify ? "conversation-unread" : ""}
+
+  .col-3
+    .conversation-details-container
+      = link_to person_path(username: conversation.other.username) do
+        = image_tag conversation.other_avatar, :class => "conversation-avatar"
+      .conversation-details
+        .conversation-other-party-name
+          = link_to_unless conversation.other.deleted?, conversation.other.display_name || conversation.other.given_name, person_path(username: conversation.other.username)
+        .conversation-last-message-at
+          = time_ago(conversation.last_activity_at)
+
+  %div{class: payments_in_use ? "col-6" : "col-9"}
+    = link_to conversation.path,
+      class:(conversation.should_notify ? 'conversation-title-link-unread' : 'conversation-title-link') do
+      - if conversation.title.present?
+        = conversation.title
+      - else
+        %span.conversation-last-message-content-not-available
+          = t("conversations.conversation.message_content_not_available")
+    .conversation-context
+      - if conversation.listing.present?
+        = t("conversations.conversation.about_listing", listing_title: link_to_unless(conversation.listing.deleted?, conversation.listing.title, listing_path(conversation.listing))).html_safe
+      - else
+        = t("conversations.conversation.free_message")
+
+  - if payments_in_use
+    .col-3
+
+      -# Only for transactions
+      - status = conversation.last_transition_to_state
+      - if status.present? && status != "free"
+        - status_meta = conversation.last_transition_status_meta
+        - is_author = !conversation.is_starter
+        - waiting_feedback = conversation.waiting_feedback
+        - other_name = conversation.other.display_name
+
+        - icon, status_description = conversation_icon_and_status(status, is_author, other_name, waiting_feedback, status_meta)
+
+        .conversation-list-status-container
+          .conversation-list-status-icon
+            = icon
+          .conversation-list-status
+            = status_description

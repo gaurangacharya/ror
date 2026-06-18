@@ -1,0 +1,11 @@
+- content_for :title_header do
+  %h1= t('.sign_up')
+
+.signup-form.centered-section
+
+  = render 'form', person: @person, signup_plan: @signup_plan
+
+- content_for :javascript do
+  window.ST.signup.init({
+  successPath: '#{checkout_chargebee_path}',
+  });

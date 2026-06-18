@@ -1,0 +1,5 @@
+window.ST.transactionShow.nextPage({
+content: '#{j render('additional_listings', presenter: @presenter)}',
+next_page: #{!!@presenter.additional_listings.next_page},
+next_page_path: '#{additional_listings_transaction_path(id: @presenter.tx.id, page: @presenter.additional_listings.next_page)}',
+});

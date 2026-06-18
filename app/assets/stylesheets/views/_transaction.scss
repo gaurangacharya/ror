@@ -1,0 +1,50 @@
+@import "../mixins/all";
+
+.transaction-additional-listings-wrapper {
+  border-top: 1px solid black;
+
+  @include media(mid-desktop) {
+    margin-top: 30px;
+
+    & > h2 {
+      margin-top: 15px;
+    }
+  }
+}
+
+.transaction-additional-listings {
+  display: flex;
+  flex-wrap: wrap;
+
+  .home-fluid-thumbnail-grid-item {
+    flex: 1 1 100%;
+    padding-right: 15px;
+    padding-bottom: 15px;
+  }
+
+  @include media(tablet) {
+    .home-fluid-thumbnail-grid-item {
+      flex: 1 1 calc(100% / 2);
+    }
+  }
+  @include media(mid-desktop) {
+    .home-fluid-thumbnail-grid-item {
+      flex: 1 1 calc(100% / 3);
+    }
+  }
+}
+
+.tx_add_ons {
+  border-top: 1px solid #c3c3c3;
+
+  & .initiate-transaction-quantity-wrapper {
+    margin-left: 10px;
+  }
+}
+
+#transaction-form {
+  .discount_code {
+    color: #db1414;
+    font-weight: bold;
+  }
+}

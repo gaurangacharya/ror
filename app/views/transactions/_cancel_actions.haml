@@ -1,0 +1,21 @@
+- if transaction_model.can_cancel_and_refund?
+  - payment = transaction_model.stripe_payment || transaction_model.paypal_payment
+  .conversation-status
+    .inbox-horizontally-aligned-status
+      - if payment.paid?
+        - if transaction_model.booking && transaction_model.booking.in_past?
+          .row
+            .col-12
+              = t(".warning_past")
+        = form_tag cancel_and_refund_person_transaction_path(person_id: @current_user.id, id: transaction_model.id), method: :post do
+          .row
+            .col-6
+              %label= t(".perform_cancel_refund")
+            .col-3
+              = text_field_tag 'amount', payment.sum.to_f
+          .row
+            = submit_tag t(".cancel_refund_button"), class: 'button', data: {confirm: t("refund.confirm_cancel")}
+      - elsif payment.refunded?
+        %p
+          = t(".performed_cancel_and_refund")
+          = humanized_money_with_symbol payment.refund_amount

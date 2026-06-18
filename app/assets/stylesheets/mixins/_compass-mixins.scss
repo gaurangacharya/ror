@@ -1,0 +1,128 @@
+// --- Custom border radius mixins to replace Compass ---
+@mixin border-radius($radius) {
+  border-radius: $radius;
+}
+@mixin border-top-radius($radius) {
+  border-top-left-radius: $radius;
+  border-top-right-radius: $radius;
+}
+@mixin border-bottom-radius($radius) {
+  border-bottom-left-radius: $radius;
+  border-bottom-right-radius: $radius;
+}
+@mixin border-left-radius($radius) {
+  border-top-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+}
+@mixin border-right-radius($radius) {
+  border-top-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+}
+@mixin border-top-left-radius($radius) {
+  border-top-left-radius: $radius;
+}
+@mixin border-top-right-radius($radius) {
+  border-top-right-radius: $radius;
+}
+@mixin border-bottom-left-radius($radius) {
+  border-bottom-left-radius: $radius;
+}
+@mixin border-bottom-right-radius($radius) {
+  border-bottom-right-radius: $radius;
+}
+
+// --- Custom box-sizing mixin to replace Compass ---
+@mixin box-sizing($box) {
+  -webkit-box-sizing: $box;
+  -moz-box-sizing: $box;
+  box-sizing: $box;
+}
+
+// --- Custom box-shadow mixins to replace Compass ---
+@mixin box-shadow($args) {
+  box-shadow: $args;
+}
+
+@mixin single-box-shadow($shadow) {
+  box-shadow: $shadow;
+}
+
+// --- Custom clearfix mixin to replace Compass ---
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// --- Custom text-shadow mixin to replace Compass ---
+@mixin text-shadow($shadows...) {
+  -webkit-text-shadow: $shadows;
+  -moz-text-shadow: $shadows;
+  text-shadow: $shadows;
+}
+
+// --- Custom single-text-shadow mixin to replace Compass ---
+@mixin single-text-shadow($shadow: default) {
+  @if $shadow == default {
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  } @else {
+    text-shadow: $shadow;
+  }
+}
+
+// --- Custom background-image and linear-gradient mixins (from compass/css3/images) ---
+@mixin background-image($image) {
+  background-image: $image;
+}
+
+@mixin linear-gradient($args...) {
+  background-image: -webkit-linear-gradient($args...);
+  background-image: -moz-linear-gradient($args...);
+  background-image: -ms-linear-gradient($args...);
+  background-image: -o-linear-gradient($args...);
+  background-image: linear-gradient($args...);
+}
+
+// --- Custom user-select mixin to replace Compass ---
+@mixin user-select($select) {
+  -webkit-user-select: $select;
+  -moz-user-select: $select;
+  -ms-user-select: $select;
+  user-select: $select;
+}
+
+// --- Custom transition mixins to replace Compass ---
+@mixin transition($args...) {
+  -webkit-transition: #{$args};
+  -moz-transition: #{$args};
+  -ms-transition: #{$args};
+  -o-transition: #{$args};
+  transition: #{$args};
+}
+
+@mixin transition-property($props...) {
+  -webkit-transition-property: #{$props};
+  -moz-transition-property: #{$props};
+  -o-transition-property: #{$props};
+  transition-property: #{$props};
+}
+
+@mixin transition-duration($times...) {
+  -webkit-transition-duration: #{$times};
+  -moz-transition-duration: #{$times};
+  -o-transition-duration: #{$times};
+  transition-duration: #{$times};
+}
+
+// --- Custom background-size mixin to replace Compass ---
+@mixin background-size($size) {
+  -webkit-background-size: $size;
+  -moz-background-size: $size;
+  -o-background-size: $size;
+  background-size: $size;
+}

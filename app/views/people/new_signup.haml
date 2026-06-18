@@ -1,0 +1,15 @@
+- content_for :head do
+  %script(src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="ownoutdoors")
+
+.plan-selection
+  .row
+    .col-12
+      %h1= @plan_main.title
+      .plan-info
+        = @plan_main.subtitle
+
+  .row--flex
+    - @groups.each do |group|
+      .plan-selection__tab
+        = link_to group.title, signup_group_path(group.id)
+

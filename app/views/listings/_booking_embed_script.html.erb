@@ -1,0 +1,16 @@
+<%- site_root = "#{request.protocol}#{request.host_with_port}" -%>
+<!-- Scripts and styles -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.6.4/iframeResizer.min.js"></script>
+<script src="<%= site_root %>/ownoutdoors-booking.js?v2"></script>
+<link href="<%= site_root %>/ownoutdoors-booking.css?v2" rel="stylesheet" type="text/css" />
+<script>OwnOutdoors.init("<%= site_root %>/en", "<%= @listing.author.username %>");</script>
+
+<!-- Book this specific listing -->
+<a href="#" onclick="OwnOutdoors.book('<%= request.original_url %>'); return false">Book Now!</a>
+
+<!-- Show all listings in popup -->
+<a href="#" onclick="OwnOutdoors.select(); return false">Select Listing To Book</a>
+
+<!-- Show all listings on page -->
+<div id="ownoutdoors-listings"></div>
+<script>OwnOutdoors.display("ownoutdoors-listings")</script>

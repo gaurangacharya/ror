@@ -1,0 +1,26 @@
+## MAC OS
+.DS_Store
+
+## TEXTMATE
+*.tmproj
+tmtags
+
+## EMACS
+*~
+\#*
+.\#*
+
+## VIM
+*.swp
+
+## PROJECT::GENERAL
+coverage
+rdoc
+pkg
+Gemfile.lock
+gemfiles/*.gemfile.lock
+
+## PROJECT::SPECIFIC
+features/thinking_sphinx/database.yml
+tmp
+.bundle

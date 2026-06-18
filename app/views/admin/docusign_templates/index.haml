@@ -1,0 +1,71 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t("docusign.admin")
+
+- content_for :javascript do
+  window.ST.initializeCategoriesOrder();
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  - unless @docusign_auth.authorized?
+    .row
+      .col-12
+        %p
+          In order to use DocuSign templates, you need to authorize platform to use it first.
+
+        %p
+          = link_to "Connect with DocuSign", @docusign_login_url, class: 'button'
+  - else
+    .row
+      %h3.paypal-account-connected
+        %i.ss-check.icon-fix
+        DocuSign connected! Now you can add some templates
+
+    = form_tag admin_docusign_templates_path, method: :post do
+      .row
+        .col-4
+          %label Title
+        .col-8
+          = text_field_tag :title
+
+      .row
+        .col-4
+          %label Type
+        .col-8
+          = select_tag :doc_type, options_for_select([["Rental Agreement", "rental"], ["Release Waiver", "waiver"]])
+
+      .row
+        .col-4
+          %label Template ID
+        .col-8
+          = text_field_tag :docusign_id
+      .row
+        .col-12
+          %p Note: You can access the Template ID (GUID) on the template configuration screen in DocuSign by clicking the info icon next to the template name.
+
+      .row
+        .col-12
+          = submit_tag "Add template", class: 'button'
+
+    .row
+      .col-12
+        %table
+          %thead
+            %tr
+              %th Title
+              %th Type
+              %th Content Type
+              %th Template Id
+          %tbody
+            - @documents.each do |document|
+              %tr
+                %td= link_to document.title, document.document.url, target: "_blank"
+                %td= document.doc_type
+                %td= document.document_content_type
+                %td= link_to document.docusign_id, "#{APP_CONFIG.docusign_templates_url}#{document.docusign_id}", target: "_blank"
+                %td
+                  = link_to admin_docusign_template_path(document), method: :delete, data: {confirm: "Are you sure to remove this template?\nIt will be also unlinked from listings"} do
+                    %i.ss-trash

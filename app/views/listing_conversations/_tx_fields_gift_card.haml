@@ -1,0 +1,33 @@
+- if  @listing.gift_card?
+  = render 'listing_conversations/tx_field',
+    index: 0,
+    type: Transaction::Field::TYPE_CHECKBOX,
+    title: t("listing_conversations.gift_card.title"),
+    hidden: true,
+    value: '1'
+  = render 'listing_conversations/tx_field',
+    index: 1,
+    type: Transaction::Field::TYPE_EMAIL,
+    title: t("listing_conversations.gift_card.recipient_email_address"),
+    required: true
+  = render 'listing_conversations/tx_field',
+    index: 2,
+    type: Transaction::Field::TYPE_TEXT,
+    title: t("listing_conversations.gift_card.from_name"),
+    required: true
+  = render 'listing_conversations/tx_field',
+    index: 3,
+    type: Transaction::Field::TYPE_TEXT,
+    title: t("listing_conversations.gift_card.recipient_name"),
+    required: false
+  = render 'listing_conversations/tx_field',
+    index: 4,
+    type: Transaction::Field::TYPE_TEXT,
+    title: t("listing_conversations.gift_card.message"),
+    required: false
+  = render 'listing_conversations/tx_field',
+    index: 5,
+    type: Transaction::Field::TYPE_DATE,
+    title: t("listing_conversations.gift_card.delivery_date"),
+    required: false
+  = render 'listing_conversations/tx_field_js'

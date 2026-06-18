@@ -1,0 +1,58 @@
+!!!
+
+%html
+
+  = render 'layouts/email_head_v2'
+
+  %body.layout{class: @person_white_label&.design&.present? ? @person_white_label.design : ''}
+
+    %table.main-table
+      %tbody>
+        %tr
+          %td{:align => "center", :valign => "top"}
+            %table.centered-table
+              %tbody
+                - service_name = @person_white_label&.full_name || @community&.full_name(I18n.locale)
+                - white_label_logo = @person_white_label&.show.try('[]', :image_map).try('[]', :wide_logo_lowres)
+                - if white_label_logo
+                  %tr
+                    %td.service-name{:align => "center"}
+                      %img{src: asset_url(white_label_logo, host: "https://#{@person_white_label.full_domain}"),
+                        alt: service_name}
+                - else
+                  - if @community
+                    %tr
+                      %td.service-name{:align => "left"}
+                        = service_name
+                - if @recipient && ! @no_recipient_name
+                  %tr
+                    %td.recipient-name{:align => "left"}
+                      = t("emails.common.hey", :name => PersonViewUtils.person_display_name_for_type(@recipient, "first_name_only"))
+
+
+                %span{id: SecureRandom.hex}
+                  = yield
+
+                - if @show_branding_info
+                  = render :partial => "layouts/email_non_whitelabel_branding", locals: {link_to_sharetribe: "https://www.sharetribe.com/?utm_source=#{@current_community.ident}.sharetribe.com&utm_medium=email&utm_campaign=nowl-emails-auto"}
+                - skip_unsubscribe_footer ||= false
+                - if @recipient && @url_params && !skip_unsubscribe_footer
+                  %tr
+                    %td.unsubscribe-footer{:align => "left"}
+                      - if @community && !@person_white_label
+                        = t("emails.common.unsubscribe_from_these_emails_info", service_name: service_name)
+                      - if @person_white_label
+                        = link_to(t("emails.welcome_email.settings_link_text"), notifications_person_settings_url(@recipient, @url_params))
+                      - else
+                        = t("emails.welcome_email.welcome_email_footer_text", service_name: service_name, settings_link: link_to(t("emails.welcome_email.settings_link_text"), notifications_person_settings_url(@recipient, @url_params))).html_safe
+                      - if @email_type
+                        = t("emails.common.or")
+                        = link_to(t("emails.common.unsubscribe_from_these_emails"), unsubscribe_person_settings_url(@recipient, @url_params.merge({email_type: @email_type, auth: @unsubscribe_token}))) + "."
+
+                - if @invitation
+                  %tr
+                    %td.invitation{:align => "left"}
+                      = t("emails.common.unsubscribe_from_invitation_emails_info", service_name: @invitation_community)
+                      = link_to(t("emails.common.unsubscribe_from_invitation_emails", service_name: @invitation_community),
+                        unsubscribe_invitations_url(@url_params)) + "."
+

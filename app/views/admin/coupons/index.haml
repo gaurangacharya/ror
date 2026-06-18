@@ -1,0 +1,72 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t(".coupons")
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  .row
+    .col-12
+      %h1= t(".referral_coupons")
+
+      %h2= t(".add_code")
+      = form_tag admin_coupons_path do
+        .row
+          .col-2
+            = label_tag :code, t('.coupon_code')
+          .col-6
+            = text_field_tag :code, '', placeholder: t(".code_placeholder")
+        .row
+          .col-2
+            = label_tag :value, t('.coupon_value')
+          .col-2
+            = text_field_tag :value, 0
+          .col-2
+            = label_tag :value, "%"
+
+        .row
+          .col-2
+            = label_tag :valid_until, t('.valid_until')
+          .col-4
+            = text_field_tag :valid_until, '', autocomplete: "off"
+        .row
+          .col-12
+            = submit_tag t(".create"), class: 'button'
+
+
+      - content_for :extra_javascript do  
+        :javascript
+          var options = #{{locale: I18n.locale, localized_dates: datepicker_localized_dates}.to_json.html_safe};
+          $.fn.datepicker.dates[options.locale] = options.localized_dates;
+          $("#valid_until").datepicker({autoclose: true, weekStart: 1, language: options.locale})
+
+      = will_paginate(@coupons)
+
+      %table.small-codes
+        %thead
+          %tr
+            %th= t(".code")
+            %th= t(".value")
+            %th= t(".created")
+            %th= t(".valid_date")
+            %th{width: 80}
+        %tbody
+          - @coupons.each do |coupon|
+            %tr
+              %td= coupon.code
+              %td
+                = "#{coupon.value}%"
+              %td{title: coupon.created_at.strftime("%m/%d/%Y %H:%M")}= coupon.created_at.strftime("%m/%d/%Y")
+              %td= coupon.valid_until&.strftime("%m/%d/%Y")
+              %td
+                = link_to admin_coupon_path(coupon), title: t(".edit") do
+                  %i.ss-write
+                - unless coupon.expired?
+                  %span{style: 'padding-left: 20px'}= " "
+                  = link_to admin_coupon_path(coupon), method: :delete, confirm: t(".are_you_sure"), title: t(".deactivate") do
+                    %i.ss-delete
+
+:css
+  .small-codes { font-size: 13px; }

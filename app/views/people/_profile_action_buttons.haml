@@ -1,0 +1,58 @@
+- if !current_user?(@person) && @current_user&.is_hotel? && @person.is_affiliate?
+  .row
+    .col-12
+      = t("people.show.oo_percent_platform", number: @current_community.hotel_percent_platform.to_i)
+  .row
+    .col-12
+      = t("people.show.oo_percent_hotel", number: @current_community.hotel_percent_user.to_i)
+
+- if current_user?(@person)
+  = render :partial => "people/edit_profile_button"
+  - if @person.chargebee_id.blank?
+    = link_to '#', class: 'profile-edit-link show-popup' do
+      .content
+        = t("people.show.upgrade_plan.title")
+  = render :partial => "people/referral_id" unless @person.is_hotel? && !@person.is_affiliate?
+  - if @person.is_hotel? || true
+    .row
+      .col-12
+        - lk = set_referral_url("R-" + @person.username)
+        = t("people.show.your_referral_link")
+        = link_to lk, lk
+        %br
+        = link_qr_code(lk).html_safe
+
+- else
+  - if @current_user && @current_user.has_admin_rights?(@current_community) && !current_user?(@person)
+    - if @person.is_vendor
+      .row
+        .col-12
+          = link_to toggle_affiliate_person_path(@person), method: :put do
+            - if @person.is_affiliate
+              %i.icon-part.ss-delete
+              = t("people.show.remove_affiliate")
+            - else
+              %i.icon-part.ss-pricetag
+                = t("people.show.make_affiliate")
+
+      .row
+        .col-12
+          - if @person.is_hotel? && @person.signup_charge_id.present?
+            %div
+              %i.icon-part.ss-moneybag
+              = t("people.show.signup_fee_paid")
+          = link_to toggle_hotel_person_path(@person), method: :put do
+            - if @person.is_hotel?
+              %i.icon-part.ss-delete
+              = t("people.show.remove_hotel")
+            - else
+              %i.icon-part.ss-warehouse
+              = t("people.show.make_hotel")
+
+
+  %a.profile-contact-link{href: new_person_person_message_path(@person)}
+    .content
+      = t("people.show.contact", :person => PersonViewUtils.person_display_name_for_type(@person, "first_name_only"))
+
+- if @current_community.follow_in_use? && @current_user && !current_user?(@person)
+  = render :partial => "follow_button", :locals => { :person => @person }

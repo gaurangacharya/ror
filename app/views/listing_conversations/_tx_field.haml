@@ -1,0 +1,24 @@
+- prefix = "tx_fields[#{index}]"
+= hidden_field_tag "#{prefix}[type]", type
+= hidden_field_tag "#{prefix}[title]", title
+
+- if defined?(hidden) && hidden
+  = hidden_field_tag "#{prefix}[value]", value
+- else
+  .row
+    .col-12
+      %label= title
+      - html_class = required ? 'required' : ''
+      - if type == Transaction::Field::TYPE_TEXT
+        = text_field_tag "#{prefix}[value]", '', class: html_class
+      - if type == Transaction::Field::TYPE_CHECKBOX
+        = check_box_tag "#{prefix}[value]", '', false, class: html_class
+      - if type == Transaction::Field::TYPE_DATE
+        = text_field_tag "#{prefix}[value]", '',
+          class: html_class,
+          data: { tx_field_date: true }
+      - if type == Transaction::Field::TYPE_EMAIL
+        = text_field_tag "#{prefix}[value]", '',
+          class: html_class,
+          email: true
+

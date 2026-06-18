@@ -1,0 +1,14 @@
+- if @listing_presenter.has_no_future_dates?
+  - url = @listing.author.website_url.presence || person_url(@listing.author)
+  - link = link_to url, url
+  - email_address = @listing.author.emails.is_public.first&.address
+  - email = (email_address.present? && obfuscate_email(email_address)) || 'N/A'
+  - phone_number = @listing.author.phone_number
+  - phone = (phone_number.present? && phone_to(phone_number)) || 'N/A'
+  %p
+    %span.alert-box-icon
+      = icon_tag("information", ["icon-fix"])
+    - if email_address
+      = t("listings.no_avail_note_extended", link: link, email: email, phone: phone).html_safe
+    - else
+      = t("listings.no_avail_note", link: link).html_safe

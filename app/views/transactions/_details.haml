@@ -1,0 +1,31 @@
+.message-avatar-padding
+  .row
+    .col-12
+
+      %h2
+        = link_to_unless listing[:deleted] || @iframe_mode, listing[:title], listing_path(id: listing[:id])
+
+      - if price_break_down_locals.present?
+        = render partial: "transactions/price_break_down", locals: price_break_down_locals.merge(is_author: is_author)
+
+      = render partial: "transactions/shipping_address", locals: { shipping_address: tx[:shipping_address] }
+      - if transaction_model.starter.guest?
+        = render partial: "transactions/guest_info", locals: { transaction_model: transaction_model } 
+
+      = render "transactions/tx_fields", transaction_model: transaction_model
+
+      = render partial: "transactions/date_booking", locals: { :transaction_model => transaction_model } if is_author && transaction_model.booking&.per_hour?
+
+      %div{:id => "transaction_status"}
+        = render :partial => "transactions/status/status", :locals => { :__transaction_model => transaction_model, role: role, is_author: is_author }
+        - if true
+          .row
+            .col-12
+              = link_to edit_person_transaction_path(person_id: @current_user.username, id: transaction_model.id), class: "button" do
+                = t(".edit")
+        - if transaction_model.can_preauth_deposit? && is_author
+          = render partial: "transactions/deposit_actions", locals: {transaction_model: transaction_model}
+        - if transaction_model.deposit.present? && transaction_model.deposit > 0 && is_author
+          = render partial: "transactions/refund_actions", locals: {transaction_model: transaction_model}
+        - if transaction_model.can_cancel_and_refund? && is_author
+          = render partial: "transactions/cancel_actions", locals: {transaction_model: transaction_model}

@@ -1,0 +1,34 @@
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/bootsnap-1.4.3/ext/bootsnap
+/home/agile/.rbenv/versions/2.6.5/bin/ruby -I /home/agile/.rbenv/versions/2.6.5/lib/ruby/2.6.0 -r ./siteconf20260407-28693-17en7hu.rb extconf.rb
+creating Makefile
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/bootsnap-1.4.3/ext/bootsnap
+make "DESTDIR=" clean
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/bootsnap-1.4.3/ext/bootsnap
+make "DESTDIR="
+compiling bootsnap.c
+bootsnap.c: In function ‘get_ruby_platform’:
+bootsnap.c:219:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  219 |   struct utsname utsname;
+      |   ^~~~~~
+bootsnap.c: In function ‘bs_cache_path’:
+bootsnap.c:245:39: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 5 has type ‘uint64_t’ {aka ‘long unsigned int’} [-Wformat=]
+  245 |   sprintf(*cache_path, "%s/%02x/%014llx", cachedir, first_byte, remainder);
+      |                                 ~~~~~~^                         ~~~~~~~~~
+      |                                       |                         |
+      |                                       long long unsigned int    uint64_t {aka long unsigned int}
+      |                                 %014lx
+bootsnap.c: In function ‘bs_rb_fetch’:
+bootsnap.c:286:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  286 |   char * cachedir = RSTRING_PTR(cachedir_v);
+      |   ^~~~
+At top level:
+cc1: note: unrecognized command-line option ‘-Wno-self-assign’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-parentheses-equality’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-constant-logical-operand’ may have been intended to silence earlier diagnostics
+linking shared-object bootsnap/bootsnap.so
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/bootsnap-1.4.3/ext/bootsnap
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 bootsnap.so ./.gem.20260407-28693-183ffbh/bootsnap

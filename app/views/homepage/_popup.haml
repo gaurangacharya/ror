@@ -1,0 +1,17 @@
+- content_for :head do
+  - if person.embed_document_button_color
+    :css
+      .mfp-ajax-holder .mfp-close button.mfp-close {
+        background-color: #{person.embed_document_button_color};
+      }
+- content_for :javascript do
+  var popupNotDisplayed = #{session_person_popup(person).to_i == 0};
+  if (popupNotDisplayed) {
+  $.magnificPopup.open({
+  items: {
+  src: '#{embed_content_person_path(person.username)}',
+  type: 'ajax'
+  }
+  });
+  }
+

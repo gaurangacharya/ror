@@ -1,0 +1,182 @@
+%tr
+  %td.content-title{:align => "left"}
+    = t("emails.payment_receipt_to_seller.you_have_received_new_payment", :listing_title => listing_title, :payment_sum => payment_total, :payer_full_name => payer_given_name).html_safe
+
+%tr
+  %td.content-main-cell{:align => "left"}
+    %table.content-main-table-seller
+      %tbody
+        %tr
+          %td{:width => "200"}
+            %b= t("emails.payment_receipt_to_seller.product")
+          %td
+            %b= product_title
+          - if booking.present?
+            - if !booking.per_hour?
+              %tr
+                %td.body-font{colspan: 2}
+                  %b
+                    - if listing.booking_per_day?
+                      = use_new_translation("transactions.initiate.booked_days_label", count: duration).or_fallback_to("transactions.initiate.booked_days")
+                    - else
+                      = use_new_translation("transactions.initiate.booked_nights_label", count: duration).or_fallback_to("transactions.initiate.booked_nights")
+                  %br
+                  = l booking.start_on, format: :long_with_abbr_day_name
+                  = "-"
+                  - if listing.booking_per_day?
+                    = l (booking.end_on - 1.day), format: :long_with_abbr_day_name
+                    = "(#{pluralize(duration, t("listing_conversations.preauthorize.day"), t("listing_conversations.preauthorize.days"))})"
+                  - else
+                    = l booking.end_on, format: :long_with_abbr_day_name
+                    = "(#{pluralize(duration, t("listing_conversations.preauthorize.night"), t("listing_conversations.preauthorize.nights"))})"
+            - else
+              %tr
+                %td{colspan: 2}
+                  = t('transactions.initiate.booked_hours_label', count: duration)
+              %tr
+                %td.body-font{colspan: 2}
+                  = l booking.start_time.to_date, format: :long_with_abbr_day_name
+                  = '-'
+                  = t("transactions.initiate.start_end_time",
+                    start_time: l(booking.start_time, format: :hours_only),
+                    end_time: l(booking.end_time, format: :hours_only))
+                 
+        - if duration.present? || listing_quantity > 1
+          %tr
+            %td{:width => "250"}
+              = price_per_unit_title
+            %td
+              = listing_price
+        - if tx_model&.add_ons&.any?
+          - tx_model.add_ons.each do |add_on|
+            %tr
+              %td{:width => "250"}
+                = add_on.title
+              %td
+                = humanized_money_with_symbol(add_on.price)
+        - if duration.present? && listing_availability.to_s != 'none' && !listing.need_quantity_input?
+          %tr
+            %td{:width => "250"}
+              = t("emails.receipt_to_payer.duration")
+            %td
+              = duration
+        - elsif listing_quantity > 1
+          %tr
+            %td{:width => "250"}
+              = quantity_selector_label || t("emails.new_payment.quantity")
+            %td
+              = listing_quantity
+        %tr.with-top-border
+          %td
+            %b= t("emails.payment_receipt_to_seller.price_payer_paid", :payer_full_name => payer_given_name)
+          %td
+            %b= tx_model.total
+        %tr
+          %td
+            = t("emails.payment_receipt_to_seller.service_fee")
+          %td= "#{payment_service_fee}"
+
+        - if shipping_total.present?
+          %tr
+            %td
+              = t("emails.payment_receipt_to_seller.shipping_total")
+            %td= shipping_total
+
+        - if tx_model.tax_percent.present?
+          %tr
+            %td.body-font
+              = t("emails.receipt_to_payer.tax", value: tx_model.tax_percent)
+            %td.body-font
+              = MoneyViewUtils.to_humanized(tx_model.tax)
+
+        - if tx_model.service_fee_percent.present?
+          %tr
+            %td.body-font
+              = t("emails.receipt_to_payer.service_fee", value: tx_model.service_fee_percent)
+            %td.body-font
+              = MoneyViewUtils.to_humanized(tx_model.service_fee)
+
+        - if payment_gateway_fee.present? && payment_gateway_fee_value > 0
+          %tr
+            %td
+              = t("emails.payment_receipt_to_seller.payment_gateway_fee")
+            %td= "#{payment_gateway_fee}"
+
+        %tr.with-top-border
+          %td
+            %b= t("emails.payment_receipt_to_seller.you_will_get")
+          %td
+            %b= payment_seller_gets
+
+        - if deposit.present?
+          %tr.with-top-border
+            %td
+              %b=t("emails.payment_receipt_to_seller.deposit")
+            %td
+              %b= deposit
+
+        - if starter_hotel
+          - if starter_hotel.hotel.present?
+            %tr.with-top-border
+              %td
+                %b=t("emails.payment_receipt_to_payer.booked_by_hotel")
+              %td
+                = starter_hotel.hotel.full_name
+          %tr
+            %td
+              %b=t("emails.payment_receipt_to_payer.hotel_notes")
+            %td
+              = starter_hotel.notes
+          %tr
+            - starter = starter_hotel
+            %td{colspan: 2}
+              %p.body-font
+
+                %b= t("listing_conversations.guest.title")
+              %p.body-font
+
+                %strong= t("transactions.guest.first_name")+":"
+                = starter.given_name
+              %p.body-font
+
+                %strong= t("transactions.guest.last_name")+":"
+                = starter.family_name
+              %p.body-font
+
+                %b= t("transactions.guest.email")+":"
+                = starter.primary_email.address
+              - if starter.phone_number.present?
+                %p.body-font
+
+                  %strong= t("transactions.guest.phone")+":"
+                  = starter.phone_number
+
+              - if starter.notes.present?
+                %p.body-font
+                  %strong= t("transactions.guest.notes")+":"
+                  = starter.notes
+
+              %p.body-font
+                %strong= t("transactions.guest.hotel_guest")+":"
+                = starter.hotel_guest ? 'Yes' : 'No'
+
+              - if starter.name_on_reservation.present?
+                %p.body-font
+                  %strong= t("transactions.guest.name_on_reservation")+":"
+                  = starter.name_on_reservation
+
+              - if starter.booking_string.present?
+                %p.body-font
+
+                  %strong= t("transactions.guest.dates")+":"
+                  = starter.booking_string
+
+        - if tx_model&.fields&.any?
+          - tx_model.fields.each do |field|
+            %tr
+              %td{:width => "250"}
+                = "#{field.title}:"
+              %td
+                = field.to_s
+
+= render :partial => "person_mailer/action_button_v2", :locals => { :text => t("emails.conversation_status_changed.view_thread"), :url => conversation_url}

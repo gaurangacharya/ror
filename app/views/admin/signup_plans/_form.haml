@@ -1,0 +1,27 @@
+%h1= plan.new_record? ? t(".new_plan") : t('.edit_plan')
+= form_for [:admin, plan] do |f|
+  = f.label :code, t('.code')
+  = f.select :code, SignupPlan.available_codes
+  = f.label :active, t('.active')
+  = f.check_box :active
+  = f.label :position, t('.position')
+  = f.number_field :position
+  = f.label :signup_group_id, t('.group')
+  = f.select :signup_group_id, SignupGroup.all.map{|group| [group.title, group.id]}, { include_blank: true }
+  = label_tag :title, t('.title')
+  = f.text_field :title
+  = label_tag :subtitle, t('.subtitle')
+  = f.text_field :subtitle
+  = label_tag :price_title, t('.price_title')
+  = f.text_field :price_title
+  = label_tag :plan_body, t('.plan_body')
+  = f.text_area :plan_body, rows: 20, cols: 100
+  = label_tag :signup_button_text, t('.signup_button_text')
+  = f.text_field :signup_button_text
+  = label_tag :create_account_button_text, t('.create_account_button_text')
+  = f.text_field :create_account_button_text
+
+  .row
+    .col-12
+      = submit_tag t(".save"), class: 'button'
+

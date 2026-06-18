@@ -1,0 +1,23 @@
+#ladera-guest-type-modal.lightbox{style: "display: none;"}
+  .lightbox-content
+    %a.close.lightbox-x{href: "#", "data-dismiss": "modal", "aria-label": "Close"}
+      ×
+    
+    .modal-header
+      %h5#laderaGuestTypeModalLabel.modal-title
+        = t("listings.ladera_guest_type.modal_title")
+    
+    .modal-body      
+      .guest-type-options{role: "group", "aria-labelledby": "laderaGuestTypeModalLabel"}
+        .row
+          .col-6
+            %button.btn.btn-outline-primary.btn-block.guest-type-btn{data: {type: "visitor"}, "aria-describedby": "visitor-description"}
+              %h6.ladera-guest-type-modal-title= t("listings.ladera_guest_type.visitor")
+              %small#visitor-description= t("listings.ladera_guest_type.visitor_description")
+          .col-6
+            %button.btn.btn-outline-primary.btn-block.guest-type-btn{data: {type: "hotel_guest"}, "aria-describedby": "hotel-guest-description"}
+              %h6.ladera-guest-type-modal-title= t("listings.ladera_guest_type.hotel_guest")
+              %small#hotel-guest-description= t("listings.ladera_guest_type.hotel_guest_description")
+      
+      %p.text-center.text-muted.mt-3
+        = t("listings.ladera_guest_type.verification_message") 

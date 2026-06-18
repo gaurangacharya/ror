@@ -1,0 +1,24 @@
+{
+  "formation": {
+    "web": {
+      "quantity": 1
+    },
+    "worker": {
+      "quantity": 1
+    },
+    "search": {
+      "quantity": 1
+    }
+  },
+  "scripts": {
+    "dokku": {
+      "postdeploy": "bundle exec rails db:migrate"
+    }
+  },
+  "cron": [
+    {
+      "command": "bundle exec rake fareharbor:import_listings_active_companies",
+      "schedule": "@daily"
+    }
+  ]
+}

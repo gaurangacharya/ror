@@ -1,0 +1,21 @@
+.row
+  .col-12#calendar-container
+    #calendar.small-calendar
+  .col-12.legend-center
+    - unless presenter.listing.booking_per_day_or_night?
+      %span.legend-padd.green= t("availability.no_bookings")
+      %span.legend-padd.yellow= t("availability.partial")
+      %span.legend-padd.grey= t("availability.noavail")
+    - else
+      %span.legend-padd.green= t("availability.free")
+      %span.legend-padd.grey= t("availability.noavail")
+
+
+- content_for :extra_javascript do
+  :javascript
+    window.ST.listingShow.setupSmallCalendar({
+      locale: '#{I18n.locale}',
+      prefix: "#{t("availability.i_am_great")}",
+      time_slots_path: '#{listing_availability_dates_path(listing_id: presenter.listing.id)}',
+      daily: #{!!presenter.listing.booking_per_day_or_night?}
+    });

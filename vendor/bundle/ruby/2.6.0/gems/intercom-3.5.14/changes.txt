@@ -1,0 +1,243 @@
+3.5.12
+- Use base_url in initialize parameter
+
+3.5.11
+- Add scroll api for companies
+
+3.5.10
+  - Add Support for find_all events pagination (@jkeyes)
+
+3.5.9
+ - Fix event create method
+
+3.5.8
+ - Add admins.me method
+
+3.5.7
+- Add method to find all events for a user (@reidab)
+
+3.5.6
+
+3.5.5
+- Add scroll api for contacts
+- Add extra context to IntercomError
+- Add support to find admin by id
+- Add decrement method to incrementable traits
+- Suppress printing of users during test runs
+
+
+3.5.4
+- Add support for scoll API feature
+
+3.5.3
+- Add support for global conversation counts
+
+3.5.2
+- Add Support for pagination
+
+3.5.1
+ - Support for 'visitors'
+ - Fix utf8 body parsing
+
+3.4.0
+ - Add a "token" keyword for OAuth clients
+
+3.3.0
+ - Add Bulk API support
+
+3.2.0
+ - Add attachment support for conversations
+ - Fix puts'ing api resources
+
+3.1.0
+ - Support opening, closing, and assigning conversations
+
+3.0.6
+ - Support the `delete` resource on Contacts
+
+3.0.5
+ - Fix id-based updates on Contacts (thanks @gevans)
+
+3.0.4
+ - Support the `all` resource on Contacts
+
+3.0.3
+ - Fix untagging
+
+3.0.2
+ - Fix bad .gem push :(
+
+3.0.1
+ - Fix circular dependency warning in Ruby 2.2.
+
+3.0.0
+ - New version, client-based access.
+
+2.5.4
+ - Acquire support
+
+2.4.4
+ - Fix parsing nil lists from notifications
+
+2.4.3
+ - Updates to remove warning when running in Ruby 2.2.0 (thanks @pat @jwaldrip)
+
+2.4.2
+ - Add nil guard around decode_body to fix potential issue.
+
+2.4.1
+ - Add 'update_last_requst_at=true' as an attribute to set on a User.
+
+2.4.0
+ - Support for Ruby 1.9.3 (thanks @Chocksy)
+
+2.3.0
+ - Add Intercom::HttpError to be raised when empty response entity received unexpectedly
+ - Raise Intercom errors more gracefully when HTML returned
+ - Fixed README typo (thanks to @marckohlbrugge)
+
+2.2.4
+ - Add Intercom::MultipleMatchingUsersError
+
+2.2.3
+ - Add rate limiting details to Intercom.rate_limiting_details
+
+2.2.2
+ - Improve spec strings (thanks to @jkeyes)
+ - Improve README readability (thanks to @jkeyes)
+ - Raise Intercom::ServiceConnectionError on connection failure
+ - Fix creation of Intercom::Message with stringy keys in to/from fields
+
+2.2.1
+ - Webhook Notification support
+ - Webhook Subscription support
+
+2.2.0
+ - Handle blanks on identity attributes (e.g. email) better.
+
+2.1.6
+ - Add handling for service unavailable exceptions
+
+2.1.5
+ - Fix typos in error messages (thanks to @infertux)
+ - Gemfile cleanup (thanks to @Manfred)
+ - Handle 403 Forbidden errors
+ - Fix intermittant spec failure
+
+2.1.4
+ - Rework hash helper extensions
+
+2.1.2
+ - Clean up some spec warnings
+ - Fix incrementing of custom data
+
+2.1.1
+ - Added User Agent header
+
+2.1.0
+ - Added Admin listing (thanks to @javiercr)
+ - Fix ancestor lookup of constants (thanks to @javiercr)
+
+2.0.3
+ - Fix for bug caused by "type" in custom attributes
+
+2.0.2
+ - Mark conversations as read
+
+2.0.1
+ - Move ruby version to gemspec
+
+2.0.0
+ - Bumped to 2.0.0.
+
+1.0.0
+ - Bumped to a 1.0.0 version. No functional changes.
+
+0.3.0
+ - Renamed UserEvents to Events
+
+0.2.0
+ - Add UserEvents.
+
+0.1.19
+ - Update DELETE request to fix issue.
+
+0.1.18
+ - Increase connection and read timeouts
+
+0.1.16
+ - Add BadGatewayError to properly report that sort of error.
+
+0.1.15
+ - Fix location_data and social_profiles for ruby 2.0 change to #respond_to? method.
+
+0.1.14
+ - Update tagging interface for API changes
+
+0.1.13
+ - Add license to gemspec
+
+0.1.12
+ - Fix the admin avatar attributes for MessageAuthor
+ - Add ability to send increments
+
+0.1.11
+ - Add getters/setters https://github.com/intercom/intercom-ruby/pull/35
+
+0.1.10
+ - fix broken tag updating :(
+
+0.1.9
+ - better response object for tags
+
+0.1.8
+ - change tag response to match the new api response. add support to query users that are tagged with a specific tag
+
+0.1.7
+ - add support for creating, updating, and fetching tags
+
+0.1.6
+ - add unsubscribed_from_emails and unsubscribed_from_emails= to user
+
+0.1.5
+ - always convert times to unix timestamps for the wire (thanks @jgwhite)
+
+0.1.4
+ - Intercom::User.all now includes Enumerable
+
+0.0.12
+ - add support for multiple endpoints, with failover on service unavailable / socket connect timeout. (only relevant to customers who must use static ip addresses to access our API)
+
+0.0.11
+ - add support for creating notes on users
+
+0.0.10
+ - allow settings dates to nil
+
+0.0.9
+ - add support for settings/updating url attribute for message_threads
+
+0.0.8
+ - add support for updating last request time for user through either last_request_at or last_impression_at
+
+0.0.7
+ - add support for deleting user
+
+0.0.6
+ - drop rest-client, use pure net/http instead
+
+0.0.5
+ - added Intercom::User.find_by_email, Intercom::User.find_by_user_id
+ - add support for Intercom::User.all.each, Intercom::User.all.map, Intercom::User.all.count
+
+0.0.4
+ - allow to directly set custom_data hash on Intercom::User user.custom_data = {...}
+
+0.0.3
+ - renamed Intercom.secret_key to Intercom.api_key for consistency throughout our app and docs
+
+0.0.2
+ - updates to reflect changes to resources served by the api
+
+0.0.1
+ - experimental version

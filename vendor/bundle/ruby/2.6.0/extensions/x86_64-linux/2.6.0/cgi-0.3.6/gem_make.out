@@ -1,0 +1,23 @@
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/cgi-0.3.6/ext/cgi/escape
+/home/agile/.rbenv/versions/2.6.5/bin/ruby -I /home/agile/.rbenv/versions/2.6.5/lib/ruby/2.6.0 -r ./siteconf20260407-28693-172xnuk.rb extconf.rb
+creating Makefile
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/cgi-0.3.6/ext/cgi/escape
+make "DESTDIR=" clean
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/cgi-0.3.6/ext/cgi/escape
+make "DESTDIR="
+compiling escape.c
+escape.c: In function ‘optimized_escape_html’:
+escape.c:66:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   66 |     VALUE escaped;
+      |     ^~~~~
+At top level:
+cc1: note: unrecognized command-line option ‘-Wno-self-assign’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-parentheses-equality’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-constant-logical-operand’ may have been intended to silence earlier diagnostics
+linking shared-object cgi/escape.so
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/cgi-0.3.6/ext/cgi/escape
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 escape.so ./.gem.20260407-28693-ivudsx/cgi

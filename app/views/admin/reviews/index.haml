@@ -1,0 +1,40 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t("admin.reviews.reviews")
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  .row
+    .col-12
+      %h1= t("admin.reviews.reviews")
+
+      = link_to t(".add_review"), new_admin_review_path, class: 'button'
+
+  %table#admin_reviews
+    %thead
+      %tr
+        %th=t(".headers.title")
+        %th=t(".headers.author")
+        %th
+
+    %tbody
+      - @reviews.each do |review|
+        %tr
+          %td
+            = review.title
+          %td
+            = review.author
+          %td
+            = link_to edit_admin_review_path(review), :class => "custom-fields-action-edit" do
+              = icon_tag("edit", ["icon-fix"])
+            = link_to admin_review_path(review), :class => "custom-fields-action-edit",
+              method: :delete, data: { confirm: 'Are you sure?' } do
+              = icon_tag("cross", ["icon-fix"])
+
+  .row
+    .col-12
+      = will_paginate @reviews
+

@@ -1,0 +1,6 @@
+window.ST.signup.createPerson({
+content: '#{j render 'form', person: @person, signup_plan: @signup_plan}',
+errors:  #{@person.errors.any?},
+person_id: '#{@person.id}',
+period_unit: '#{params[:period_unit]}'
+});

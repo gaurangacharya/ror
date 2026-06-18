@@ -1,0 +1,3 @@
+- if @current_user.has_admin_rights?(@current_community)
+  = form.label :admin_rating, 'Rating', class: 'input'
+  = form.select :admin_rating, [['N/A', '0'], ['Good', '10'], ['Excellent', '20']]

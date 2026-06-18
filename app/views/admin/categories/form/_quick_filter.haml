@@ -1,0 +1,19 @@
+.row
+  .col-12
+    = form.label :quick_filter, t(".quick_filter")
+    = form.check_box :quick_filter
+.row
+  .col-12
+    = form.label :icon, t(".icon")
+    = form.text_field :icon
+.row
+  .col-6.quick-filter-icon
+    %i.fa-solid{class: "fa-#{form.object.icon}"}
+  .col-6
+    = link_to 'Font awesome', 'https://fontawesome.com/search?o=r&m=free', target: '_blank'
+
+- content_for :javascript do
+  $('#category_icon').on('change', function(e) {
+  var value = $(e.target).val();
+  $('.quick-filter-icon i').attr('class', 'fa-solid fa-' + value);
+  });

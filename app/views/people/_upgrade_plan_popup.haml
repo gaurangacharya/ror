@@ -1,0 +1,24 @@
+= render layout: "layouts/lightbox", locals: { id: "upgrade-plan-popup"} do
+  #upgrade-plan-popup-content.upgrade-plan-popup-content
+    .upgrade-plan--popup
+      %h2= t('people.show.upgrade_plan.title')
+      - if plan = plans.find_by(code: 'business')
+        %h2
+          = plan.title
+        %p
+          = plan.subtitle&.html_safe
+        %h3
+          = plan.price_title&.html_safe
+        .plan-section-body
+          =raw plan.plan_body
+      .upgrade-plan--inputs
+        = hidden_field_tag :plan_id, 'Personal-Premium'
+        = label_tag :period_unit, t('chargebees.form.period_unit')
+        = select_tag :period_unit,
+          options_for_select([[t('chargebees.form.monthly'), 'month'], [t('chargebees.form.annual'), 'year']])
+      .upgrade-plan--buttons
+        = link_to '#', class: 'button chargebee-upgrade-plan' do
+          = t('people.show.upgrade_plan.upgrade')
+        = link_to '#', class: 'cancel-button', id: 'close_x1' do
+          = t('people.show.upgrade_plan.cancel')
+

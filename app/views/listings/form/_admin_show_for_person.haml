@@ -1,0 +1,4 @@
+- if @current_user.has_admin_rights?(@current_community)
+  = form.label :show_for, 'Show For', class: 'input'
+  = form.autocomplete_field :show_for, autocomplete_person_name_admin_people_path,
+  'data-delimiter' => ',', :multiple => true

@@ -1,0 +1,9 @@
+window.ST.listingShow.newSlot({
+locale: '#{I18n.locale}',
+content: '#{j render('listings/working_time_slots/form', presenter: @presenter)}',
+datepicker: #{@presenter.datepicker.to_json.html_safe},
+time_slot_options: #{@presenter.time_slot_options.to_json.html_safe},
+new_slot_date: #{params[:date].present?},
+multidate: true,
+update_calendar: #{@error_list.present?}
+});

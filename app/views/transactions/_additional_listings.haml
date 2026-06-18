@@ -1,0 +1,18 @@
+- presenter.additional_listings.each do |listing|
+  .home-fluid-thumbnail-grid-item{id: "listing_#{listing.id}"}
+    %div
+      -# Listing image
+      = render :partial => "layouts/grid_item_listing_image", :locals => {:listing => listing, :modifier_class => ""}
+
+      -# Listing author details
+      .home-fluid-thumbnail-grid-author
+        .home-fluid-thumbnail-grid-author-avatar
+          = link_to(person_path(username: listing.author.username)) do
+            = image_tag(listing.author.image.present? && listing.author.image.url(:thumb) || missing_avatar(:thumb, listing.author.is_vendor), :class => "home-fluid-thumbnail-grid-author-avatar-image")
+
+        - name = PersonViewUtils.person_entity_display_name(listing.author, @current_community.name_display_type)
+        .home-fluid-thumbnail-grid-details
+          = link_to(person_path(username: listing.author.username), class: "home-fluid-thumbnail-grid-details-author-name", title: name) do
+            = name
+          = stars_rating_tag listing.author.rating_average, disable_after_rate: true, readonly: true, class: 'home-fluid-thumbnail-grid-details-author-rating'
+

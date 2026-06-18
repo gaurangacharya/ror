@@ -1,0 +1,19 @@
+.row.paypal-wizard
+  .col-12
+    .paypal-wizard-content
+      .row
+        .col-12
+          %h3.paypal-wizard-step
+            =t("paypal_accounts.soap_form.title")
+      .row
+        .col-12
+          = form_for @paypal_soap_account, url: update_paypal_person_payment_settings_path, method: :post do |form|
+            = form.label :login
+            = form.text_field :login
+            = form.label :password
+            = form.text_field :password
+            = form.label :signature
+            = form.text_field :signature
+
+            = form.button
+

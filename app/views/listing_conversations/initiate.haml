@@ -1,0 +1,185 @@
+- content_for :javascript do
+  initialize_send_message_form('#{I18n.locale}');
+  ST.transaction.initializePayPalBuyForm("transaction-form", #{paypal_analytics_event.to_json.html_safe});
+
+- content_for :title_header do
+  %h1
+    = action_button_label
+    = link_to(listing[:title], listing_path(listing[:id]))
+- if @iframe_mode
+  = link_to t("iframe.select_another_time"), listing_path(listing[:id]), class: 'button-back'
+#new_message_form.centered-section
+
+  - author_link = link_to(author[:display_name], person_path(username: author[:username]))
+
+  .preauthorize-section
+    %h2.preauthorize-details-title
+      = t("listing_conversations.preauthorize.details")
+
+    %ul.no-bullets
+      %li
+        %div
+          - if @iframe_mode
+            = t("listing_conversations.preauthorize.by", listing: "#{listing[:title]}", author: author[:display_name]).html_safe
+          - else
+            = t("listing_conversations.preauthorize.by", listing: link_to("#{listing[:title]}", listing_path(listing[:id])), author: author_link).html_safe
+
+      %li
+        = render partial: "transactions/price_break_down", locals: price_break_down_locals.merge(is_author: false, listing: listing_model)
+
+  = form_tag form_action, method: :post, id: "transaction-form" do
+
+    = hidden_field_tag(:start_on, start_on&.iso8601 )
+    = hidden_field_tag(:end_on, end_on&.iso8601 )
+    - add_on_ids.is_a?(Array) && add_on_ids.each do |add_on_id|
+      = hidden_field_tag('add_on_ids[]', add_on_id)
+    - if per_hour
+      = hidden_field_tag(:start_time, start_time&.iso8601 )
+      = hidden_field_tag(:end_time, end_time&.iso8601 )
+      = hidden_field_tag(:per_hour, '1' )
+
+    .preauthorize-section
+      %h2
+        - if @iframe_mode
+          = t("conversations.new.optional_message_to", author_name: author[:display_name]).html_safe
+        - else
+          = t("conversations.new.optional_message_to", author_name: author_link).html_safe
+
+      .row
+        .col-12
+          = text_area_tag :message, nil, :class => "text_area"
+
+      - if @current_community.transaction_agreement_in_use
+        = render :partial => "listing_conversations/transaction_agreement_checkbox"
+
+      - if quantity
+        = hidden_field_tag :quantity, quantity
+
+      - if delivery_method
+        = hidden_field_tag :delivery, delivery_method
+
+      - if @current_user.is_hotel? || @current_user.guest? || !@current_user.premium_pricing?(@listing)
+        .row
+          .col-12
+            %h2.discount_code= t("listing_conversations.guest.discount_code")
+            = text_field_tag :referral_id
+            = render :partial => 'listing_conversations/discount_code'
+
+      = hidden_field_tag :payment_type, 'none'
+
+      - if @current_user.guest? || @current_user.is_hotel?
+        - if !@iframe_mode
+          %h2
+            = t("listing_conversations.guest.title")
+          - if @current_user.guest?
+            .row
+              .col-12
+                - login_link = link_to(t("listing_conversations.guest.login_title"), login_path)
+                - signup_link = link_to(t("listing_conversations.guest.signup_title"), sign_up_path)
+                = t("listing_conversations.guest.login", login: login_link, signup: signup_link).html_safe
+        .row
+          .col-12
+            %label= t("listing_conversations.guest.first_name")
+            = text_field_tag 'user[first_name]', '', class: 'required'
+        .row
+          .col-12
+            %label= t("listing_conversations.guest.last_name")
+            = text_field_tag 'user[last_name]', '', class: 'required'
+        .row
+          .col-12
+            %label= t("listing_conversations.guest.email")
+            = text_field_tag 'user[email]', '', class: 'required'
+
+        - if @current_user.is_hotel?
+          .row
+            .col-12
+              %label= t("listing_conversations.guest.phone_required")
+              = text_field_tag 'user[phone]', '', class: 'required'
+          .row
+            .col-12
+              %label= t("listing_conversations.guest.notes_long")
+              = text_field_tag 'user[notes]', ''
+        - else
+          .row
+            .col-12
+              %label= t("listing_conversations.guest.phone")
+              = text_field_tag 'user[phone]', '', class: ''
+          .row
+            .col-12
+              %label= t("listing_conversations.guest.notes")
+              = text_field_tag 'user[notes]', '', class: ''
+
+        = render 'listing_conversations/tx_fields_gift_card'
+
+        .row
+          .col-12
+            %label= t("listing_conversations.guest.name_on_reservation")
+            = text_field_tag 'user[name_on_reservation]', ''
+
+        - if @current_user.is_hotel?
+          .row
+            .col-12
+              .checkbox-container
+                = check_box_tag :confirmed_availability, "1", false, class: 'required'
+                %label= t("listing_conversations.guest.confirmed_availability")
+                %div
+                  %label.error.hidden{for: :confirmed_availability, style: 'display: none'}
+                    = t("listing_conversations.guest.avail_is_required")
+                    &nbsp;
+          %div.hidden.avail-options
+            .row
+              .col-12
+                %label= t("listing_conversations.guest.booking_date")
+                = text_field_tag 'user[booking_date]', '', id: 'dd'
+            .row
+              .col-12
+                %label= t("listing_conversations.guest.booking_start_time")
+                = hidden_field_tag 'user[booking_start]', '', id: 'tf'
+            .row
+              .col-12
+                %label= t("listing_conversations.guest.booking_end_time")
+                = hidden_field_tag 'user[booking_end]', '', id: 'tt'
+
+      - if @listing.free?
+        .row
+          .col-12.payment-button-wrapper.free
+            = button_tag t("listing_conversations.free.book_for_free"), class: "checkout-free-button"
+      - else
+        - if stripe_in_use
+          .row
+            .col-12
+              %h2
+                = t("listing_conversations.stripe_payment.payment")
+          = render :partial => "listing_conversations/stripe_payment", locals: {  publishable_key: stripe_publishable_key, stripe_shipping_required: stripe_shipping_required, paypal_in_use: paypal_in_use}
+
+        - if paypal_in_use && !stripe_in_use
+          .row
+            .col-12.payment-button-wrapper.paypal-payment
+              = button_tag t("paypal.pay_with_paypal"), class: "checkout-with-paypal-button"
+
+        - if paypal_in_use  && stripe_in_use
+          .row
+            .col-12.paypal-or-stripe
+              %span
+                = t("paypal.or_pay_with_paypal")
+          .row
+            .col-12.payment-button-wrapper.paypal-payment
+              %button.checkout-with-paypal-button.paypal-image{type: 'button'}
+                = t("paypal.checkout_with")
+                = image_tag 'checkout_with_paypal.png'
+
+        - if (stripe_in_use || paypal_in_use) && !@listing.auto_confirm?
+          .row
+            .col-12
+              %p
+                - if @iframe_mode
+                  = t("listing_conversations.preauthorize.you_will_be_charged", author: author[:display_name], expiration_period: paypal_expiration_period).html_safe
+                - else
+                  = t("listing_conversations.preauthorize.you_will_be_charged", author: author_link, expiration_period: paypal_expiration_period).html_safe
+
+  %noscript
+    = "For security reasons JavaScript has to be enabled"
+  - content_for :extra_javascript do
+    :javascript
+      ST.transaction.initiateTransactionScreen(#{{locale: I18n.locale, localized_dates: datepicker_localized_dates}.to_json.html_safe});
+

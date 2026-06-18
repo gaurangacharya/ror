@@ -1,0 +1,270 @@
+%h2 Booking form fields
+%table{:border => "1", :cellspacing => "0"}
+  %tr
+    %td{:align => "left"}
+      unit&nbsp;\&nbsp;availability
+    %td{:align => "center"}
+      %b
+        %b none
+    %td{:align => "center"}
+      %b
+        %b hour
+    %td{:align => "center"}
+      %b
+        %b day
+    %td{:align => "center"}
+      %b
+        %b night
+  %tr
+    %td{:align => "left"}
+      %b hour
+    %td{:align => "center"} quantity
+    %td{:align => "center"}
+      date
+      %br
+      start time
+      %br
+      end time
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b ½ hour
+    %td{:align => "center"} quantity
+    %td{:align => "center"}
+      date
+      %br
+      start time
+      %br
+      end time
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b 4 hours
+    %td{:align => "center"} quantity
+    %td{:align => "center"}
+      date
+      %br
+      start time
+      %br
+      end time
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b 8 hours
+    %td{:align => "center"} quantity
+    %td{:align => "center"} 
+      date
+      %br
+      start time
+      %br
+      end time
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b 24 hours
+    %td{:align => "center"} quantity
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"}
+      start date
+      %br
+      end date
+  %tr
+    %td{:align => "left"}
+      %b day
+    %td{:align => "center"} quantity
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"}
+      start date
+      %br
+      end date
+
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b night
+    %td{:align => "center"} quantity
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"}
+      start date
+      %br
+      end date
+
+  %tr
+    %td{:align => "left"}
+      %b week
+    %td{:align => "center"} quantity
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"}
+      start date
+      %br
+      end date
+    %td{:align => "center"}
+      start date
+      %br
+      end date
+
+  %tr
+    %td{:align => "left"}
+      %b activity
+    %td{:align => "center"} quantity
+    %td{:align => "center"}
+      date
+      %br
+      start time
+      %br
+      end time
+      %br
+      quantity
+    %td{:align => "center"}
+      start date
+      %br
+      end date
+      %br
+      quantity
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b person
+    %td{:align => "center"} quantity
+    %td{:align => "center"}
+      date
+      %br
+      start time
+      %br
+      end time
+      %br
+      quantity
+    %td{:align => "center"}
+      start date
+      %br
+      end date
+      %br
+      quantity
+    %td{:align => "center"} 
+      %i.ss-delete
+%hr
+%h2 Pricing calculation
+%table{:border => "1", :cellspacing => "0"}
+  %tr
+    %td{:align => "left"}
+    %td{:align => "center"}
+      %b
+        %b none
+    %td{:align => "center"}
+      %b
+        %b hour
+    %td{:align => "center"}
+      %b
+        %b day
+    %td{:align => "center"}
+      %b
+        %b night
+  %tr
+    %td{:align => "left"}
+      %b hour
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} price&nbsp;*&nbsp;hours
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b ½ hour
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} price&nbsp;*&nbsp;hours * 2
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b 4 hours
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} price&nbsp;*&nbsp;hours&nbsp;/&nbsp;4
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b 8 hours
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} price&nbsp;*&nbsp;hours&nbsp;/&nbsp;8
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b 24 hours
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} price&nbsp;*&nbsp;nights
+  %tr
+    %td{:align => "left"}
+      %b day
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} price&nbsp;*&nbsp;days
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b night
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} price&nbsp;*&nbsp;nights
+  %tr
+    %td{:align => "left"}
+      %b week
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} 
+      %i.ss-delete
+    %td{:align => "center"} price&nbsp;*&nbsp;days&nbsp;/&nbsp;7
+    %td{:align => "center"} price&nbsp;*&nbsp;nights&nbsp;/&nbsp;7
+  %tr
+    %td{:align => "left"}
+      %b activity
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} 
+      %i.ss-delete
+  %tr
+    %td{:align => "left"}
+      %b person
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} price&nbsp;*&nbsp;qty
+    %td{:align => "center"} 
+      %i.ss-delete

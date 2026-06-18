@@ -1,0 +1,25 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = t("admin.communities.manage_members.manage_members")
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  %h2= t("admin.communities.manage_members.manage_members", :community_name => @current_community.name(I18n.locale))
+  .row
+    = t("admin.communities.redprofile_users.import_total", users: @csv_importer.people.size, listings: @csv_importer.listings.size, errors: @csv_importer.errors.size)
+  %ol
+    - @csv_importer.people.each do |person|
+      %li
+        = link_to person.name_or_username, person_path(person), target: '_blank'
+
+  - if @csv_importer.errors.present?
+    .row
+      %h2= t("admin.communities.redprofile_users.import_errors")
+      %ol
+        - @csv_importer.errors.each do |row_index, message|
+          %li
+            = t("admin.communities.redprofile_users.import_row", row: row_index+1)
+            = message

@@ -1,0 +1,24 @@
+.ta-badge
+  - unless hide_image
+    - ta_awards = ta_info['awards']
+    - awards = ta_awards.is_a?(Hash) ? ta_awards["data"] : ta_awards
+    .ta-badge-images
+      - awards[0,1].each do |award|
+        - if remove_url
+          = image_tag award['images']['large'], title: award['display_name'].to_s, alt: award['display_name'], class: 'ta-award-image'
+        - else
+          = link_to ta_info['web_url'], target: '_blank' do
+            = image_tag award['images']['large'], title: award['display_name'].to_s, alt: award['display_name'], class: 'ta-award-image'
+  .ta-reviews-line
+    .ta-reviews-header
+      %small
+        %strong
+          = t('tripadvisor.reviews_header')
+    .ta-reviews-image
+      = link_to ta_info['web_url'], target: '_blank' do
+        = image_tag ta_info['rating_image_url'], class: 'ta-rating-image'
+    .ta-reviews-text
+      = ta_info['num_reviews']
+      = t("tripadvisor.reviews")
+    .ta-summary
+      = link_to ta_info['ranking_data']['ranking_string'].html_safe, ta_info['web_url'], target: '_blank', class: 'ta-summary-title'

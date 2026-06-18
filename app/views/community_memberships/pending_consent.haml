@@ -1,0 +1,102 @@
+- content_for :javascript do
+  initialize_pending_consent_form("#{t("people.new.email_is_in_use_or_not_allowed")}",#{invite_only}, "#{t("people.new.invalid_invitation_code")}", "#{t("people.new.referral_id_not_found")}");
+
+- content_for :title_header do
+  %h1= t('community_memberships.new.join_community', community: @current_community.name(I18n.locale))
+
+- if session[:fb_join] == "pending_analytics"
+  - content_for :javascript do
+    window.ST.analytics.logEvent('user', "signed up", "facebook");
+  - session[:fb_join] = "analytics_reported"
+
+.centered-section
+  %p
+    - if invite_only && values[:invitation_code].blank?
+      = t('community_memberships.new.you_can_join_with_invite_only')
+    - elsif !has_valid_email_for_community
+      - if allowed_emails.size > 1
+        = t('community_memberships.new.you_can_join_email_confirmation_multiple_addresses', email_endings: allowed_emails.join(", "))
+      - else
+        = t('community_memberships.new.you_can_join_email_confirmation', email_ending: allowed_emails.first)
+    - else
+      = t('community_memberships.new.welcome_fb_user', name: PersonViewUtils.person_display_name_for_type(@current_user, "first_name_only"))
+      = t('community_memberships.new.fb_join_accept_terms')
+
+  %p
+    = t('community_memberships.new.if_want_to_view_content')
+    = link_to(t('community_memberships.new.log_out'), logout_path) + "."
+
+  = form_tag give_consent_path, id: "pending_consent_form" do
+
+    - if invite_only
+      - if values[:invitation_code].present?
+        = hidden_field_tag "form[invitation_code]", values[:invitation_code]
+      - else
+        = label_tag "form[invitation_code", t('people.new.invitation_code'), class: "inline"
+        = link_to t('common.what_is_this'), "#", tabindex: "-1", id: "help_invitation_code_link", class: "label-info"
+        = text_field_tag "form[invitation_code]", values[:invitation_code], class: :text_field, maxlength: "20"
+
+    - if !has_valid_email_for_community
+      = label_tag "form[email]", t('people.new.email'), class: "before_description"
+      = text_field_tag "form[email]", values[:email], class: :text_field, maxlenght: "255"
+
+    = label_tag :is_vendor, t("people.new.is_vendor")
+    = select_tag 'form[is_vendor]', options_for_select([[t("people.new.vendor_individual"), 0], [t("people.new.vendor_business"), 1], [t("people.new.vendor_hotel"), "-1"]], @current_user.is_vendor? ? 1 : 0)
+
+    .reseller-options.hidden
+      .row
+        %label= t("people.new.reseller_mode")
+      .row
+        .col-12
+          = radio_button_tag :reseller_mode, 'portal', true, class: 'checkbox-row-checkbox'
+          = label_tag :reseller_mode_portal, t("people.new.reseller_portal"), class: 'checkbox-row-label'
+      .row
+        .col-12
+          = radio_button_tag :reseller_mode, 'service', false, class: 'checkbox-row-checkbox'
+          = label_tag :reseller_mode_service, t("people.new.reseller_service", price: MoneyViewUtils.to_humanized(@current_community.self_service_price)), class: 'checkbox-row-label'
+
+      .reseller-pays.hidden
+        %label= t("people.new.credit_card_details")
+        = render partial: 'people/stripe_checkout'
+
+    -# Phone
+    = label_tag :phone_number, t('people.new.phone_number')
+    = text_field_tag 'form[phone_number]', '', :class => :text_field, :maxlength => "255"
+
+    = hidden_field_tag :profile_type, 'personal'
+
+    %div.website-url
+      = label_tag :website_url, t('people.new.website_url')
+      = text_field_tag 'form[website_url]', '', :class => :text_field, :maxlength => "255", placeholder: "http://www.yoursite.com"
+
+    .outer-checkbox-container
+      .checkbox-container
+        = check_box_tag "form[consent]", "on", values[:consent] == "on", id: "community_membership_consent"
+        = label_tag "form[consent]", t('people.new.i_accept_the'), class: "checkbox"
+        = link_to t("people.new.terms"), "#", tabindex: "-1", id: "terms_link", class: "form"
+    = button_tag(t('community_memberships.new.join_community_button'), class: "send_button", id: 'send-add-card')
+    = hidden_field_tag :membership, params[:membership]
+
+= render partial: "people/help_texts", collection: ["terms", "help_invitation_code"], as: :field
+
+- content_for :extra_javascript do
+  :javascript
+    function checkMembershipSelected() {
+      var v = $("#form_is_vendor").val();
+      if (v == '-1') {
+        $(".reseller-options").show();
+        $("#profile_type").val("reseller");
+      } else {
+        $(".reseller-options").hide();
+        $("#profile_type").val("");
+      }
+    }
+    $("#reseller_mode_service").click(function(){
+      $(".reseller-pays").show();
+    });
+    $("#reseller_mode_portal").click(function(){
+      $(".reseller-pays").hide();
+    });
+
+    $("#form_is_vendor").change(checkMembershipSelected);
+    checkMembershipSelected();

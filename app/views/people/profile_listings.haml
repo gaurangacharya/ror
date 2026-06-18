@@ -1,0 +1,15 @@
+.row
+  .col-12
+    #profile-listings-list
+      = render :partial => 'listings/profile_listings', :locals => {person: @presenter.person, limit: @presenter.per_page, listings: @presenter.listings}
+- if @presenter.add_js_links?
+  - content_for :extra_javascript do
+    :javascript
+      $(document).ready(function(){
+        $("#profile-listings-list a").on("click", function(event) {
+          event.stopPropagation();
+          event.preventDefault();
+          window.parent.postMessage("OwnOutdoors:"+this.href, "*");
+          return false;
+        });
+      });

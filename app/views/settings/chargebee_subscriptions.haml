@@ -1,0 +1,37 @@
+- content_for :head do
+  %script(src="https://js.chargebee.com/v2/chargebee.js")
+
+- content_for :javascript do
+  ST.profile.init({
+  site: '#{APP_CONFIG.chargebee_site}',
+  generateHostedPagePath: '#{checkout_new_chargebee_path}',
+  person_id: '#{@person.id}'
+  });
+
+- content_for :title_header do
+  %h1= t("layouts.no_tribe.settings_membership")
+
+= render :partial => "layouts/left_hand_navigation", :locals => { :links => settings_links_for(@person, @current_community) }
+
+#person_settings_form.left-navi-section.settings-section.account-settings
+  .account-settings-row
+    %p
+    - if @person.chargebee_id.present?
+      .row
+        .col-6
+          %p
+            %strong
+              = t("people.show.premium_membership")
+        .col-6
+          %h2= t("people.show.active_until", date: @person.membership_expires_at.strftime("%m/%d/%Y"))
+    - else
+      .row
+        .col-4
+        .col-4
+          = link_to '#', class: 'profile-edit-link show-popup' do
+            .content
+              = t("people.show.upgrade_plan.title")
+        .col-4
+
+= render 'people/upgrade_plan_popup', plans: @plans
+

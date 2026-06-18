@@ -1,0 +1,8 @@
+- content_for :javascript do
+  $.magnificPopup.open({
+  items: {
+  src: '#{embed_content_listing_path(listing)}',
+  type: 'ajax'
+  }
+  });
+

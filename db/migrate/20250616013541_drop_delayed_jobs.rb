@@ -1,0 +1,22 @@
+class DropDelayedJobs < ActiveRecord::Migration[6.1]
+  def up
+    drop_table :delayed_jobs if table_exists?(:delayed_jobs)
+  end
+
+  def down
+    create_table :delayed_jobs do |table|
+      table.integer  :priority, default: 0      # Allows some jobs to jump to the front of the queue
+      table.integer  :attempts, default: 0      # Provides for retries, but still fail eventually.
+      table.text     :handler                   # YAML-encoded string of the object that will do work
+      table.text     :last_error                # reason for last failure
+      table.datetime :run_at                    # When to run. Could be Time.zone.now for immediately, or sometime in the future.
+      table.datetime :locked_at                 # Set when a client is working on this object
+      table.datetime :failed_at                 # Set when all retries have failed
+      table.string   :locked_by                 # Who is working on this object (if locked)
+      table.string   :queue                     # The name of the queue this job is in
+      table.timestamps null: true
+    end
+
+    add_index :delayed_jobs, [:priority, :run_at], name: 'delayed_jobs_priority'
+  end
+end

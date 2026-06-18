@@ -1,0 +1,16 @@
+@font-face {
+ font-family: 'LibreBaskervilleRegular';
+ src: asset-url('LibreBaskerville-Regular.ttf');
+ src: asset-url('LibreBaskerville-Regular.ttf') format('truetype');
+ font-weight: 400;
+ font-style: normal;
+}
+
+@font-face {
+ font-family: 'LibreBaskervilleBold';
+ src: asset-url('LibreBaskerville-Bold.ttf');
+ src: asset-url('LibreBaskerville-Bold.ttf') format('truetype');
+ font-weight: 500;
+ font-style: normal;
+}
+

@@ -1,0 +1,11 @@
+- if show_price_filter || show_custom_fields
+  - if show_price_filter
+    .auto-col
+      = render :partial => "price_filter"
+
+  - if show_custom_fields
+    = render :partial => "seller_type_filter"
+    = render :partial => "custom_filters", locals: { filters: filters }
+
+//  %button{type: 'submit'}
+//    = t("homepage.custom_filters.update_view")

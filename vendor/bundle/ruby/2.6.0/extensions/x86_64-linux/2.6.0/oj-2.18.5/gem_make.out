@@ -1,0 +1,57 @@
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/oj-2.18.5/ext/oj
+/home/agile/.rbenv/versions/2.6.5/bin/ruby -I /home/agile/.rbenv/versions/2.6.5/lib/ruby/2.6.0 -r ./siteconf20260407-28693-1vsr9r9.rb extconf.rb
+>>>>> Creating Makefile for ruby version 2.6.5 on x86_64-linux <<<<<
+creating Makefile
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/oj-2.18.5/ext/oj
+make "DESTDIR=" clean
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/oj-2.18.5/ext/oj
+make "DESTDIR="
+compiling cache8.c
+compiling circarray.c
+compiling compat.c
+compiling dump.c
+dump.c: In function ‘oj_write_obj_to_file’:
+dump.c:2299:23: warning: pointer ‘f’ may be used after ‘fclose’ [-Wuse-after-free]
+ 2299 |         int     err = ferror(f);
+      |                       ^~~~~~~~~
+dump.c:2297:5: note: call to ‘fclose’ here
+ 2297 |     fclose(f);
+      |     ^~~~~~~~~
+At top level:
+cc1: note: unrecognized command-line option ‘-Wno-self-assign’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-parentheses-equality’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-constant-logical-operand’ may have been intended to silence earlier diagnostics
+compiling err.c
+err.c: In function ‘oj_err_raise’:
+err.c:46:1: warning: function might be candidate for attribute ‘noreturn’ [-Wsuggest-attribute=noreturn]
+   46 | oj_err_raise(Err e) {
+      | ^~~~~~~~~~~~
+err.c: In function ‘_oj_raise_error’:
+err.c:67:1: warning: function might be candidate for attribute ‘noreturn’ [-Wsuggest-attribute=noreturn]
+   67 | _oj_raise_error(const char *msg, const char *json, const char *current, const char* file, int line) {
+      | ^~~~~~~~~~~~~~~
+At top level:
+cc1: note: unrecognized command-line option ‘-Wno-self-assign’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-parentheses-equality’ may have been intended to silence earlier diagnostics
+cc1: note: unrecognized command-line option ‘-Wno-constant-logical-operand’ may have been intended to silence earlier diagnostics
+compiling fast.c
+compiling hash.c
+compiling hash_test.c
+compiling object.c
+compiling odd.c
+compiling oj.c
+compiling parse.c
+compiling reader.c
+compiling resolve.c
+compiling saj.c
+compiling scp.c
+compiling sparse.c
+compiling strict.c
+compiling val_stack.c
+linking shared-object oj/oj.so
+
+current directory: /home/agile/live_project/ian-ownoutdoorsc/ownoutdoorsc/vendor/bundle/ruby/2.6.0/gems/oj-2.18.5/ext/oj
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 oj.so ./.gem.20260407-28693-tc97vz/oj

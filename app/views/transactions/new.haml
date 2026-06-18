@@ -1,0 +1,76 @@
+- content_for :extra_javascript do
+  :javascript
+    ST.transaction.initializeFreeTransactionForm('#{I18n.locale}');
+
+- content_for :title_header do
+  %h1
+    = action_button_label
+    = link_to(listing[:title], listing_path(listing[:id]))
+
+#new_message_form.centered-section
+
+  - author_link = link_to(author[:display_name], person_path(username: author[:username]))
+
+  .preauthorize-section
+    %h2.preauthorize-details-title
+      = t("listing_conversations.preauthorize.details")
+
+    %ul.no-bullets
+      %li
+        %div
+          = t("listing_conversations.preauthorize.by", listing: link_to("#{listing[:title]}", listing_path(listing[:id])), author: author_link).html_safe
+
+      - m_price_break_down.each do |price_break_down|
+        %li
+          = render partial: "transactions/price_break_down", locals: price_break_down.merge(is_author: false)
+
+  = form_tag(form_action, method: :post, id: "transaction-form") do
+
+    = hidden_field_tag(:start_on, booking_start)
+    = hidden_field_tag(:end_on, booking_end)
+    = hidden_field_tag(:guest_type, params[:guest_type]) if params[:guest_type].present?
+    
+    - if @current_user.guest? || @current_user.is_hotel?
+      %h2
+        = t("listing_conversations.guest.free_title")
+      - if @current_user.guest?
+        .row
+          .col-12
+            - login_link = link_to(t("listing_conversations.guest.login_title"), login_path)
+            - signup_link = link_to(t("listing_conversations.guest.signup_title"), sign_up_path)
+            = t("listing_conversations.guest.login", login: login_link, signup: signup_link).html_safe
+
+      .row
+        .col-12
+          %label= t("listing_conversations.guest.last_name")
+          = text_field_tag 'user[last_name]', '', class: 'required'
+      .row
+        .col-12
+          %label= t("listing_conversations.guest.first_name")
+          = text_field_tag 'user[first_name]', '', class: 'required'
+      .row
+        .col-12
+          %label= t("listing_conversations.guest.email")
+          = text_field_tag 'user[email]', '', class: 'required'
+      .row
+        .col-12
+          %label= t("listing_conversations.guest.phone")
+          = text_field_tag 'user[phone]', '', class: ''
+      .row
+        .col-12
+          %label= t("listing_conversations.guest.notes")
+          = text_field_tag 'user[notes]', '', class: ''
+
+    .preauthorize-section
+      %h2
+        = t("conversations.new.send_message_to_user", person: author_link).html_safe
+      .row
+        .col-12
+          = text_area_tag(:message, nil, :class => "text_area")
+
+      - if quantity
+        = hidden_field_tag(:quantity, quantity)
+
+      .row
+        .col-12
+          = button_tag t("conversations.new.send_message"), :class => "send_button"

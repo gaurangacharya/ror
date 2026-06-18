@@ -1,0 +1,414 @@
+- content_for :javascript do
+  initialize_listing_view('#{I18n.locale}');
+
+- content_for :extra_javascript do
+  :javascript
+    window.ST.listing();
+  - maps_key = MarketplaceHelper.google_maps_key(@current_community.id)
+  - key_param = maps_key ? "?key=#{maps_key}" : ""
+  - needs_maps = !FeatureFlagHelper.feature_enabled?(:topbar_v1) || search_mode == :keyword
+  = javascript_include_tag "//maps.googleapis.com/maps/api/js#{key_param}" if needs_maps
+
+- content_for :title, raw(@listing.title)
+- content_for :meta_author, PersonViewUtils.person_display_name(@listing.author, @current_community)
+- content_for :meta_description, StringUtils.first_words(@listing.description, 15)
+- content_for :meta_image, @listing.listing_images.first.image.url(:medium) if !@listing.listing_images.empty?
+- dimensions = @listing.listing_images.first.get_dimensions_for_style(:medium) if !@listing.listing_images.empty?
+- content_for :meta_image_width, dimensions[:width].to_s if !@listing.listing_images.empty?
+- content_for :meta_image_height, dimensions[:height].to_s if !@listing.listing_images.empty?
+- content_for :keywords, StringUtils.keywords(@listing.title)
+
+- content_for :title_header do
+  %h1
+    %span#listing-title.listing-title= @listing.title
+
+%script{type: "text/template", class: "template", id: "image-frame-template"}
+  .listing-image-frame
+    #listing-image-link.listing-image-frame-content
+      .listing-image-vertical-centering{:class => "${aspectRatioClass}" }
+        %img{:src => "${url}", :alt => @listing.title, :class => "listing-image ${aspectRatioClass}"}
+
+%script{type: "text/template", class: "template", id: "image-thumbnail-template"}
+  .listing-image-thumbnail-container
+    %img.listing-image-thumbnail{src: "${url}"}
+    .fade
+
+= render partial: 'layouts/onboarding_popup_wrapper'
+
+- if @iframe_mode
+  .row
+    .col-12
+      = link_to t("iframe.select_another_activity"), profile_listings_person_path(@listing.author.username), class: 'button-back'
+.row
+  .col-8.listing-details-container
+    .row
+      .col-12
+        - with_image_frame(@listing) do |reason, listing_images|
+          - if reason == :images_ok
+            .listing-image-carousel
+              #listing-image-frame
+              .ta-small-badge= tripadvisor_info_badge(@listing.author_id, true, false)
+
+              - if @listing_presenter.prev_image_id && @listing_presenter.next_image_id
+                = link_to params.to_unsafe_hash.slice(:id, :locale).merge(image: @listing_presenter.prev_image_id), class: "listing-image-navi listing-image-navi-left", id: "listing-image-navi-left" do
+                  .listing-image-navi-arrow-container
+                    .listing-image-arrow-icon-container.left
+                      = icon_tag("directleft", ["navigate-icon-fix", "listing-image-navi-arrow"])
+                = link_to params.to_unsafe_hash.slice(:id, :locale).merge(image: @listing_presenter.next_image_id), class: "listing-image-navi listing-image-navi-right", id: "listing-image-navi-right" do
+                  .listing-image-navi-arrow-container
+                    .listing-image-arrow-icon-container.right
+                      = icon_tag("directright", ["navigate-icon-fix", "listing-image-navi-arrow"])
+            #thumbnail-stripe.listing-image-thumbnail-stripe
+
+            - content_for :extra_javascript do
+              :javascript
+                var listingImages = #{raw listing_images.map { |image| ListingImageJSAdapter.new(image) }.to_json }
+                var currentImage = #{params[:image].present? ? params[:image].to_i : listing_images.first.id};
+                ST.listingImages(listingImages, currentImage);
+          - else
+            .listing-image-text-container
+              .listing-image-frame
+                .listing-image-frame-content
+                  .listing-image-vertical-centering
+                    .listing-no-image
+                      - if reason == :images_processing
+                        = t("listings.show.processing_uploaded_image")
+                      - else
+                        = t(".no_description")
+
+    .row
+      .col-12.listing-description-content
+        - if !@listing.description.blank?
+          = markdown(@listing.description)
+        - if !@listing.description_from_provider.blank?
+          = markdown(@listing.description_from_provider)
+        - if !@listing.description_closing.blank?
+          = markdown(@listing.description_closing)
+        - if( @listing_presenter.youtube_link_ids.present?)
+          - @listing_presenter.youtube_link_ids.each do |youtube_id|
+            .listing-description-youtube-wrapper
+              %iframe.listing-description-youtube-iframe{ title: t("listings.show.youtube_video_player"), width: 640, height:390, src: "//www.youtube.com/embed/#{ youtube_id }", frameborder: 0, allowfullscreen: true}
+        - if( @listing_presenter.closing_youtube_link_ids.present?)
+          - @listing_presenter.closing_youtube_link_ids.each do |youtube_id|
+            .listing-description-youtube-wrapper
+              %iframe.listing-description-youtube-iframe{ title: t("listings.show.youtube_video_player"), width: 640, height:390, src: "//www.youtube.com/embed/#{ youtube_id }", frameborder: 0, allowfullscreen: true}
+
+    - @listing.custom_field_values.each do |custom_field_value|
+      - unless @listing.is_ladera_listing? && custom_field_value.question.name(I18n.locale).include?('Activity Types')
+        .row
+          .col-12
+            - custom_field_value.with_type do |question_type|
+              = render :partial => "listings/custom_field_partials/#{question_type}", :locals => { :custom_field_value => custom_field_value }
+
+    - if @listing.need_quantity_input? && @listing.restricts_quantity?
+      - if @listing.show_min_quantity?
+        .row.listing-min-quantity
+          .col-12
+            %b= t("listings.min_quantity")+":"
+            = @listing.min_quantity
+      - if @listing.show_max_quantity?
+        .row.listing-max-quantity
+          .col-12
+            %b= t("listings.max_quantity")+":"
+            = @listing.max_quantity
+
+    - if @listing.document.present? && @listing.use_documents? && !@iframe_mode
+      .row.listing-document
+        .col-12
+          %h3= t(".document_to_sign")
+          %p
+            = link_to @listing.document.title_or_name, @listing.document.document.url, target: "_blank"
+
+    - if @listing_presenter.is_authorized && @listing.capacity > 0
+      .row.listing-capacity
+        .col-12
+          %b= t("listings.capacity_short")
+          %big= @listing.capacity
+
+    - if @current_community.show_listing_publishing_date? && !@iframe_mode
+      .row.listing-publishing-date
+        .col-12
+          .icon-with-text-container
+            = icon_tag("calendar", ["icon-part"])
+            .text-part
+              %b
+                = t(".listing_created_at")
+                = l @listing.created_at, :format => :short_date
+
+    - if !@current_community.private? && !@iframe_mode
+      .row
+        .col-12
+          .listing-social
+            .listing-fb-like-button
+              = facebook_like(current_user?(@listing.author))
+            .listing-tweet-button
+              - twitter_params =  {count: "horizontal", via: (@current_community.twitter_handle), text: @listing.title }.compact
+              = link_to("", "https://twitter.com/share", :class => "twitter-share-button", "data" => twitter_params)
+              - content_for :extra_javascript do
+                :javascript
+                  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+
+    - if @listing_presenter.is_authorized && @listing.booking?
+      = render 'listings/working_time_slots/calendar', presenter: @listing_presenter
+
+    - unless (@listing.closed? && !current_user?(@listing.author)) || !@current_community.listing_comments_in_use || @iframe_mode
+      .view-item
+        #comments.discussion.overflow-allowed
+          %h2
+            = icon_tag("chat_bubble", ["icon-with_text"])
+            .text-with-icon
+              = t(".comments")
+              %span#comment_count= "(#{@listing.comments_count})"
+          #follow-links.follow-links
+            = render :partial => "follow_links"
+          #comment-list
+            = render :partial => "comment", :collection => @listing.comments
+          #comment-form
+            = render :partial => "comment_form"
+
+  %aside.col-4.aside-listing-actions
+    - if @listing.call_for_price || @listing.hide_price
+
+    - elsif @listing.price
+      .row
+        .col-12
+          .listing-price{class: (@listing.is_ladera_listing? ? 'ladera-pricing' : ''), data: {visitor_price: (@listing.visitor_price ? MoneyViewUtils.to_humanized(@listing.visitor_price) : MoneyViewUtils.to_humanized(@listing.price)), hotel_guest_price: MoneyViewUtils.to_humanized(@listing.price), standard_price: MoneyViewUtils.to_humanized(@listing.price)}}
+            - if @current_user&.premium_pricing?(@listing)
+              %span.listing-price-amount.crossed.inline-crossed
+                = MoneyViewUtils.to_humanized(@listing.price)
+              %span.listing-price-amount
+                = MoneyViewUtils.to_humanized(@listing.price/2)
+            - else
+              %span.listing-price-amount
+                = MoneyViewUtils.to_humanized(@listing.price)
+
+            - with_quantity_text(@current_community, @listing) do |text|
+              %span.listing-price-quantity
+                = text
+      .row
+        .col-12
+          - if false && !@current_user&.premium_pricing?(@listing) && Listing.semi_premium_pricing?(@listing)
+            - if @current_user
+              - member_link = link_to t("listings.become_premium_link"), person_path(@current_user, :preselect => 'premium')
+            - else
+              - member_link = link_to t("listings.become_premium_link"), sign_up_path(:preselect => 'premium')
+            = raw t("listings.become_premium_note", link: member_link)
+
+    .row-with-divider
+      .col-12
+        #listing-message-links
+          = render :partial => "listing_actions"
+
+    - if !@iframe_mode
+      .row-with-divider.row-listing-author
+        .col-12
+          .listing-author
+            .listing-author-avatar
+              = medium_avatar_thumb(@listing.author, {:class => "listing-author-avatar-image"})
+            .listing-author-details
+              .listing-author-name
+                = link_to PersonViewUtils.person_display_name(@listing.author, @current_community), @listing.author, :id => "listing-author-link", :class => "listing-author-name-link", :title => "#{PersonViewUtils.person_display_name(@listing.author, @current_community)}"
+              - if @listing.author != @current_user
+                .listing-author-contact
+                  %a#listing-contact{href: contact_to_listing_path(:listing_id => @listing.id.to_s), :class => "listing-author-contact-button"}
+                    .content
+                      = t(".contact")
+
+    - if @listing_presenter.received_testimonials.size > 0 && !@iframe_mode
+      .row-with-divider.listing-author-activity
+        .col-12
+          %i.listing-author-activity-icon{:class => icon_class("testimonial")}
+          .listing-author-activity-item
+            .listing-author-activity-value
+              - if @listing_presenter.received_testimonials.size > 0
+                = t("people.show.average_rating", average_rating: @listing.author.rating_average.to_f.round(1))
+              - else
+                = t(".no_reviews")
+            .listing-author-activity-description
+              = t(".feedback")
+
+    - if @listing.origin_loc && @listing.origin_loc.address != ""
+      .row
+        .col-12
+          #googlemap
+            = render :partial => "googlemap", :locals => { :listing => @listing}
+            = render :partial => "origin", :locals => { :origin_loc => @listing.origin_loc }
+    .row
+      .col-12
+        = tripadvisor_info_badge(@listing.author_id, false, true)
+
+- if @listing_presenter.popup_for_qr?
+  = render 'popup_for_qr', listing: @listing
+
+- if @listing.has_guest_type_pricing? && @current_user != @listing.author
+  = render 'ladera_guest_type_modal'
+  - content_for :extra_javascript do
+    :javascript
+      // Ladera Guest Type Selection JavaScript
+      // Set flag for debugging
+      window.laderaJSLoaded = true;
+
+      // Hide price until selection - works on any Ladera page
+      function hidePriceUntilSelection() {
+        $('.listing-price').hide();
+      }
+
+      function updatePricingDisplay(guestType) {
+        try {
+          console.log('updatePricingDisplay called with guestType:', guestType);
+          
+          if (guestType === 'hotel_guest') {
+            console.log('Processing hotel_guest pricing');
+            var hotelGuestPrice = $('.listing-price').data('hotel-guest-price');
+            var standardPrice = $('.listing-price').data('standard-price');
+            console.log('Hotel guest price:', hotelGuestPrice, 'Standard price:', standardPrice);
+            
+            // Check if the price is $0 or equivalent to show "Complimentary"
+            var isComplimentary = hotelGuestPrice === '$0.00' || hotelGuestPrice === '$0' || 
+                                  standardPrice === '$0.00' || standardPrice === '$0' ||
+                                  parseFloat(hotelGuestPrice.replace(/[$,]/g, '')) === 0;
+            
+            if (isComplimentary) {
+              $('.listing-price-amount').text('Complimentary').addClass('complimentary-price');
+            } else {
+              $('.listing-price-amount').text(hotelGuestPrice).removeClass('complimentary-price');
+            }
+            $('.listing-price').show();
+            // Remove any visitor indicators
+            $('.visitor-indicator').remove();
+          } else if (guestType === 'visitor') {
+            console.log('Processing visitor pricing');
+            var visitorPrice = $('.listing-price').data('visitor-price');
+            console.log('Visitor price:', visitorPrice);
+            // Update price amount with visitor price
+            $('.listing-price-amount').text(visitorPrice).removeClass('complimentary-price');
+            $('.listing-price').show();
+            // Add visitor indicator
+            if (!$('.visitor-rate-label').length) {
+              $('.listing-price').after('<div class="visitor-rate-label" style="font-size: 12px; opacity: 0.8; font-style: italic; text-transform: lowercase;">Visitor Rate</div>');
+            }
+          }
+          console.log('Updated pricing display successfully');
+        } catch (error) {
+          console.error('Error updating pricing display:', error);
+        }
+      }
+
+      // Initialize guest type pricing features when document is ready
+      $(document).ready(function() {
+        // Check if this is a Ladera page (legacy support)
+        var isLaderaPage = $('body').hasClass('ladera');
+        console.log('Guest Pricing JS: isLaderaPage =', isLaderaPage);
+        
+        // Check if this listing has guest type pricing (modal present indicates this)
+        var hasGuestTypePricing = $('#ladera-guest-type-modal').length > 0;
+        console.log('Guest Pricing JS: hasGuestTypePricing =', hasGuestTypePricing);
+        
+        // Only hide price for non-owners on guest type pricing pages
+        if (hasGuestTypePricing) {
+          console.log('Guest Pricing JS: Hiding price for guest type pricing visitor');
+          hidePriceUntilSelection();
+        } else if (isLaderaPage && hasGuestTypePricing) {
+          console.log('Guest Pricing JS: Hiding price for legacy Ladera page');
+          hidePriceUntilSelection();
+        }
+        
+        // Check if this is a guest type pricing experience with modal functionality
+        var isGuestTypePricingExperience = hasGuestTypePricing;
+        console.log('Guest Pricing JS: isGuestTypePricingExperience =', isGuestTypePricingExperience);
+        
+        if (isGuestTypePricingExperience) {
+          var selectedGuestType = null;
+          var guestTypeSelected = false; // Track if user made a selection
+          var $modal = $('#ladera-guest-type-modal');
+
+          // Show modal automatically on page load if no guest type selected
+          if (!selectedGuestType && $modal.length > 0) {
+            $modal.lightbox_me({
+              centered: true,
+              zIndex: 1000000,
+              closeSelector: '.lightbox-x, [data-dismiss="modal"]',
+              onLoad: function() {
+                resetModalContent();
+                setTimeout(function() {
+                  $modal.find('.guest-type-btn').first().focus();
+                }, 300);
+                $('.lb_overlay').off('click.ladera').on('click.ladera', function(e) {
+                  if (e.target === this && !guestTypeSelected) {
+                    updatePricingDisplay('visitor');
+                    $modal.trigger('close');
+                  }
+                });
+                $(document).off('keyup.ladera').on('keyup.ladera', function(e) {
+                  if (e.keyCode === 27 && !guestTypeSelected) {
+                    updatePricingDisplay('visitor');
+                    $modal.trigger('close');
+                  }
+                });
+              },
+              onClose: function() {
+                $('.lb_overlay').off('click.ladera');
+                $(document).off('keyup.ladera');
+                // Only default to visitor if no selection was made
+                if (!guestTypeSelected) {
+                  updatePricingDisplay('visitor');
+                }
+              }
+            });
+          }
+
+          // Handle guest type selection (now synchronous - no loading state)
+          $(document).on('click', '.guest-type-btn', function() {
+            selectedGuestType = $(this).data('type');
+            guestTypeSelected = true; // Mark that user made a selection
+
+            if (!selectedGuestType || (selectedGuestType !== 'visitor' && selectedGuestType !== 'hotel_guest')) {
+              console.error('Invalid guest type selected:', selectedGuestType);
+              return false;
+            }
+
+            // Update pricing display immediately (synchronous)
+            updatePricingDisplay(selectedGuestType);
+
+            // Add guest_type as hidden input to the booking form
+            var $form = $('#booking-dates');
+            if ($form.length > 0 && $form.find('input[name="guest_type"]').length === 0) {
+              $('<input>').attr({
+                type: 'hidden',
+                name: 'guest_type',
+                value: selectedGuestType
+              }).appendTo($form);
+            } else if ($form.length > 0) {
+              $form.find('input[name="guest_type"]').val(selectedGuestType);
+            }
+
+            // Close modal immediately
+            $('#ladera-guest-type-modal').trigger('close');
+          });
+          
+          // Reset modal content to original state
+          function resetModalContent() {
+            var originalContent = '<p id="laderaGuestTypeModalDescription" class="text-center">' +
+              'Please select your guest type to see the appropriate pricing for this experience.' +
+              '</p>' +
+              '<div class="guest-type-options" role="group" aria-labelledby="laderaGuestTypeModalLabel">' +
+              '<div class="row">' +
+              '<div class="col-6">' +
+              '<button class="btn btn-outline-primary btn-block guest-type-btn" data-type="visitor" aria-describedby="visitor-description">' +
+              '<h6 class="ladera-guest-type-modal-title">Visitor</h6>' +
+              '<small id="visitor-description">I am visiting Ladera Resort</small>' +
+              '</button>' +
+              '</div>' +
+              '<div class="col-6">' +
+              '<button class="btn btn-outline-primary btn-block guest-type-btn" data-type="hotel_guest" aria-describedby="hotel-guest-description">' +
+              '<h6 class="ladera-guest-type-modal-title">Hotel Guest</h6>' +
+              '<small id="hotel-guest-description">I am staying at Ladera Resort</small>' +
+              '</button>' +
+              '</div>' +
+              '</div>' +
+              '</div>';
+            
+            $('#ladera-guest-type-modal .modal-body').html(originalContent);
+          }
+        }
+      });

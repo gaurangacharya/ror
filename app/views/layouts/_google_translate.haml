@@ -1,0 +1,44 @@
+- if !admin_controller?
+  #google_translate_element
+
+  = content_for :extra_javascript do
+    :javascript
+      function googleTranslateElementInit() {
+        var isDesktop = screen.width > 768;
+
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+          },
+          'google_translate_element'
+        );
+
+        if (isDesktop) {
+          function observe(entries) {
+            var el = entries[0].contentRect;
+            var height = el.height;
+            var offsetTop = 0;
+            if ($('.skiptranslate').css('display') !== 'none') {
+              offsetTop = $('.skiptranslate iframe').height();
+            }
+            var top = 140 + height + offsetTop + 'px';
+            var items = [
+              '.fixed-homepage',
+              '.map-column',
+              '.listings-column',
+              '.filter-overlay'
+            ];
+            for (var x of items) {
+              var item = document.querySelector(x);
+              if (item) {
+                item.style.top = top;
+              }
+            }
+          };
+          var resizeObserver = new ResizeObserver(observe);
+          resizeObserver.observe(document.querySelector("#google_translate_element"));
+        }
+      }
+
+    = javascript_include_tag "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+

@@ -1,0 +1,3 @@
+web: script/startup.sh web
+worker: script/startup.sh worker
+search: tail -f /dev/null
