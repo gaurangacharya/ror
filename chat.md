@@ -344,8 +344,8 @@ These were **not** done on the server (require user action elsewhere):
 - [ ] Add `https://jitsi.agiletechnologies.in/*` to Maps HTTP referrers
 - [ ] Update any DNS records still pointing to old IP `202.131.119.93` / `202.131.117.93`
 - [ ] Decide if Jitsi Meet needs a different subdomain (nginx config was replaced)
-- [ ] Push local commits to GitHub (`staging` branch is ahead 2 commits from Dockerfile revert work)
-- [ ] Optional: commit `deploy-staging.sh`, `deploy-staging.txt`, `chat.md` to git
+- [ ] Push local commits to GitHub (`staging` branch is ahead 3 commits; HTTPS push needs credentials or SSH deploy key on server)
+- [x] Committed `deploy-staging.sh`, `deploy-staging.txt`, `chat.md`, category JPG assets, and `Dockerfile.development` fixes (commit `507d9eb3`)
 
 ---
 
