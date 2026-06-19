@@ -16,7 +16,7 @@ RUN mkdir ~/.gnupg \
 RUN curl -sSL https://repo.manticoresearch.com/manticore-repo.noarch.deb -o /tmp/manticore-repo.deb \
   && dpkg -i /tmp/manticore-repo.deb \
   && apt-get update \
-  && apt-get install -y manticore manticore-extra  \
+  && apt-get install -y manticore  \
   && rm -rf /var/lib/apt/lists/* \
   && rm /tmp/manticore-repo.deb
 
@@ -67,7 +67,7 @@ RUN curl -sfSL \
 
 # Install:
 # - nginx - used to serve maintenance mode page
-RUN apt-get install -y nginx
+RUN apt-get update && apt-get install -y nginx
 
 # Install latest bundler
 ENV BUNDLE_BIN=

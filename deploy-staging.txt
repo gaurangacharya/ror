@@ -1,0 +1,243 @@
+================================================================================
+OWNOUTDOORS STAGING — DEPLOYMENT COMMANDS & DESCRIPTIONS
+================================================================================
+
+Server IP      : 111.93.93.21
+App folder     : /opt/source/staging-ownoutdoorsc
+Git branch     : staging
+Git remote     : https://github.com/gaurangacharya/ror.git
+Staging URL    : https://jitsi.agiletechnologies.in
+Deploy script  : /opt/source/staging-ownoutdoorsc/deploy-staging.sh
+Stack          : Docker Compose (web, worker, mysql, redis, memcached, mailcatcher)
+
+================================================================================
+WORKFLOW OVERVIEW
+================================================================================
+
+  Laptop  →  git push origin staging  →  GitHub
+                                              ↓
+  Server  →  sudo bash deploy-staging.sh  →  Live site updated
+
+================================================================================
+PART 1 — ON YOUR LAPTOP (before server deploy)
+================================================================================
+
+cd /path/to/ownoutdoorsc
+  → Go to your local project folder
+
+git checkout staging
+  → Switch to the staging branch (never deploy production branch here)
+
+git pull origin staging
+  → Download latest staging code from GitHub before you start editing
+
+git add .
+  → Stage all changed files for commit
+
+git add path/to/file.rb
+  → Stage only one specific file
+
+git commit -m "describe your change"
+  → Save your changes locally with a message
+
+git push origin staging
+  → Upload your commits to GitHub (required before server deploy)
+
+================================================================================
+PART 2 — ON THE SERVER (main deploy commands)
+================================================================================
+
+ssh user@111.93.93.21
+  → Connect to the staging server
+
+cd /opt/source/staging-ownoutdoorsc
+  → Go to the app folder (all deploy commands run from here)
+
+--------------------------------------------------------------------------------
+AUTOMATED DEPLOY (recommended)
+--------------------------------------------------------------------------------
+
+sudo bash deploy-staging.sh
+  → Normal deploy: pull code, fix permissions, migrate DB, restart web+worker,
+    show health check. Use this for most code changes (Ruby, views, controllers).
+
+sudo bash deploy-staging.sh --full
+  → Full deploy: everything above PLUS rebuild Docker images, bundle install,
+    and asset precompile. Use when Gemfile, Dockerfile.development, or
+    package.json / client dependencies changed.
+
+--------------------------------------------------------------------------------
+WHAT deploy-staging.sh RUNS (step by step)
+--------------------------------------------------------------------------------
+
+git pull origin staging
+  → Download latest code from GitHub into /opt/source/staging-ownoutdoorsc
+
+chown -R 1000:1000 /opt/source/staging-ownoutdoorsc
+  → Fix file ownership so the app user inside Docker can read/write files
+    (needed after git pull creates root-owned files)
+
+docker compose up --build -d
+  → Rebuild Docker images and start all containers in background (--full only)
+
+docker compose run --rm web bundle install
+  → Install Ruby gems after Gemfile changes (--full only)
+
+docker compose exec web bash -c 'cd client && npm ci && cd .. && bundle exec rake assets:precompile'
+  → Install Node packages and compile JS/CSS/images for production (--full only)
+
+docker compose run --rm web bundle exec rails db:migrate
+  → Run any new database migrations from db/migrate/
+
+docker compose restart web worker
+  → Restart the web server (Passenger) and background worker (Sidekiq + search)
+
+docker compose ps
+  → Show status of all containers (web, worker, mysql, redis, etc.)
+
+curl -sI https://jitsi.agiletechnologies.in/_health
+  → Quick check that the app is responding (should return HTTP 200)
+
+================================================================================
+PART 3 — MANUAL DEPLOY (if you prefer step-by-step)
+================================================================================
+
+cd /opt/source/staging-ownoutdoorsc
+sudo git pull origin staging
+  → Pull latest code manually
+
+sudo chown -R 1000:1000 /opt/source/staging-ownoutdoorsc
+  → Fix permissions manually
+
+sudo docker compose run --rm web bundle exec rails db:migrate
+  → Run migrations manually
+
+sudo docker compose restart web worker
+  → Restart app manually
+
+================================================================================
+PART 4 — WHEN TO USE EXTRA COMMANDS
+================================================================================
+
+sudo docker compose up --build -d
+  → Rebuild and start ALL services. Use when Dockerfile.development or
+    docker-compose.yml changed.
+
+sudo docker compose run --rm web bundle install
+  → Install gems after Gemfile / Gemfile.lock changed (without full rebuild).
+
+sudo docker compose exec web bash -c 'cd client && npm ci && cd .. && bundle exec rake assets:precompile'
+  → Recompile assets after JS, CSS, or image changes. Fixes homepage 500 errors
+    like "asset not present in the asset pipeline".
+
+sudo docker compose restart web
+  → Restart only the web container (faster than full restart).
+
+sudo docker compose restart worker
+  → Restart only the Sidekiq/search worker.
+
+sudo docker compose exec worker bundle exec rake ts:rebuild
+  → Rebuild Sphinx/Manticore search index after listing/search data changes.
+
+sudo docker compose up -d
+  → Start all containers if they are stopped (no rebuild).
+
+sudo docker compose down
+  → Stop and remove all containers (data volumes are kept).
+
+================================================================================
+PART 5 — LOGS & DEBUGGING
+================================================================================
+
+sudo docker compose ps
+  → List all containers and whether they are Up or Exited
+
+sudo docker compose ps -a
+  → List all containers including stopped ones
+
+sudo docker compose logs web --tail 50
+  → Show last 50 lines of web server logs
+
+sudo docker compose logs web -f
+  → Follow web logs live (Ctrl+C to stop)
+
+sudo docker compose logs worker --tail 50
+  → Show last 50 lines of worker (Sidekiq + search) logs
+
+sudo docker compose logs worker -f
+  → Follow worker logs live
+
+sudo docker compose logs mysql --tail 30
+  → Show MySQL container logs
+
+sudo docker compose run --rm web bundle exec rails c
+  → Open Rails console for debugging
+
+sudo docker compose exec web bash
+  → Open a shell inside the running web container
+
+curl -sI https://jitsi.agiletechnologies.in/_health
+  → Health endpoint check (expect HTTP 200)
+
+curl -sL -o /dev/null -w "%{http_code}\n" https://jitsi.agiletechnologies.in/
+  → Homepage HTTP status (expect 200)
+
+================================================================================
+PART 6 — DATABASE COMMANDS
+================================================================================
+
+sudo docker compose run --rm web bundle exec rails db:migrate
+  → Apply pending migrations
+
+sudo docker compose run --rm web bundle exec rails db:migrate:status
+  → Show which migrations are up or down
+
+sudo docker exec -i staging-ownoutdoorsc-mysql-1 mysql -u rdeveloper -prdeveloper ownoutdoors_development < backup.sql
+  → Import a MySQL dump file into the staging database
+
+sudo docker exec staging-ownoutdoorsc-mysql-1 mysql -u rdeveloper -prdeveloper ownoutdoors_development -e "SHOW TABLES;"
+  → List all tables in the database
+
+================================================================================
+PART 7 — NGINX (host server, outside Docker)
+================================================================================
+
+sudo nginx -t
+  → Test nginx configuration syntax before reload
+
+sudo systemctl reload nginx
+  → Reload nginx after editing /etc/nginx/conf.d/jitsi.agiletechnologies.in.conf
+
+curl -sI https://jitsi.agiletechnologies.in/_health
+  → Verify nginx is proxying HTTPS to the Rails app on port 3000
+
+================================================================================
+PART 8 — QUICK REFERENCE BY CHANGE TYPE
+================================================================================
+
+Change type                          Command to use
+--------------------------------------------------------------------------------
+Ruby code, views, controllers        sudo bash deploy-staging.sh
+New db/migrate file                  sudo bash deploy-staging.sh
+Gemfile changed                      sudo bash deploy-staging.sh --full
+package.json / client JS changed     sudo bash deploy-staging.sh --full
+Dockerfile.development changed       sudo bash deploy-staging.sh --full
+Search/listings index issue          sudo docker compose exec worker bundle exec rake ts:rebuild
+Homepage 500 (missing assets)        sudo bash deploy-staging.sh --full
+
+================================================================================
+PART 9 — IMPORTANT NOTES
+================================================================================
+
+1. Always push to GitHub first (git push origin staging), then run deploy on server.
+2. Always use sudo for docker commands on this server.
+3. Deploy from the staging branch only — not production.
+4. config/config.yml and .env hold secrets — do not commit them to git.
+5. Mailcatcher UI (test emails): http://111.93.93.21:1080
+6. App runs on port 3000 inside Docker; nginx on the host serves HTTPS on 443.
+7. If git pull fails with "dubious ownership", run:
+     sudo git config --global --add safe.directory /opt/source/staging-ownoutdoorsc
+
+================================================================================
+END OF FILE
+================================================================================
